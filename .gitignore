@@ -1,0 +1,15 @@
+sim/
+sim2/
+synth/
+*.log
+*.vcd
+*.fsdb
+*.vpd
+*.key
+simv*
+csrc/
+work/
+DVEfiles/
+*.daidir/
+*.vdb
+*.swp
