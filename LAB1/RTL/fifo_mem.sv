@@ -11,8 +11,8 @@ module fifo_mem #(
     input logic [ADDR_WIDTH-1:0] w_addr,
     input logic [ADDR_WIDTH-1:0] r_addr,
 
-    input logic [ADDR_WIDTH-1:0] w_data,
-    output logic [ADDR_WIDTH-1:0] r_data
+    input logic [DATA_WIDTH-1:0] w_data,
+    output logic [DATA_WIDTH-1:0] r_data
 );
 
     logic [DATA_WIDTH-1:0] mem [0:DEPTH-1];
