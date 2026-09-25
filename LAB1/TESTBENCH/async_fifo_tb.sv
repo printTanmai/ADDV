@@ -409,5 +409,12 @@ module async_fifo_tb;
         $fatal(1, "Simulation timeout");
     end
 
+
+    //waveform dump
+initial begin
+    $fsdbDumpfile("novas.fsdb");
+    $fsdbDumpvars(0, async_fifo_tb);
+end
+
 endmodule
 
