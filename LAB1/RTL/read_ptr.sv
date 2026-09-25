@@ -2,7 +2,9 @@
 module read_ptr #(
     parameter int DEPTH = 8,
     parameter int ADDR_WIDTH = $clog2(DEPTH),
-    parameter int PTR_WIDTH = ADDR_WIDTH + 1
+    parameter int PTR_WIDTH = ADDR_WIDTH + 1,
+    parameter int ALMOST_EMPTY_LEVEL = DEPTH / 4
+    
 )(
     input logic r_clk,
     input logic r_rst_b,

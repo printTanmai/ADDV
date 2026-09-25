@@ -1,7 +1,9 @@
 module write_ptr #(
     parameter int DEPTH = 8,
     parameter int ADDR_WIDTH = $clog2(DEPTH),
-    parameter int PTR_WIDTH = ADDR_WIDTH + 1
+    parameter int PTR_WIDTH = ADDR_WIDTH + 1,
+    parameter int ALMOST_FULL_LEVEL = DEPTH / 4
+    
 )(
     input logic w_clk,
     input logic w_rst_b,
