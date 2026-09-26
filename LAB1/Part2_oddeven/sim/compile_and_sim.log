@@ -1,0 +1,311 @@
+                         Chronologic VCS (TM)
+      Version W-2024.09-SP2-3_Full64 -- Sat Sep 26 22:41:50 2026
+
+                    Copyright (c) 1991 - 2025 Synopsys, Inc.
+   This software and the associated documentation are proprietary to Synopsys,
+ Inc. This software may only be used in accordance with the terms and conditions
+ of a written license agreement with Synopsys, Inc. All other use, reproduction,
+   or distribution of this software is strictly prohibited.  Licensed Products
+     communicate with Synopsys servers for the purpose of providing software
+    updates, detecting software piracy and verifying that customers are using
+    Licensed Products in conformity with the applicable License Key for such
+  Licensed Products. Synopsys will use information gathered in connection with
+    this process to deliver software updates and pursue software pirates and
+                                   infringers.
+
+ Inclusivity & Diversity - Visit SolvNetPlus to read the "Synopsys Statement on
+            Inclusivity and Diversity" (Refer to article 000036315 at
+                        https://solvnetplus.synopsys.com)
+
+Parsing design file '../RTL/sync_fifo.sv'
+Parsing design file '../RTL/read_arbiter.sv'
+Parsing design file '../RTL/router.sv'
+Parsing design file '../RTL/oddeven.sv'
+Parsing design file '../TESTBENCH/oddeven_tb.sv'
+Top Level Modules:
+       oddeven_tb
+TimeScale is 1 ns / 1 ps
+Starting vcs inline pass...
+2 modules and 0 UDP read.
+recompiling module sync_fifo
+recompiling module oddeven_tb
+Both modules done.
+make[1]: Entering directory '/home/a25397_asu/ADDV/ADDV/LAB1/Part2_oddeven/sim/csrc'
+make[1]: Leaving directory '/home/a25397_asu/ADDV/ADDV/LAB1/Part2_oddeven/sim/csrc'
+make[1]: Entering directory '/home/a25397_asu/ADDV/ADDV/LAB1/Part2_oddeven/sim/csrc'
+rm -f _cuarc*.so _csrc*.so pre_vcsobj_*.so share_vcsobj_*.so
+if [ -x ../simv ]; then chmod a-x ../simv; fi
+g++  -o ../simv      -rdynamic  -Wl,-rpath='$ORIGIN'/simv.daidir -Wl,-rpath=./simv.daidir -Wl,-rpath=/usr/local2/synopsys/vcs_2024/vcs/W-2024.09-SP2-3/linux64/lib -L/usr/local2/synopsys/vcs_2024/vcs/W-2024.09-SP2-3/linux64/lib  -Wl,-rpath-link=./  /usr/lib64/libnuma.so.1   objs/amcQw_d.o   _2075623_archive_1.so   SIM_l.o      rmapats_mop.o rmapats.o rmar.o rmar_nd.o  rmar_llvm_0_1.o rmar_llvm_0_0.o            -lvirsim -lerrorinf -lsnpsmalloc -lvfs    -lvcsnew -ldistsimclient -lsimprofile -luclinative /usr/local2/synopsys/vcs_2024/vcs/W-2024.09-SP2-3/linux64/lib/vcs_tls.o   -Wl,-whole-archive  -lvcsucli    -Wl,-no-whole-archive        _vcs_pli_stub_.o   /usr/local2/synopsys/vcs_2024/vcs/W-2024.09-SP2-3/linux64/lib/vcs_save_restore_new.o /usr/local2/synopsys/verdi_2024.09/verdi_2024/share/PLI/VCS/LINUX64/pli.a -ldl  -lc -lm -lpthread -ldl 
+../simv up to date
+make[1]: Leaving directory '/home/a25397_asu/ADDV/ADDV/LAB1/Part2_oddeven/sim/csrc'
+Info: [VCS_SAVE_RESTORE_INFO] ASLR (Address Space Layout Randomization) is detected on the machine. To enable $save functionality, ASLR will be switched off and simv re-executed.
+Please use '-no_save' simv switch to avoid re-execution or '-suppress=ASLR_DETECTED_INFO' to suppress this message.
+Chronologic VCS simulator copyright 1991-2024
+Contains Synopsys proprietary information.
+Compiler version W-2024.09-SP2-3_Full64; Runtime version W-2024.09-SP2-3_Full64;  Sep 26 22:41 2026
+*Verdi* Loading libsscore_vcs202409.so
+FSDB Dumper for VCS, Release Verdi_W-2024.09-SP2-3, Linux x86_64/64bit, 06/23/2025
+(C) 1996 - 2025 by Synopsys, Inc.
+*Verdi* : Create FSDB file 'novas.fsdb'
+*Verdi* : Begin traversing the scope (oddeven_tb), layer (0).
+*Verdi* : End of traversing.
+
+Starting CASE 1: 40 odd values followed by 40 even values
+ERROR [66000] odd_empty does not match FIFO occupancy
+ERROR [566000] even_empty does not match FIFO occupancy
+ERROR [586000] data mismatch: expected 0x80, received 0xxx
+ERROR [596000] data mismatch: expected 0x01, received 0xxx
+ERROR [596000] odd_full does not match FIFO occupancy
+ERROR [606000] data mismatch: expected 0x82, received 0x80
+ERROR [616000] data mismatch: expected 0x03, received 0x01
+ERROR [626000] data mismatch: expected 0x84, received 0x82
+ERROR [636000] data mismatch: expected 0x05, received 0x03
+ERROR [666000] data mismatch: expected 0x86, received 0x84
+ERROR [676000] data mismatch: expected 0x07, received 0x05
+ERROR [686000] data mismatch: expected 0x88, received 0x86
+ERROR [696000] data mismatch: expected 0x09, received 0x07
+ERROR [706000] data mismatch: expected 0x8a, received 0x88
+ERROR [716000] data mismatch: expected 0x0b, received 0x09
+ERROR [726000] data mismatch: expected 0x8c, received 0x8a
+ERROR [736000] data mismatch: expected 0x0d, received 0x0b
+ERROR [766000] data mismatch: expected 0x8e, received 0x8c
+ERROR [776000] data mismatch: expected 0x0f, received 0x0d
+ERROR [786000] data mismatch: expected 0x90, received 0x8e
+ERROR [796000] data mismatch: expected 0x11, received 0x0f
+ERROR [806000] data mismatch: expected 0x92, received 0x90
+ERROR [816000] data mismatch: expected 0x13, received 0x11
+ERROR [826000] data mismatch: expected 0x94, received 0x92
+ERROR [836000] data mismatch: expected 0x15, received 0x13
+ERROR [866000] data mismatch: expected 0x96, received 0x94
+ERROR [876000] data mismatch: expected 0x17, received 0x15
+ERROR [886000] data mismatch: expected 0x98, received 0x96
+ERROR [896000] data mismatch: expected 0x19, received 0x17
+ERROR [906000] data mismatch: expected 0x9a, received 0x98
+ERROR [916000] data mismatch: expected 0x1b, received 0x19
+ERROR [926000] data mismatch: expected 0x9c, received 0x9a
+ERROR [936000] data mismatch: expected 0x1d, received 0x1b
+ERROR [966000] data mismatch: expected 0x9e, received 0x9c
+ERROR [976000] data mismatch: expected 0x1f, received 0x1d
+ERROR [986000] data mismatch: expected 0xa0, received 0x9e
+ERROR [996000] data mismatch: expected 0x21, received 0x1f
+ERROR [1006000] data mismatch: expected 0xa2, received 0xa0
+ERROR [1016000] data mismatch: expected 0x23, received 0x21
+ERROR [1026000] data mismatch: expected 0xa4, received 0xa2
+ERROR [1036000] data mismatch: expected 0x25, received 0x23
+ERROR [1066000] data mismatch: expected 0xa6, received 0xa4
+ERROR [1076000] data mismatch: expected 0x27, received 0x25
+ERROR [1086000] data mismatch: expected 0xa8, received 0xa6
+ERROR [1096000] data mismatch: expected 0x29, received 0x27
+ERROR [1106000] data mismatch: expected 0xaa, received 0xa8
+ERROR [1116000] data mismatch: expected 0x2b, received 0x29
+ERROR [1126000] data mismatch: expected 0xac, received 0xaa
+ERROR [1136000] data mismatch: expected 0x2d, received 0x2b
+ERROR [1166000] data mismatch: expected 0xae, received 0xac
+ERROR [1176000] data mismatch: expected 0x2f, received 0x2d
+ERROR [1186000] data mismatch: expected 0xb0, received 0xae
+ERROR [1196000] data mismatch: expected 0x31, received 0x2f
+ERROR [1206000] data mismatch: expected 0xb2, received 0xb0
+ERROR [1216000] data mismatch: expected 0x33, received 0x31
+ERROR [1226000] data mismatch: expected 0xb4, received 0xb2
+ERROR [1236000] data mismatch: expected 0x35, received 0x33
+ERROR [1266000] data mismatch: expected 0xb6, received 0xb4
+ERROR [1276000] data mismatch: expected 0x37, received 0x35
+ERROR [1286000] data mismatch: expected 0xb8, received 0xb6
+ERROR [1296000] data mismatch: expected 0x39, received 0x37
+ERROR [1306000] data mismatch: expected 0xba, received 0xb8
+ERROR [1316000] data mismatch: expected 0x3b, received 0x39
+ERROR [1326000] data mismatch: expected 0xbc, received 0xba
+ERROR [1336000] data mismatch: expected 0x3d, received 0x3b
+ERROR [1366000] data mismatch: expected 0xbe, received 0xbc
+ERROR [1376000] data mismatch: expected 0x3f, received 0x3d
+ERROR [1386000] data mismatch: expected 0xc0, received 0xbe
+ERROR [1396000] data mismatch: expected 0x41, received 0x3f
+ERROR [1406000] data mismatch: expected 0xc2, received 0xc0
+ERROR [1416000] data mismatch: expected 0x43, received 0x41
+ERROR [1426000] data mismatch: expected 0xc4, received 0xc2
+ERROR [1436000] data mismatch: expected 0x45, received 0x43
+ERROR [1466000] data mismatch: expected 0xc6, received 0xc4
+ERROR [1476000] data mismatch: expected 0x47, received 0x45
+ERROR [1486000] data mismatch: expected 0xc8, received 0xc6
+ERROR [1496000] data mismatch: expected 0x49, received 0x47
+ERROR [1506000] data mismatch: expected 0xca, received 0xc8
+ERROR [1516000] data mismatch: expected 0x4b, received 0x49
+ERROR [1526000] data mismatch: expected 0xcc, received 0xca
+ERROR [1536000] data mismatch: expected 0x4d, received 0x4b
+ERROR [1566000] data mismatch: expected 0xce, received 0xcc
+ERROR [1576000] data mismatch: expected 0x4f, received 0x4d
+CASE 1: 40 odd values followed by 40 even values summary: accepted writes=80, outputs=80, peak even=21, peak odd=40
+CASE 1: 40 odd values followed by 40 even values FAILED with 83 error(s)
+
+Starting CASE 2: alternating even and odd values
+ERROR [1646000] even_empty does not match FIFO occupancy
+ERROR [1656000] odd_empty does not match FIFO occupancy
+ERROR [1666000] data mismatch: expected 0x00, received 0xce
+ERROR [1666000] even_empty does not match FIFO occupancy
+ERROR [1676000] data mismatch: expected 0x01, received 0x4f
+ERROR [1676000] odd_empty does not match FIFO occupancy
+ERROR [1686000] data mismatch: expected 0x02, received 0x00
+ERROR [1686000] even_empty does not match FIFO occupancy
+ERROR [1696000] data mismatch: expected 0x03, received 0x01
+ERROR [1696000] odd_empty does not match FIFO occupancy
+ERROR [1706000] data mismatch: expected 0x04, received 0x02
+ERROR [1706000] even_empty does not match FIFO occupancy
+ERROR [1716000] data mismatch: expected 0x05, received 0x03
+ERROR [1716000] odd_empty does not match FIFO occupancy
+ERROR [1746000] data mismatch: expected 0x06, received 0x04
+ERROR [1746000] even_empty does not match FIFO occupancy
+ERROR [1756000] data mismatch: expected 0x07, received 0x05
+ERROR [1756000] odd_empty does not match FIFO occupancy
+ERROR [1766000] data mismatch: expected 0x08, received 0x06
+ERROR [1766000] even_empty does not match FIFO occupancy
+ERROR [1776000] data mismatch: expected 0x09, received 0x07
+ERROR [1776000] odd_empty does not match FIFO occupancy
+ERROR [1786000] data mismatch: expected 0x0a, received 0x08
+ERROR [1786000] even_empty does not match FIFO occupancy
+ERROR [1796000] data mismatch: expected 0x0b, received 0x09
+ERROR [1796000] odd_empty does not match FIFO occupancy
+ERROR [1806000] data mismatch: expected 0x0c, received 0x0a
+ERROR [1806000] even_empty does not match FIFO occupancy
+ERROR [1816000] data mismatch: expected 0x0d, received 0x0b
+ERROR [1816000] odd_empty does not match FIFO occupancy
+ERROR [1846000] data mismatch: expected 0x0e, received 0x0c
+ERROR [1846000] even_empty does not match FIFO occupancy
+ERROR [1856000] data mismatch: expected 0x0f, received 0x0d
+ERROR [1856000] odd_empty does not match FIFO occupancy
+ERROR [1866000] data mismatch: expected 0x10, received 0x0e
+ERROR [1866000] even_empty does not match FIFO occupancy
+ERROR [1876000] data mismatch: expected 0x11, received 0x0f
+ERROR [1876000] odd_empty does not match FIFO occupancy
+ERROR [1886000] data mismatch: expected 0x12, received 0x10
+ERROR [1886000] even_empty does not match FIFO occupancy
+ERROR [1896000] data mismatch: expected 0x13, received 0x11
+ERROR [1896000] odd_empty does not match FIFO occupancy
+ERROR [1906000] data mismatch: expected 0x14, received 0x12
+ERROR [1906000] even_empty does not match FIFO occupancy
+ERROR [1916000] data mismatch: expected 0x15, received 0x13
+ERROR [1916000] odd_empty does not match FIFO occupancy
+ERROR [1946000] data mismatch: expected 0x16, received 0x14
+ERROR [1946000] even_empty does not match FIFO occupancy
+ERROR [1956000] data mismatch: expected 0x17, received 0x15
+ERROR [1956000] odd_empty does not match FIFO occupancy
+ERROR [1966000] data mismatch: expected 0x18, received 0x16
+ERROR [1966000] even_empty does not match FIFO occupancy
+ERROR [1976000] data mismatch: expected 0x19, received 0x17
+ERROR [1976000] odd_empty does not match FIFO occupancy
+ERROR [1986000] data mismatch: expected 0x1a, received 0x18
+ERROR [1986000] even_empty does not match FIFO occupancy
+ERROR [1996000] data mismatch: expected 0x1b, received 0x19
+ERROR [1996000] odd_empty does not match FIFO occupancy
+ERROR [2006000] data mismatch: expected 0x1c, received 0x1a
+ERROR [2006000] even_empty does not match FIFO occupancy
+ERROR [2016000] data mismatch: expected 0x1d, received 0x1b
+ERROR [2016000] odd_empty does not match FIFO occupancy
+ERROR [2046000] data mismatch: expected 0x1e, received 0x1c
+ERROR [2046000] even_empty does not match FIFO occupancy
+ERROR [2056000] data mismatch: expected 0x1f, received 0x1d
+ERROR [2056000] odd_empty does not match FIFO occupancy
+ERROR [2066000] data mismatch: expected 0x20, received 0x1e
+ERROR [2066000] even_empty does not match FIFO occupancy
+ERROR [2076000] data mismatch: expected 0x21, received 0x1f
+ERROR [2076000] odd_empty does not match FIFO occupancy
+ERROR [2086000] data mismatch: expected 0x22, received 0x20
+ERROR [2086000] even_empty does not match FIFO occupancy
+ERROR [2096000] data mismatch: expected 0x23, received 0x21
+ERROR [2096000] odd_empty does not match FIFO occupancy
+ERROR [2106000] data mismatch: expected 0x24, received 0x22
+ERROR [2106000] even_empty does not match FIFO occupancy
+ERROR [2116000] data mismatch: expected 0x25, received 0x23
+ERROR [2116000] odd_empty does not match FIFO occupancy
+ERROR [2146000] data mismatch: expected 0x26, received 0x24
+ERROR [2146000] even_empty does not match FIFO occupancy
+ERROR [2156000] data mismatch: expected 0x27, received 0x25
+ERROR [2156000] odd_empty does not match FIFO occupancy
+ERROR [2166000] data mismatch: expected 0x28, received 0x26
+ERROR [2166000] even_empty does not match FIFO occupancy
+ERROR [2176000] data mismatch: expected 0x29, received 0x27
+ERROR [2176000] odd_empty does not match FIFO occupancy
+ERROR [2186000] data mismatch: expected 0x2a, received 0x28
+ERROR [2186000] even_empty does not match FIFO occupancy
+ERROR [2196000] data mismatch: expected 0x2b, received 0x29
+ERROR [2196000] odd_empty does not match FIFO occupancy
+ERROR [2206000] data mismatch: expected 0x2c, received 0x2a
+ERROR [2206000] even_empty does not match FIFO occupancy
+ERROR [2216000] data mismatch: expected 0x2d, received 0x2b
+ERROR [2216000] odd_empty does not match FIFO occupancy
+ERROR [2246000] data mismatch: expected 0x2e, received 0x2c
+ERROR [2246000] even_empty does not match FIFO occupancy
+ERROR [2256000] data mismatch: expected 0x2f, received 0x2d
+ERROR [2256000] odd_empty does not match FIFO occupancy
+ERROR [2266000] data mismatch: expected 0x30, received 0x2e
+ERROR [2266000] even_empty does not match FIFO occupancy
+ERROR [2276000] data mismatch: expected 0x31, received 0x2f
+ERROR [2276000] odd_empty does not match FIFO occupancy
+ERROR [2286000] data mismatch: expected 0x32, received 0x30
+ERROR [2286000] even_empty does not match FIFO occupancy
+ERROR [2296000] data mismatch: expected 0x33, received 0x31
+ERROR [2296000] odd_empty does not match FIFO occupancy
+ERROR [2306000] data mismatch: expected 0x34, received 0x32
+ERROR [2306000] even_empty does not match FIFO occupancy
+ERROR [2316000] data mismatch: expected 0x35, received 0x33
+ERROR [2316000] odd_empty does not match FIFO occupancy
+ERROR [2346000] data mismatch: expected 0x36, received 0x34
+ERROR [2346000] even_empty does not match FIFO occupancy
+ERROR [2356000] data mismatch: expected 0x37, received 0x35
+ERROR [2356000] odd_empty does not match FIFO occupancy
+ERROR [2366000] data mismatch: expected 0x38, received 0x36
+ERROR [2366000] even_empty does not match FIFO occupancy
+ERROR [2376000] data mismatch: expected 0x39, received 0x37
+ERROR [2376000] odd_empty does not match FIFO occupancy
+ERROR [2386000] data mismatch: expected 0x3a, received 0x38
+ERROR [2386000] even_empty does not match FIFO occupancy
+ERROR [2396000] data mismatch: expected 0x3b, received 0x39
+ERROR [2396000] odd_empty does not match FIFO occupancy
+ERROR [2406000] data mismatch: expected 0x3c, received 0x3a
+ERROR [2406000] even_empty does not match FIFO occupancy
+ERROR [2416000] data mismatch: expected 0x3d, received 0x3b
+ERROR [2416000] odd_empty does not match FIFO occupancy
+ERROR [2446000] data mismatch: expected 0x3e, received 0x3c
+ERROR [2446000] even_empty does not match FIFO occupancy
+ERROR [2456000] data mismatch: expected 0x3f, received 0x3d
+ERROR [2456000] odd_empty does not match FIFO occupancy
+ERROR [2466000] data mismatch: expected 0x40, received 0x3e
+ERROR [2466000] even_empty does not match FIFO occupancy
+ERROR [2476000] data mismatch: expected 0x41, received 0x3f
+ERROR [2476000] odd_empty does not match FIFO occupancy
+ERROR [2486000] data mismatch: expected 0x42, received 0x40
+ERROR [2486000] even_empty does not match FIFO occupancy
+ERROR [2496000] data mismatch: expected 0x43, received 0x41
+ERROR [2496000] odd_empty does not match FIFO occupancy
+ERROR [2506000] data mismatch: expected 0x44, received 0x42
+ERROR [2506000] even_empty does not match FIFO occupancy
+ERROR [2516000] data mismatch: expected 0x45, received 0x43
+ERROR [2516000] odd_empty does not match FIFO occupancy
+ERROR [2546000] data mismatch: expected 0x46, received 0x44
+ERROR [2546000] even_empty does not match FIFO occupancy
+ERROR [2556000] data mismatch: expected 0x47, received 0x45
+ERROR [2556000] odd_empty does not match FIFO occupancy
+ERROR [2566000] data mismatch: expected 0x48, received 0x46
+ERROR [2566000] even_empty does not match FIFO occupancy
+ERROR [2576000] data mismatch: expected 0x49, received 0x47
+ERROR [2576000] odd_empty does not match FIFO occupancy
+ERROR [2586000] data mismatch: expected 0x4a, received 0x48
+ERROR [2586000] even_empty does not match FIFO occupancy
+ERROR [2596000] data mismatch: expected 0x4b, received 0x49
+ERROR [2596000] odd_empty does not match FIFO occupancy
+ERROR [2606000] data mismatch: expected 0x4c, received 0x4a
+ERROR [2606000] even_empty does not match FIFO occupancy
+ERROR [2616000] data mismatch: expected 0x4d, received 0x4b
+ERROR [2616000] odd_empty does not match FIFO occupancy
+ERROR [2646000] data mismatch: expected 0x4e, received 0x4c
+ERROR [2656000] data mismatch: expected 0x4f, received 0x4d
+CASE 2: alternating even and odd values summary: accepted writes=80, outputs=80, peak even=1, peak odd=1
+CASE 2: alternating even and odd values FAILED with 160 error(s)
+
+ODDEVEN TESTBENCH FAILED (243 errors, 1357 checks)
+Fatal: "../TESTBENCH/oddeven_tb.sv", 357: oddeven_tb: at time 2666000 ps
+oddeven verification failed
+$finish called from file "../TESTBENCH/oddeven_tb.sv", line 357.
+$finish at simulation time              2666000
+           V C S   S i m u l a t i o n   R e p o r t 
+Time: 2666000 ps
+CPU time: .197 seconds to compile + .182 seconds to elab + .156 seconds to link + .159 seconds in simulation

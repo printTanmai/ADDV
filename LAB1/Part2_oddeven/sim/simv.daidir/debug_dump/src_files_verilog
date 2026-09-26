@@ -1,0 +1,5 @@
+/home/a25397_asu/ADDV/ADDV/LAB1/Part2_oddeven/RTL/oddeven.sv
+/home/a25397_asu/ADDV/ADDV/LAB1/Part2_oddeven/RTL/read_arbiter.sv
+/home/a25397_asu/ADDV/ADDV/LAB1/Part2_oddeven/RTL/router.sv
+/home/a25397_asu/ADDV/ADDV/LAB1/Part2_oddeven/RTL/sync_fifo.sv
+/home/a25397_asu/ADDV/ADDV/LAB1/Part2_oddeven/TESTBENCH/oddeven_tb.sv
