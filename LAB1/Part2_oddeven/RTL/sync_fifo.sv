@@ -49,10 +49,14 @@ module sync_fifo #(
         end
     end
 
-    // single clock domain: no gray code, no synchronizers needed
-    assign full_next  = (wptr_next[ADDR_WIDTH-1:0] == rptr[ADDR_WIDTH-1:0]) &&
-                         (wptr_next[PTR_WIDTH-1] != rptr[PTR_WIDTH-1]);
-    assign empty_next = (rptr_next == wptr);
+    //single clock domain: compare both next pointers so the flags reflect
+    //simultaneous reads and writes on the current clock edge
+    assign full_next  = (wptr_next[ADDR_WIDTH-1:0] == rptr_next[ADDR_WIDTH-1:0]) &&
+                         (wptr_next[PTR_WIDTH-1] != rptr_next[PTR_WIDTH-1]);
+    assign empty_next = (rptr_next == wptr_next);
+
+    //the arbiter samples the current FIFO head on the read clock edge
+    assign data_out = mem[r_addr];
 
     always_ff @(posedge clk) begin
         if (rst) begin
@@ -69,8 +73,6 @@ module sync_fifo #(
             if (write_en && !full)
                 mem[w_addr] <= data_in;
 
-            if (read_en && !empty)
-                data_out <= mem[r_addr];
         end
     end
 
