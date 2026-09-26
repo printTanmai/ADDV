@@ -1,0 +1,21 @@
+ 
+****************************************
+Report : clocks
+Design : fifo_wrapper
+Version: V-2023.12-SP5-1
+Date   : Sat Sep 26 08:25:42 2026
+****************************************
+
+Attributes:
+    d - dont_touch_network
+    f - fix_hold
+    p - propagated_clock
+    G - generated_clock
+    g - lib_generated_clock
+
+Clock          Period   Waveform            Attrs     Sources
+--------------------------------------------------------------------------------
+r_clk         0.666667  {0 0.333333}                  {r_clk}
+w_clk         0.666667  {0 0.333333}                  {w_clk}
+--------------------------------------------------------------------------------
+1

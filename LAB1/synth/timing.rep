@@ -1,0 +1,980 @@
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 10
+Design : fifo_wrapper
+Version: V-2023.12-SP5-1
+Date   : Sat Sep 26 08:25:42 2026
+****************************************
+
+Operating Conditions: typical   Library: gscl45nm
+Wire Load Model Mode: top
+
+  Startpoint: async_fifo_inst/read_ptr_inst/empty_reg
+              (rising edge-triggered flip-flop clocked by r_clk)
+  Endpoint: async_fifo_inst/read_ptr_inst/empty_reg
+            (rising edge-triggered flip-flop clocked by r_clk)
+  Path Group: r_clk
+  Path Type: max
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock r_clk (rise edge)                             0.000000   0.000000
+  clock network delay (ideal)                         0.000000   0.000000
+  async_fifo_inst/read_ptr_inst/empty_reg/CLK (DFFSR) 0.000000   0.000000 r
+  async_fifo_inst/read_ptr_inst/empty_reg/Q (DFFSR)   0.108832   0.108832 r
+  async_fifo_inst/read_ptr_inst/U51/Y (BUFX2)         0.035569   0.144401 r
+  async_fifo_inst/read_ptr_inst/U70/Y (BUFX2)         0.039119   0.183520 r
+  async_fifo_inst/read_ptr_inst/U64/Y (INVX1)         0.020241   0.203761 f
+  async_fifo_inst/read_ptr_inst/U63/Y (AND2X2)        0.038067   0.241828 f
+  async_fifo_inst/read_ptr_inst/U14/Y (AND2X2)        0.034943   0.276772 f
+  async_fifo_inst/read_ptr_inst/U71/Y (XNOR2X1)       0.040345   0.317117 r
+  async_fifo_inst/read_ptr_inst/U66/Y (INVX1)         0.055524   0.372641 f
+  async_fifo_inst/read_ptr_inst/rptr_bin_to_gray/bin[1] (bin2gray_WIDTH4_0)
+                                                      0.000000   0.372641 f
+  async_fifo_inst/read_ptr_inst/rptr_bin_to_gray/U3/Y (XOR2X1)
+                                                      0.055896   0.428536 r
+  async_fifo_inst/read_ptr_inst/rptr_bin_to_gray/gray[0] (bin2gray_WIDTH4_0)
+                                                      0.000000   0.428536 r
+  async_fifo_inst/read_ptr_inst/U33/Y (XNOR2X1)       0.053444   0.481980 r
+  async_fifo_inst/read_ptr_inst/U46/Y (AND2X2)        0.032183   0.514163 r
+  async_fifo_inst/read_ptr_inst/U47/Y (INVX1)         0.016967   0.531130 f
+  async_fifo_inst/read_ptr_inst/U29/Y (NOR3X1)        0.047994   0.579124 r
+  async_fifo_inst/read_ptr_inst/empty_reg/D (DFFSR)   0.000000   0.579124 r
+  data arrival time                                              0.579124
+
+  clock r_clk (rise edge)                             0.666667   0.666667
+  clock network delay (ideal)                         0.000000   0.666667
+  async_fifo_inst/read_ptr_inst/empty_reg/CLK (DFFSR) 0.000000   0.666667 r
+  library setup time                                  -0.087089  0.579577
+  data required time                                             0.579577
+  --------------------------------------------------------------------------
+  data required time                                             0.579577
+  data arrival time                                              -0.579124
+  --------------------------------------------------------------------------
+  slack (MET)                                                    0.000454
+
+
+  Startpoint: async_fifo_inst/wptr_sync_inst/sync_ptr_reg[3]
+              (rising edge-triggered flip-flop clocked by r_clk)
+  Endpoint: async_fifo_inst/read_ptr_inst/almost_empty_reg
+            (rising edge-triggered flip-flop clocked by r_clk)
+  Path Group: r_clk
+  Path Type: max
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock r_clk (rise edge)                             0.000000   0.000000
+  clock network delay (ideal)                         0.000000   0.000000
+  async_fifo_inst/wptr_sync_inst/sync_ptr_reg[3]/CLK (DFFSR)
+                                                      0.000000   0.000000 r
+  async_fifo_inst/wptr_sync_inst/sync_ptr_reg[3]/Q (DFFSR)
+                                                      0.108832   0.108832 r
+  async_fifo_inst/wptr_sync_inst/U18/Y (BUFX2)        0.049003   0.157835 r
+  async_fifo_inst/wptr_sync_inst/sync_ptr[3] (synchronizer_WIDTH4_1)
+                                                      0.000000   0.157835 r
+  async_fifo_inst/read_ptr_inst/wptr_gray_sync[3] (read_ptr_DEPTH8_ADDR_WIDTH3_PTR_WIDTH4_ALMOST_EMPTY_LEVEL2)
+                                                      0.000000   0.157835 r
+  async_fifo_inst/read_ptr_inst/wptr_gray_to_bin/gray[3] (gray2bin_WIDTH4_0)
+                                                      0.000000   0.157835 r
+  async_fifo_inst/read_ptr_inst/wptr_gray_to_bin/U3/Y (XOR2X1)
+                                                      0.056674   0.214508 r
+  async_fifo_inst/read_ptr_inst/wptr_gray_to_bin/U5/Y (BUFX4)
+                                                      0.031356   0.245864 r
+  async_fifo_inst/read_ptr_inst/wptr_gray_to_bin/U2/Y (XOR2X1)
+                                                      0.040770   0.286634 r
+  async_fifo_inst/read_ptr_inst/wptr_gray_to_bin/U4/Y (BUFX4)
+                                                      0.027844   0.314477 r
+  async_fifo_inst/read_ptr_inst/wptr_gray_to_bin/bin[1] (gray2bin_WIDTH4_0)
+                                                      0.000000   0.314477 r
+  async_fifo_inst/read_ptr_inst/U15/Y (OR2X1)         0.052585   0.367063 r
+  async_fifo_inst/read_ptr_inst/U52/Y (INVX1)         0.020407   0.387470 f
+  async_fifo_inst/read_ptr_inst/U37/Y (AOI22X1)       0.032841   0.420310 r
+  async_fifo_inst/read_ptr_inst/U50/Y (BUFX2)         0.048006   0.468316 r
+  async_fifo_inst/read_ptr_inst/U36/YS (FAX1)         0.086502   0.554818 f
+  async_fifo_inst/read_ptr_inst/U35/Y (NOR3X1)        0.023372   0.578191 r
+  async_fifo_inst/read_ptr_inst/almost_empty_reg/D (DFFSR)
+                                                      0.000000   0.578191 r
+  data arrival time                                              0.578191
+
+  clock r_clk (rise edge)                             0.666667   0.666667
+  clock network delay (ideal)                         0.000000   0.666667
+  async_fifo_inst/read_ptr_inst/almost_empty_reg/CLK (DFFSR)
+                                                      0.000000   0.666667 r
+  library setup time                                  -0.087190  0.579477
+  data required time                                             0.579477
+  --------------------------------------------------------------------------
+  data required time                                             0.579477
+  data arrival time                                              -0.578191
+  --------------------------------------------------------------------------
+  slack (MET)                                                    0.001286
+
+
+  Startpoint: async_fifo_inst/read_ptr_inst/rptr_bin_reg[1]
+              (rising edge-triggered flip-flop clocked by r_clk)
+  Endpoint: async_fifo_inst/fifo_mem_inst/r_data_reg[7]
+            (rising edge-triggered flip-flop clocked by r_clk)
+  Path Group: r_clk
+  Path Type: max
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock r_clk (rise edge)                             0.000000   0.000000
+  clock network delay (ideal)                         0.000000   0.000000
+  async_fifo_inst/read_ptr_inst/rptr_bin_reg[1]/CLK (DFFSR)
+                                                      0.000000   0.000000 r
+  async_fifo_inst/read_ptr_inst/rptr_bin_reg[1]/Q (DFFSR)
+                                                      0.108832   0.108832 r
+  async_fifo_inst/read_ptr_inst/U59/Y (BUFX2)         0.054305   0.163137 r
+  async_fifo_inst/read_ptr_inst/r_addr[1] (read_ptr_DEPTH8_ADDR_WIDTH3_PTR_WIDTH4_ALMOST_EMPTY_LEVEL2)
+                                                      0.000000   0.163137 r
+  async_fifo_inst/fifo_mem_inst/r_addr[1] (fifo_mem_DATA_WIDTH8_ADDR_WIDTH3_DEPTH8)
+                                                      0.000000   0.163137 r
+  async_fifo_inst/fifo_mem_inst/U298/Y (INVX1)        0.027546   0.190683 f
+  async_fifo_inst/fifo_mem_inst/U8/Y (AND2X1)         0.045855   0.236538 f
+  async_fifo_inst/fifo_mem_inst/U286/Y (BUFX2)        0.055141   0.291679 f
+  async_fifo_inst/fifo_mem_inst/U362/Y (AOI22X1)      0.042925   0.334604 r
+  async_fifo_inst/fifo_mem_inst/U153/Y (BUFX2)        0.036359   0.370963 r
+  async_fifo_inst/fifo_mem_inst/U364/Y (AOI21X1)      0.014728   0.385691 f
+  async_fifo_inst/fifo_mem_inst/U152/Y (BUFX2)        0.033919   0.419610 f
+  async_fifo_inst/fifo_mem_inst/U26/Y (OR2X1)         0.048500   0.468110 f
+  async_fifo_inst/fifo_mem_inst/U17/Y (AOI22X1)       0.046194   0.514304 r
+  async_fifo_inst/fifo_mem_inst/U32/Y (BUFX2)         0.034567   0.548870 r
+  async_fifo_inst/fifo_mem_inst/U296/Y (INVX1)        0.013583   0.562453 f
+  async_fifo_inst/fifo_mem_inst/r_data_reg[7]/D (DFFPOSX1)
+                                                      0.000000   0.562453 f
+  data arrival time                                              0.562453
+
+  clock r_clk (rise edge)                             0.666667   0.666667
+  clock network delay (ideal)                         0.000000   0.666667
+  async_fifo_inst/fifo_mem_inst/r_data_reg[7]/CLK (DFFPOSX1)
+                                                      0.000000   0.666667 r
+  library setup time                                  -0.056577  0.610090
+  data required time                                             0.610090
+  --------------------------------------------------------------------------
+  data required time                                             0.610090
+  data arrival time                                              -0.562453
+  --------------------------------------------------------------------------
+  slack (MET)                                                    0.047637
+
+
+  Startpoint: async_fifo_inst/read_ptr_inst/rptr_bin_reg[1]
+              (rising edge-triggered flip-flop clocked by r_clk)
+  Endpoint: async_fifo_inst/fifo_mem_inst/r_data_reg[6]
+            (rising edge-triggered flip-flop clocked by r_clk)
+  Path Group: r_clk
+  Path Type: max
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock r_clk (rise edge)                             0.000000   0.000000
+  clock network delay (ideal)                         0.000000   0.000000
+  async_fifo_inst/read_ptr_inst/rptr_bin_reg[1]/CLK (DFFSR)
+                                                      0.000000   0.000000 r
+  async_fifo_inst/read_ptr_inst/rptr_bin_reg[1]/Q (DFFSR)
+                                                      0.108832   0.108832 r
+  async_fifo_inst/read_ptr_inst/U59/Y (BUFX2)         0.054305   0.163137 r
+  async_fifo_inst/read_ptr_inst/r_addr[1] (read_ptr_DEPTH8_ADDR_WIDTH3_PTR_WIDTH4_ALMOST_EMPTY_LEVEL2)
+                                                      0.000000   0.163137 r
+  async_fifo_inst/fifo_mem_inst/r_addr[1] (fifo_mem_DATA_WIDTH8_ADDR_WIDTH3_DEPTH8)
+                                                      0.000000   0.163137 r
+  async_fifo_inst/fifo_mem_inst/U298/Y (INVX1)        0.027546   0.190683 f
+  async_fifo_inst/fifo_mem_inst/U8/Y (AND2X1)         0.045855   0.236538 f
+  async_fifo_inst/fifo_mem_inst/U286/Y (BUFX2)        0.055141   0.291679 f
+  async_fifo_inst/fifo_mem_inst/U356/Y (AOI22X1)      0.042925   0.334604 r
+  async_fifo_inst/fifo_mem_inst/U174/Y (BUFX2)        0.036359   0.370963 r
+  async_fifo_inst/fifo_mem_inst/U358/Y (AOI21X1)      0.014728   0.385691 f
+  async_fifo_inst/fifo_mem_inst/U173/Y (BUFX2)        0.033919   0.419610 f
+  async_fifo_inst/fifo_mem_inst/U24/Y (OR2X1)         0.048500   0.468110 f
+  async_fifo_inst/fifo_mem_inst/U15/Y (AOI22X1)       0.046194   0.514304 r
+  async_fifo_inst/fifo_mem_inst/U34/Y (BUFX2)         0.034567   0.548870 r
+  async_fifo_inst/fifo_mem_inst/U295/Y (INVX1)        0.013583   0.562453 f
+  async_fifo_inst/fifo_mem_inst/r_data_reg[6]/D (DFFPOSX1)
+                                                      0.000000   0.562453 f
+  data arrival time                                              0.562453
+
+  clock r_clk (rise edge)                             0.666667   0.666667
+  clock network delay (ideal)                         0.000000   0.666667
+  async_fifo_inst/fifo_mem_inst/r_data_reg[6]/CLK (DFFPOSX1)
+                                                      0.000000   0.666667 r
+  library setup time                                  -0.056577  0.610090
+  data required time                                             0.610090
+  --------------------------------------------------------------------------
+  data required time                                             0.610090
+  data arrival time                                              -0.562453
+  --------------------------------------------------------------------------
+  slack (MET)                                                    0.047637
+
+
+  Startpoint: async_fifo_inst/read_ptr_inst/rptr_bin_reg[1]
+              (rising edge-triggered flip-flop clocked by r_clk)
+  Endpoint: async_fifo_inst/fifo_mem_inst/r_data_reg[5]
+            (rising edge-triggered flip-flop clocked by r_clk)
+  Path Group: r_clk
+  Path Type: max
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock r_clk (rise edge)                             0.000000   0.000000
+  clock network delay (ideal)                         0.000000   0.000000
+  async_fifo_inst/read_ptr_inst/rptr_bin_reg[1]/CLK (DFFSR)
+                                                      0.000000   0.000000 r
+  async_fifo_inst/read_ptr_inst/rptr_bin_reg[1]/Q (DFFSR)
+                                                      0.108832   0.108832 r
+  async_fifo_inst/read_ptr_inst/U59/Y (BUFX2)         0.054305   0.163137 r
+  async_fifo_inst/read_ptr_inst/r_addr[1] (read_ptr_DEPTH8_ADDR_WIDTH3_PTR_WIDTH4_ALMOST_EMPTY_LEVEL2)
+                                                      0.000000   0.163137 r
+  async_fifo_inst/fifo_mem_inst/r_addr[1] (fifo_mem_DATA_WIDTH8_ADDR_WIDTH3_DEPTH8)
+                                                      0.000000   0.163137 r
+  async_fifo_inst/fifo_mem_inst/U298/Y (INVX1)        0.027546   0.190683 f
+  async_fifo_inst/fifo_mem_inst/U8/Y (AND2X1)         0.045855   0.236538 f
+  async_fifo_inst/fifo_mem_inst/U286/Y (BUFX2)        0.055141   0.291679 f
+  async_fifo_inst/fifo_mem_inst/U350/Y (AOI22X1)      0.042925   0.334604 r
+  async_fifo_inst/fifo_mem_inst/U193/Y (BUFX2)        0.036359   0.370963 r
+  async_fifo_inst/fifo_mem_inst/U352/Y (AOI21X1)      0.014728   0.385691 f
+  async_fifo_inst/fifo_mem_inst/U192/Y (BUFX2)        0.033919   0.419610 f
+  async_fifo_inst/fifo_mem_inst/U22/Y (OR2X1)         0.048500   0.468110 f
+  async_fifo_inst/fifo_mem_inst/U13/Y (AOI22X1)       0.046194   0.514304 r
+  async_fifo_inst/fifo_mem_inst/U37/Y (BUFX2)         0.034567   0.548870 r
+  async_fifo_inst/fifo_mem_inst/U294/Y (INVX1)        0.013583   0.562453 f
+  async_fifo_inst/fifo_mem_inst/r_data_reg[5]/D (DFFPOSX1)
+                                                      0.000000   0.562453 f
+  data arrival time                                              0.562453
+
+  clock r_clk (rise edge)                             0.666667   0.666667
+  clock network delay (ideal)                         0.000000   0.666667
+  async_fifo_inst/fifo_mem_inst/r_data_reg[5]/CLK (DFFPOSX1)
+                                                      0.000000   0.666667 r
+  library setup time                                  -0.056577  0.610090
+  data required time                                             0.610090
+  --------------------------------------------------------------------------
+  data required time                                             0.610090
+  data arrival time                                              -0.562453
+  --------------------------------------------------------------------------
+  slack (MET)                                                    0.047637
+
+
+  Startpoint: async_fifo_inst/read_ptr_inst/rptr_bin_reg[1]
+              (rising edge-triggered flip-flop clocked by r_clk)
+  Endpoint: async_fifo_inst/fifo_mem_inst/r_data_reg[4]
+            (rising edge-triggered flip-flop clocked by r_clk)
+  Path Group: r_clk
+  Path Type: max
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock r_clk (rise edge)                             0.000000   0.000000
+  clock network delay (ideal)                         0.000000   0.000000
+  async_fifo_inst/read_ptr_inst/rptr_bin_reg[1]/CLK (DFFSR)
+                                                      0.000000   0.000000 r
+  async_fifo_inst/read_ptr_inst/rptr_bin_reg[1]/Q (DFFSR)
+                                                      0.108832   0.108832 r
+  async_fifo_inst/read_ptr_inst/U59/Y (BUFX2)         0.054305   0.163137 r
+  async_fifo_inst/read_ptr_inst/r_addr[1] (read_ptr_DEPTH8_ADDR_WIDTH3_PTR_WIDTH4_ALMOST_EMPTY_LEVEL2)
+                                                      0.000000   0.163137 r
+  async_fifo_inst/fifo_mem_inst/r_addr[1] (fifo_mem_DATA_WIDTH8_ADDR_WIDTH3_DEPTH8)
+                                                      0.000000   0.163137 r
+  async_fifo_inst/fifo_mem_inst/U298/Y (INVX1)        0.027546   0.190683 f
+  async_fifo_inst/fifo_mem_inst/U8/Y (AND2X1)         0.045855   0.236538 f
+  async_fifo_inst/fifo_mem_inst/U286/Y (BUFX2)        0.055141   0.291679 f
+  async_fifo_inst/fifo_mem_inst/U344/Y (AOI22X1)      0.042925   0.334604 r
+  async_fifo_inst/fifo_mem_inst/U210/Y (BUFX2)        0.036359   0.370963 r
+  async_fifo_inst/fifo_mem_inst/U346/Y (AOI21X1)      0.014728   0.385691 f
+  async_fifo_inst/fifo_mem_inst/U209/Y (BUFX2)        0.033919   0.419610 f
+  async_fifo_inst/fifo_mem_inst/U20/Y (OR2X1)         0.048500   0.468110 f
+  async_fifo_inst/fifo_mem_inst/U11/Y (AOI22X1)       0.046194   0.514304 r
+  async_fifo_inst/fifo_mem_inst/U39/Y (BUFX2)         0.034567   0.548870 r
+  async_fifo_inst/fifo_mem_inst/U293/Y (INVX1)        0.013583   0.562453 f
+  async_fifo_inst/fifo_mem_inst/r_data_reg[4]/D (DFFPOSX1)
+                                                      0.000000   0.562453 f
+  data arrival time                                              0.562453
+
+  clock r_clk (rise edge)                             0.666667   0.666667
+  clock network delay (ideal)                         0.000000   0.666667
+  async_fifo_inst/fifo_mem_inst/r_data_reg[4]/CLK (DFFPOSX1)
+                                                      0.000000   0.666667 r
+  library setup time                                  -0.056577  0.610090
+  data required time                                             0.610090
+  --------------------------------------------------------------------------
+  data required time                                             0.610090
+  data arrival time                                              -0.562453
+  --------------------------------------------------------------------------
+  slack (MET)                                                    0.047637
+
+
+  Startpoint: async_fifo_inst/read_ptr_inst/rptr_bin_reg[1]
+              (rising edge-triggered flip-flop clocked by r_clk)
+  Endpoint: async_fifo_inst/fifo_mem_inst/r_data_reg[3]
+            (rising edge-triggered flip-flop clocked by r_clk)
+  Path Group: r_clk
+  Path Type: max
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock r_clk (rise edge)                             0.000000   0.000000
+  clock network delay (ideal)                         0.000000   0.000000
+  async_fifo_inst/read_ptr_inst/rptr_bin_reg[1]/CLK (DFFSR)
+                                                      0.000000   0.000000 r
+  async_fifo_inst/read_ptr_inst/rptr_bin_reg[1]/Q (DFFSR)
+                                                      0.108832   0.108832 r
+  async_fifo_inst/read_ptr_inst/U59/Y (BUFX2)         0.054305   0.163137 r
+  async_fifo_inst/read_ptr_inst/r_addr[1] (read_ptr_DEPTH8_ADDR_WIDTH3_PTR_WIDTH4_ALMOST_EMPTY_LEVEL2)
+                                                      0.000000   0.163137 r
+  async_fifo_inst/fifo_mem_inst/r_addr[1] (fifo_mem_DATA_WIDTH8_ADDR_WIDTH3_DEPTH8)
+                                                      0.000000   0.163137 r
+  async_fifo_inst/fifo_mem_inst/U298/Y (INVX1)        0.027546   0.190683 f
+  async_fifo_inst/fifo_mem_inst/U8/Y (AND2X1)         0.045855   0.236538 f
+  async_fifo_inst/fifo_mem_inst/U285/Y (BUFX2)        0.055141   0.291679 f
+  async_fifo_inst/fifo_mem_inst/U338/Y (AOI22X1)      0.042925   0.334604 r
+  async_fifo_inst/fifo_mem_inst/U227/Y (BUFX2)        0.036359   0.370963 r
+  async_fifo_inst/fifo_mem_inst/U340/Y (AOI21X1)      0.014728   0.385691 f
+  async_fifo_inst/fifo_mem_inst/U226/Y (BUFX2)        0.033919   0.419610 f
+  async_fifo_inst/fifo_mem_inst/U18/Y (OR2X1)         0.048500   0.468110 f
+  async_fifo_inst/fifo_mem_inst/U9/Y (AOI22X1)        0.046194   0.514304 r
+  async_fifo_inst/fifo_mem_inst/U41/Y (BUFX2)         0.034567   0.548870 r
+  async_fifo_inst/fifo_mem_inst/U292/Y (INVX1)        0.013583   0.562453 f
+  async_fifo_inst/fifo_mem_inst/r_data_reg[3]/D (DFFPOSX1)
+                                                      0.000000   0.562453 f
+  data arrival time                                              0.562453
+
+  clock r_clk (rise edge)                             0.666667   0.666667
+  clock network delay (ideal)                         0.000000   0.666667
+  async_fifo_inst/fifo_mem_inst/r_data_reg[3]/CLK (DFFPOSX1)
+                                                      0.000000   0.666667 r
+  library setup time                                  -0.056577  0.610090
+  data required time                                             0.610090
+  --------------------------------------------------------------------------
+  data required time                                             0.610090
+  data arrival time                                              -0.562453
+  --------------------------------------------------------------------------
+  slack (MET)                                                    0.047637
+
+
+  Startpoint: async_fifo_inst/read_ptr_inst/rptr_bin_reg[1]
+              (rising edge-triggered flip-flop clocked by r_clk)
+  Endpoint: async_fifo_inst/fifo_mem_inst/r_data_reg[2]
+            (rising edge-triggered flip-flop clocked by r_clk)
+  Path Group: r_clk
+  Path Type: max
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock r_clk (rise edge)                             0.000000   0.000000
+  clock network delay (ideal)                         0.000000   0.000000
+  async_fifo_inst/read_ptr_inst/rptr_bin_reg[1]/CLK (DFFSR)
+                                                      0.000000   0.000000 r
+  async_fifo_inst/read_ptr_inst/rptr_bin_reg[1]/Q (DFFSR)
+                                                      0.108832   0.108832 r
+  async_fifo_inst/read_ptr_inst/U59/Y (BUFX2)         0.054305   0.163137 r
+  async_fifo_inst/read_ptr_inst/r_addr[1] (read_ptr_DEPTH8_ADDR_WIDTH3_PTR_WIDTH4_ALMOST_EMPTY_LEVEL2)
+                                                      0.000000   0.163137 r
+  async_fifo_inst/fifo_mem_inst/r_addr[1] (fifo_mem_DATA_WIDTH8_ADDR_WIDTH3_DEPTH8)
+                                                      0.000000   0.163137 r
+  async_fifo_inst/fifo_mem_inst/U298/Y (INVX1)        0.027546   0.190683 f
+  async_fifo_inst/fifo_mem_inst/U8/Y (AND2X1)         0.045855   0.236538 f
+  async_fifo_inst/fifo_mem_inst/U285/Y (BUFX2)        0.055141   0.291679 f
+  async_fifo_inst/fifo_mem_inst/U332/Y (AOI22X1)      0.042925   0.334604 r
+  async_fifo_inst/fifo_mem_inst/U244/Y (BUFX2)        0.036359   0.370963 r
+  async_fifo_inst/fifo_mem_inst/U334/Y (AOI21X1)      0.014728   0.385691 f
+  async_fifo_inst/fifo_mem_inst/U243/Y (BUFX2)        0.033919   0.419610 f
+  async_fifo_inst/fifo_mem_inst/U16/Y (OR2X1)         0.048500   0.468110 f
+  async_fifo_inst/fifo_mem_inst/U7/Y (AOI22X1)        0.046194   0.514304 r
+  async_fifo_inst/fifo_mem_inst/U43/Y (BUFX2)         0.034567   0.548870 r
+  async_fifo_inst/fifo_mem_inst/U291/Y (INVX1)        0.013583   0.562453 f
+  async_fifo_inst/fifo_mem_inst/r_data_reg[2]/D (DFFPOSX1)
+                                                      0.000000   0.562453 f
+  data arrival time                                              0.562453
+
+  clock r_clk (rise edge)                             0.666667   0.666667
+  clock network delay (ideal)                         0.000000   0.666667
+  async_fifo_inst/fifo_mem_inst/r_data_reg[2]/CLK (DFFPOSX1)
+                                                      0.000000   0.666667 r
+  library setup time                                  -0.056577  0.610090
+  data required time                                             0.610090
+  --------------------------------------------------------------------------
+  data required time                                             0.610090
+  data arrival time                                              -0.562453
+  --------------------------------------------------------------------------
+  slack (MET)                                                    0.047637
+
+
+  Startpoint: async_fifo_inst/read_ptr_inst/rptr_bin_reg[1]
+              (rising edge-triggered flip-flop clocked by r_clk)
+  Endpoint: async_fifo_inst/fifo_mem_inst/r_data_reg[1]
+            (rising edge-triggered flip-flop clocked by r_clk)
+  Path Group: r_clk
+  Path Type: max
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock r_clk (rise edge)                             0.000000   0.000000
+  clock network delay (ideal)                         0.000000   0.000000
+  async_fifo_inst/read_ptr_inst/rptr_bin_reg[1]/CLK (DFFSR)
+                                                      0.000000   0.000000 r
+  async_fifo_inst/read_ptr_inst/rptr_bin_reg[1]/Q (DFFSR)
+                                                      0.108832   0.108832 r
+  async_fifo_inst/read_ptr_inst/U59/Y (BUFX2)         0.054305   0.163137 r
+  async_fifo_inst/read_ptr_inst/r_addr[1] (read_ptr_DEPTH8_ADDR_WIDTH3_PTR_WIDTH4_ALMOST_EMPTY_LEVEL2)
+                                                      0.000000   0.163137 r
+  async_fifo_inst/fifo_mem_inst/r_addr[1] (fifo_mem_DATA_WIDTH8_ADDR_WIDTH3_DEPTH8)
+                                                      0.000000   0.163137 r
+  async_fifo_inst/fifo_mem_inst/U298/Y (INVX1)        0.027546   0.190683 f
+  async_fifo_inst/fifo_mem_inst/U8/Y (AND2X1)         0.045855   0.236538 f
+  async_fifo_inst/fifo_mem_inst/U285/Y (BUFX2)        0.055141   0.291679 f
+  async_fifo_inst/fifo_mem_inst/U326/Y (AOI22X1)      0.042925   0.334604 r
+  async_fifo_inst/fifo_mem_inst/U261/Y (BUFX2)        0.036359   0.370963 r
+  async_fifo_inst/fifo_mem_inst/U328/Y (AOI21X1)      0.014728   0.385691 f
+  async_fifo_inst/fifo_mem_inst/U260/Y (BUFX2)        0.033919   0.419610 f
+  async_fifo_inst/fifo_mem_inst/U14/Y (OR2X1)         0.048500   0.468110 f
+  async_fifo_inst/fifo_mem_inst/U5/Y (AOI22X1)        0.046194   0.514304 r
+  async_fifo_inst/fifo_mem_inst/U45/Y (BUFX2)         0.034567   0.548870 r
+  async_fifo_inst/fifo_mem_inst/U290/Y (INVX1)        0.013583   0.562453 f
+  async_fifo_inst/fifo_mem_inst/r_data_reg[1]/D (DFFPOSX1)
+                                                      0.000000   0.562453 f
+  data arrival time                                              0.562453
+
+  clock r_clk (rise edge)                             0.666667   0.666667
+  clock network delay (ideal)                         0.000000   0.666667
+  async_fifo_inst/fifo_mem_inst/r_data_reg[1]/CLK (DFFPOSX1)
+                                                      0.000000   0.666667 r
+  library setup time                                  -0.056577  0.610090
+  data required time                                             0.610090
+  --------------------------------------------------------------------------
+  data required time                                             0.610090
+  data arrival time                                              -0.562453
+  --------------------------------------------------------------------------
+  slack (MET)                                                    0.047637
+
+
+  Startpoint: async_fifo_inst/read_ptr_inst/rptr_bin_reg[1]
+              (rising edge-triggered flip-flop clocked by r_clk)
+  Endpoint: async_fifo_inst/fifo_mem_inst/r_data_reg[0]
+            (rising edge-triggered flip-flop clocked by r_clk)
+  Path Group: r_clk
+  Path Type: max
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock r_clk (rise edge)                             0.000000   0.000000
+  clock network delay (ideal)                         0.000000   0.000000
+  async_fifo_inst/read_ptr_inst/rptr_bin_reg[1]/CLK (DFFSR)
+                                                      0.000000   0.000000 r
+  async_fifo_inst/read_ptr_inst/rptr_bin_reg[1]/Q (DFFSR)
+                                                      0.108832   0.108832 r
+  async_fifo_inst/read_ptr_inst/U59/Y (BUFX2)         0.054305   0.163137 r
+  async_fifo_inst/read_ptr_inst/r_addr[1] (read_ptr_DEPTH8_ADDR_WIDTH3_PTR_WIDTH4_ALMOST_EMPTY_LEVEL2)
+                                                      0.000000   0.163137 r
+  async_fifo_inst/fifo_mem_inst/r_addr[1] (fifo_mem_DATA_WIDTH8_ADDR_WIDTH3_DEPTH8)
+                                                      0.000000   0.163137 r
+  async_fifo_inst/fifo_mem_inst/U298/Y (INVX1)        0.027546   0.190683 f
+  async_fifo_inst/fifo_mem_inst/U8/Y (AND2X1)         0.045855   0.236538 f
+  async_fifo_inst/fifo_mem_inst/U285/Y (BUFX2)        0.055141   0.291679 f
+  async_fifo_inst/fifo_mem_inst/U320/Y (AOI22X1)      0.042925   0.334604 r
+  async_fifo_inst/fifo_mem_inst/U280/Y (BUFX2)        0.036359   0.370963 r
+  async_fifo_inst/fifo_mem_inst/U322/Y (AOI21X1)      0.014728   0.385691 f
+  async_fifo_inst/fifo_mem_inst/U279/Y (BUFX2)        0.033919   0.419610 f
+  async_fifo_inst/fifo_mem_inst/U49/Y (OR2X1)         0.048637   0.468247 f
+  async_fifo_inst/fifo_mem_inst/U3/Y (AOI22X1)        0.038454   0.506701 r
+  async_fifo_inst/fifo_mem_inst/U47/Y (BUFX2)         0.034491   0.541191 r
+  async_fifo_inst/fifo_mem_inst/U297/Y (INVX1)        0.013550   0.554741 f
+  async_fifo_inst/fifo_mem_inst/r_data_reg[0]/D (DFFPOSX1)
+                                                      0.000000   0.554741 f
+  data arrival time                                              0.554741
+
+  clock r_clk (rise edge)                             0.666667   0.666667
+  clock network delay (ideal)                         0.000000   0.666667
+  async_fifo_inst/fifo_mem_inst/r_data_reg[0]/CLK (DFFPOSX1)
+                                                      0.000000   0.666667 r
+  library setup time                                  -0.056579  0.610088
+  data required time                                             0.610088
+  --------------------------------------------------------------------------
+  data required time                                             0.610088
+  data arrival time                                              -0.554741
+  --------------------------------------------------------------------------
+  slack (MET)                                                    0.055347
+
+
+  Startpoint: async_fifo_inst/write_ptr_inst/full_reg
+              (rising edge-triggered flip-flop clocked by w_clk)
+  Endpoint: async_fifo_inst/write_ptr_inst/full_reg
+            (rising edge-triggered flip-flop clocked by w_clk)
+  Path Group: w_clk
+  Path Type: max
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock w_clk (rise edge)                             0.000000   0.000000
+  clock network delay (ideal)                         0.000000   0.000000
+  async_fifo_inst/write_ptr_inst/full_reg/CLK (DFFSR) 0.000000   0.000000 r
+  async_fifo_inst/write_ptr_inst/full_reg/Q (DFFSR)   0.108832   0.108832 r
+  async_fifo_inst/write_ptr_inst/U46/Y (BUFX2)        0.035569   0.144401 r
+  async_fifo_inst/write_ptr_inst/full (write_ptr_DEPTH8_ADDR_WIDTH3_PTR_WIDTH4_ALMOST_FULL_LEVEL6)
+                                                      0.000000   0.144401 r
+  async_fifo_inst/U2/Y (OR2X1)                        0.041278   0.185679 r
+  async_fifo_inst/U3/Y (INVX1)                        0.025910   0.211589 f
+  async_fifo_inst/write_ptr_inst/write_en (write_ptr_DEPTH8_ADDR_WIDTH3_PTR_WIDTH4_ALMOST_FULL_LEVEL6)
+                                                      0.000000   0.211589 f
+  async_fifo_inst/write_ptr_inst/U28/Y (INVX1)        0.001895   0.213483 r
+  async_fifo_inst/write_ptr_inst/U33/Y (INVX1)        0.015279   0.228762 f
+  async_fifo_inst/write_ptr_inst/U51/Y (AND2X2)       0.040571   0.269334 f
+  async_fifo_inst/write_ptr_inst/U84/Y (OAI21X1)      0.039169   0.308502 r
+  async_fifo_inst/write_ptr_inst/U45/Y (INVX2)        0.022692   0.331195 f
+  async_fifo_inst/write_ptr_inst/U44/Y (INVX1)        0.010008   0.341202 r
+  async_fifo_inst/write_ptr_inst/U23/Y (INVX1)        0.032290   0.373492 f
+  async_fifo_inst/write_ptr_inst/wptr_bin_to_gray/bin[1] (bin2gray_WIDTH4_1)
+                                                      0.000000   0.373492 f
+  async_fifo_inst/write_ptr_inst/wptr_bin_to_gray/U2/Y (XOR2X1)
+                                                      0.065921   0.439413 r
+  async_fifo_inst/write_ptr_inst/wptr_bin_to_gray/gray[1] (bin2gray_WIDTH4_1)
+                                                      0.000000   0.439413 r
+  async_fifo_inst/write_ptr_inst/U35/Y (XNOR2X1)      0.041288   0.480701 r
+  async_fifo_inst/write_ptr_inst/U20/Y (AND2X1)       0.028138   0.508839 r
+  async_fifo_inst/write_ptr_inst/U50/Y (INVX1)        0.021936   0.530774 f
+  async_fifo_inst/write_ptr_inst/U30/Y (NOR3X1)       0.047812   0.578586 r
+  async_fifo_inst/write_ptr_inst/full_reg/D (DFFSR)   0.000000   0.578586 r
+  data arrival time                                              0.578586
+
+  clock w_clk (rise edge)                             0.666667   0.666667
+  clock network delay (ideal)                         0.000000   0.666667
+  async_fifo_inst/write_ptr_inst/full_reg/CLK (DFFSR) 0.000000   0.666667 r
+  library setup time                                  -0.087127  0.579539
+  data required time                                             0.579539
+  --------------------------------------------------------------------------
+  data required time                                             0.579539
+  data arrival time                                              -0.578586
+  --------------------------------------------------------------------------
+  slack (MET)                                                    0.000953
+
+
+  Startpoint: async_fifo_inst/write_ptr_inst/full_reg
+              (rising edge-triggered flip-flop clocked by w_clk)
+  Endpoint: async_fifo_inst/write_ptr_inst/almost_full_reg
+            (rising edge-triggered flip-flop clocked by w_clk)
+  Path Group: w_clk
+  Path Type: max
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock w_clk (rise edge)                             0.000000   0.000000
+  clock network delay (ideal)                         0.000000   0.000000
+  async_fifo_inst/write_ptr_inst/full_reg/CLK (DFFSR) 0.000000   0.000000 r
+  async_fifo_inst/write_ptr_inst/full_reg/Q (DFFSR)   0.108832   0.108832 r
+  async_fifo_inst/write_ptr_inst/U46/Y (BUFX2)        0.035569   0.144401 r
+  async_fifo_inst/write_ptr_inst/full (write_ptr_DEPTH8_ADDR_WIDTH3_PTR_WIDTH4_ALMOST_FULL_LEVEL6)
+                                                      0.000000   0.144401 r
+  async_fifo_inst/U2/Y (OR2X1)                        0.041278   0.185679 r
+  async_fifo_inst/U3/Y (INVX1)                        0.025910   0.211589 f
+  async_fifo_inst/write_ptr_inst/write_en (write_ptr_DEPTH8_ADDR_WIDTH3_PTR_WIDTH4_ALMOST_FULL_LEVEL6)
+                                                      0.000000   0.211589 f
+  async_fifo_inst/write_ptr_inst/U28/Y (INVX1)        0.001895   0.213483 r
+  async_fifo_inst/write_ptr_inst/U33/Y (INVX1)        0.015279   0.228762 f
+  async_fifo_inst/write_ptr_inst/U51/Y (AND2X2)       0.040571   0.269334 f
+  async_fifo_inst/write_ptr_inst/U84/Y (OAI21X1)      0.039169   0.308502 r
+  async_fifo_inst/write_ptr_inst/U45/Y (INVX2)        0.022692   0.331195 f
+  async_fifo_inst/write_ptr_inst/U86/Y (AOI21X1)      0.035447   0.366641 r
+  async_fifo_inst/write_ptr_inst/U49/Y (BUFX2)        0.034117   0.400759 r
+  async_fifo_inst/write_ptr_inst/U87/Y (AOI21X1)      0.009445   0.410203 f
+  async_fifo_inst/write_ptr_inst/U47/Y (BUFX2)        0.041822   0.452025 f
+  async_fifo_inst/write_ptr_inst/U90/Y (AOI22X1)      0.038024   0.490049 r
+  async_fifo_inst/write_ptr_inst/U61/Y (BUFX2)        0.040467   0.530516 r
+  async_fifo_inst/write_ptr_inst/U91/Y (XOR2X1)       0.029058   0.559574 f
+  async_fifo_inst/write_ptr_inst/U92/Y (OAI21X1)      0.020320   0.579894 r
+  async_fifo_inst/write_ptr_inst/almost_full_reg/D (DFFSR)
+                                                      0.000000   0.579894 r
+  data arrival time                                              0.579894
+
+  clock w_clk (rise edge)                             0.666667   0.666667
+  clock network delay (ideal)                         0.000000   0.666667
+  async_fifo_inst/write_ptr_inst/almost_full_reg/CLK (DFFSR)
+                                                      0.000000   0.666667 r
+  library setup time                                  -0.084400  0.582266
+  data required time                                             0.582266
+  --------------------------------------------------------------------------
+  data required time                                             0.582266
+  data arrival time                                              -0.579894
+  --------------------------------------------------------------------------
+  slack (MET)                                                    0.002372
+
+
+  Startpoint: async_fifo_inst/write_ptr_inst/full_reg
+              (rising edge-triggered flip-flop clocked by w_clk)
+  Endpoint: async_fifo_inst/write_ptr_inst/wptr_gray_reg[2]
+            (rising edge-triggered flip-flop clocked by w_clk)
+  Path Group: w_clk
+  Path Type: max
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock w_clk (rise edge)                             0.000000   0.000000
+  clock network delay (ideal)                         0.000000   0.000000
+  async_fifo_inst/write_ptr_inst/full_reg/CLK (DFFSR) 0.000000   0.000000 r
+  async_fifo_inst/write_ptr_inst/full_reg/Q (DFFSR)   0.108832   0.108832 r
+  async_fifo_inst/write_ptr_inst/U46/Y (BUFX2)        0.035569   0.144401 r
+  async_fifo_inst/write_ptr_inst/full (write_ptr_DEPTH8_ADDR_WIDTH3_PTR_WIDTH4_ALMOST_FULL_LEVEL6)
+                                                      0.000000   0.144401 r
+  async_fifo_inst/U2/Y (OR2X1)                        0.041278   0.185679 r
+  async_fifo_inst/U3/Y (INVX1)                        0.025910   0.211589 f
+  async_fifo_inst/write_ptr_inst/write_en (write_ptr_DEPTH8_ADDR_WIDTH3_PTR_WIDTH4_ALMOST_FULL_LEVEL6)
+                                                      0.000000   0.211589 f
+  async_fifo_inst/write_ptr_inst/U28/Y (INVX1)        0.001895   0.213483 r
+  async_fifo_inst/write_ptr_inst/U33/Y (INVX1)        0.015279   0.228762 f
+  async_fifo_inst/write_ptr_inst/U36/Y (INVX1)        0.000737   0.229500 r
+  async_fifo_inst/write_ptr_inst/U37/Y (INVX1)        0.013849   0.243349 f
+  async_fifo_inst/write_ptr_inst/U29/Y (NAND3X1)      0.031184   0.274533 r
+  async_fifo_inst/write_ptr_inst/U58/Y (BUFX2)        0.034864   0.309397 r
+  async_fifo_inst/write_ptr_inst/U52/Y (AND2X1)       0.028419   0.337816 r
+  async_fifo_inst/write_ptr_inst/U53/Y (INVX1)        0.019480   0.357296 f
+  async_fifo_inst/write_ptr_inst/U21/Y (AND2X1)       0.041991   0.399286 f
+  async_fifo_inst/write_ptr_inst/U65/Y (INVX1)        0.042188   0.441475 r
+  async_fifo_inst/write_ptr_inst/wptr_bin_to_gray/bin[3] (bin2gray_WIDTH4_1)
+                                                      0.000000   0.441475 r
+  async_fifo_inst/write_ptr_inst/wptr_bin_to_gray/U1/Y (XOR2X1)
+                                                      0.052164   0.493639 r
+  async_fifo_inst/write_ptr_inst/wptr_bin_to_gray/gray[2] (bin2gray_WIDTH4_1)
+                                                      0.000000   0.493639 r
+  async_fifo_inst/write_ptr_inst/wptr_gray_reg[2]/D (DFFSR)
+                                                      0.000000   0.493639 r
+  data arrival time                                              0.493639
+
+  clock w_clk (rise edge)                             0.666667   0.666667
+  clock network delay (ideal)                         0.000000   0.666667
+  async_fifo_inst/write_ptr_inst/wptr_gray_reg[2]/CLK (DFFSR)
+                                                      0.000000   0.666667 r
+  library setup time                                  -0.092198  0.574469
+  data required time                                             0.574469
+  --------------------------------------------------------------------------
+  data required time                                             0.574469
+  data arrival time                                              -0.493639
+  --------------------------------------------------------------------------
+  slack (MET)                                                    0.080830
+
+
+  Startpoint: async_fifo_inst/write_ptr_inst/full_reg
+              (rising edge-triggered flip-flop clocked by w_clk)
+  Endpoint: async_fifo_inst/write_ptr_inst/wptr_gray_reg[1]
+            (rising edge-triggered flip-flop clocked by w_clk)
+  Path Group: w_clk
+  Path Type: max
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock w_clk (rise edge)                             0.000000   0.000000
+  clock network delay (ideal)                         0.000000   0.000000
+  async_fifo_inst/write_ptr_inst/full_reg/CLK (DFFSR) 0.000000   0.000000 r
+  async_fifo_inst/write_ptr_inst/full_reg/Q (DFFSR)   0.108832   0.108832 r
+  async_fifo_inst/write_ptr_inst/U46/Y (BUFX2)        0.035569   0.144401 r
+  async_fifo_inst/write_ptr_inst/full (write_ptr_DEPTH8_ADDR_WIDTH3_PTR_WIDTH4_ALMOST_FULL_LEVEL6)
+                                                      0.000000   0.144401 r
+  async_fifo_inst/U2/Y (OR2X1)                        0.041278   0.185679 r
+  async_fifo_inst/U3/Y (INVX1)                        0.025910   0.211589 f
+  async_fifo_inst/write_ptr_inst/write_en (write_ptr_DEPTH8_ADDR_WIDTH3_PTR_WIDTH4_ALMOST_FULL_LEVEL6)
+                                                      0.000000   0.211589 f
+  async_fifo_inst/write_ptr_inst/U28/Y (INVX1)        0.001895   0.213483 r
+  async_fifo_inst/write_ptr_inst/U33/Y (INVX1)        0.015279   0.228762 f
+  async_fifo_inst/write_ptr_inst/U51/Y (AND2X2)       0.040571   0.269334 f
+  async_fifo_inst/write_ptr_inst/U84/Y (OAI21X1)      0.039169   0.308502 r
+  async_fifo_inst/write_ptr_inst/U45/Y (INVX2)        0.022692   0.331195 f
+  async_fifo_inst/write_ptr_inst/U44/Y (INVX1)        0.010008   0.341202 r
+  async_fifo_inst/write_ptr_inst/U23/Y (INVX1)        0.032290   0.373492 f
+  async_fifo_inst/write_ptr_inst/wptr_bin_to_gray/bin[1] (bin2gray_WIDTH4_1)
+                                                      0.000000   0.373492 f
+  async_fifo_inst/write_ptr_inst/wptr_bin_to_gray/U2/Y (XOR2X1)
+                                                      0.065921   0.439413 r
+  async_fifo_inst/write_ptr_inst/wptr_bin_to_gray/gray[1] (bin2gray_WIDTH4_1)
+                                                      0.000000   0.439413 r
+  async_fifo_inst/write_ptr_inst/U13/Y (BUFX2)        0.036952   0.476365 r
+  async_fifo_inst/write_ptr_inst/wptr_gray_reg[1]/D (DFFSR)
+                                                      0.000000   0.476365 r
+  data arrival time                                              0.476365
+
+  clock w_clk (rise edge)                             0.666667   0.666667
+  clock network delay (ideal)                         0.000000   0.666667
+  async_fifo_inst/write_ptr_inst/wptr_gray_reg[1]/CLK (DFFSR)
+                                                      0.000000   0.666667 r
+  library setup time                                  -0.074616  0.592051
+  data required time                                             0.592051
+  --------------------------------------------------------------------------
+  data required time                                             0.592051
+  data arrival time                                              -0.476365
+  --------------------------------------------------------------------------
+  slack (MET)                                                    0.115686
+
+
+  Startpoint: async_fifo_inst/write_ptr_inst/full_reg
+              (rising edge-triggered flip-flop clocked by w_clk)
+  Endpoint: async_fifo_inst/write_ptr_inst/wptr_bin_reg[3]
+            (rising edge-triggered flip-flop clocked by w_clk)
+  Path Group: w_clk
+  Path Type: max
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock w_clk (rise edge)                             0.000000   0.000000
+  clock network delay (ideal)                         0.000000   0.000000
+  async_fifo_inst/write_ptr_inst/full_reg/CLK (DFFSR) 0.000000   0.000000 r
+  async_fifo_inst/write_ptr_inst/full_reg/Q (DFFSR)   0.108832   0.108832 r
+  async_fifo_inst/write_ptr_inst/U46/Y (BUFX2)        0.035569   0.144401 r
+  async_fifo_inst/write_ptr_inst/full (write_ptr_DEPTH8_ADDR_WIDTH3_PTR_WIDTH4_ALMOST_FULL_LEVEL6)
+                                                      0.000000   0.144401 r
+  async_fifo_inst/U2/Y (OR2X1)                        0.041278   0.185679 r
+  async_fifo_inst/U3/Y (INVX1)                        0.025910   0.211589 f
+  async_fifo_inst/write_ptr_inst/write_en (write_ptr_DEPTH8_ADDR_WIDTH3_PTR_WIDTH4_ALMOST_FULL_LEVEL6)
+                                                      0.000000   0.211589 f
+  async_fifo_inst/write_ptr_inst/U28/Y (INVX1)        0.001895   0.213483 r
+  async_fifo_inst/write_ptr_inst/U33/Y (INVX1)        0.015279   0.228762 f
+  async_fifo_inst/write_ptr_inst/U36/Y (INVX1)        0.000737   0.229500 r
+  async_fifo_inst/write_ptr_inst/U37/Y (INVX1)        0.013849   0.243349 f
+  async_fifo_inst/write_ptr_inst/U29/Y (NAND3X1)      0.031184   0.274533 r
+  async_fifo_inst/write_ptr_inst/U58/Y (BUFX2)        0.034864   0.309397 r
+  async_fifo_inst/write_ptr_inst/U52/Y (AND2X1)       0.028419   0.337816 r
+  async_fifo_inst/write_ptr_inst/U53/Y (INVX1)        0.019480   0.357296 f
+  async_fifo_inst/write_ptr_inst/U21/Y (AND2X1)       0.041991   0.399286 f
+  async_fifo_inst/write_ptr_inst/U65/Y (INVX1)        0.042188   0.441475 r
+  async_fifo_inst/write_ptr_inst/wptr_bin_reg[3]/D (DFFSR)
+                                                      0.000000   0.441475 r
+  data arrival time                                              0.441475
+
+  clock w_clk (rise edge)                             0.666667   0.666667
+  clock network delay (ideal)                         0.000000   0.666667
+  async_fifo_inst/write_ptr_inst/wptr_bin_reg[3]/CLK (DFFSR)
+                                                      0.000000   0.666667 r
+  library setup time                                  -0.083536  0.583130
+  data required time                                             0.583130
+  --------------------------------------------------------------------------
+  data required time                                             0.583130
+  data arrival time                                              -0.441475
+  --------------------------------------------------------------------------
+  slack (MET)                                                    0.141656
+
+
+  Startpoint: async_fifo_inst/write_ptr_inst/full_reg
+              (rising edge-triggered flip-flop clocked by w_clk)
+  Endpoint: async_fifo_inst/write_ptr_inst/wptr_gray_reg[3]
+            (rising edge-triggered flip-flop clocked by w_clk)
+  Path Group: w_clk
+  Path Type: max
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock w_clk (rise edge)                             0.000000   0.000000
+  clock network delay (ideal)                         0.000000   0.000000
+  async_fifo_inst/write_ptr_inst/full_reg/CLK (DFFSR) 0.000000   0.000000 r
+  async_fifo_inst/write_ptr_inst/full_reg/Q (DFFSR)   0.108832   0.108832 r
+  async_fifo_inst/write_ptr_inst/U46/Y (BUFX2)        0.035569   0.144401 r
+  async_fifo_inst/write_ptr_inst/full (write_ptr_DEPTH8_ADDR_WIDTH3_PTR_WIDTH4_ALMOST_FULL_LEVEL6)
+                                                      0.000000   0.144401 r
+  async_fifo_inst/U2/Y (OR2X1)                        0.041278   0.185679 r
+  async_fifo_inst/U3/Y (INVX1)                        0.025910   0.211589 f
+  async_fifo_inst/write_ptr_inst/write_en (write_ptr_DEPTH8_ADDR_WIDTH3_PTR_WIDTH4_ALMOST_FULL_LEVEL6)
+                                                      0.000000   0.211589 f
+  async_fifo_inst/write_ptr_inst/U28/Y (INVX1)        0.001895   0.213483 r
+  async_fifo_inst/write_ptr_inst/U33/Y (INVX1)        0.015279   0.228762 f
+  async_fifo_inst/write_ptr_inst/U36/Y (INVX1)        0.000737   0.229500 r
+  async_fifo_inst/write_ptr_inst/U37/Y (INVX1)        0.013849   0.243349 f
+  async_fifo_inst/write_ptr_inst/U29/Y (NAND3X1)      0.031184   0.274533 r
+  async_fifo_inst/write_ptr_inst/U58/Y (BUFX2)        0.034864   0.309397 r
+  async_fifo_inst/write_ptr_inst/U52/Y (AND2X1)       0.028419   0.337816 r
+  async_fifo_inst/write_ptr_inst/U53/Y (INVX1)        0.019480   0.357296 f
+  async_fifo_inst/write_ptr_inst/U21/Y (AND2X1)       0.041991   0.399286 f
+  async_fifo_inst/write_ptr_inst/U65/Y (INVX1)        0.042188   0.441475 r
+  async_fifo_inst/write_ptr_inst/wptr_bin_to_gray/bin[3] (bin2gray_WIDTH4_1)
+                                                      0.000000   0.441475 r
+  async_fifo_inst/write_ptr_inst/wptr_bin_to_gray/gray[3] (bin2gray_WIDTH4_1)
+                                                      0.000000   0.441475 r
+  async_fifo_inst/write_ptr_inst/wptr_gray_reg[3]/D (DFFSR)
+                                                      0.000000   0.441475 r
+  data arrival time                                              0.441475
+
+  clock w_clk (rise edge)                             0.666667   0.666667
+  clock network delay (ideal)                         0.000000   0.666667
+  async_fifo_inst/write_ptr_inst/wptr_gray_reg[3]/CLK (DFFSR)
+                                                      0.000000   0.666667 r
+  library setup time                                  -0.083536  0.583130
+  data required time                                             0.583130
+  --------------------------------------------------------------------------
+  data required time                                             0.583130
+  data arrival time                                              -0.441475
+  --------------------------------------------------------------------------
+  slack (MET)                                                    0.141656
+
+
+  Startpoint: async_fifo_inst/write_ptr_inst/full_reg
+              (rising edge-triggered flip-flop clocked by w_clk)
+  Endpoint: async_fifo_inst/write_ptr_inst/wptr_gray_reg[0]
+            (rising edge-triggered flip-flop clocked by w_clk)
+  Path Group: w_clk
+  Path Type: max
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock w_clk (rise edge)                             0.000000   0.000000
+  clock network delay (ideal)                         0.000000   0.000000
+  async_fifo_inst/write_ptr_inst/full_reg/CLK (DFFSR) 0.000000   0.000000 r
+  async_fifo_inst/write_ptr_inst/full_reg/Q (DFFSR)   0.108832   0.108832 r
+  async_fifo_inst/write_ptr_inst/U46/Y (BUFX2)        0.035569   0.144401 r
+  async_fifo_inst/write_ptr_inst/full (write_ptr_DEPTH8_ADDR_WIDTH3_PTR_WIDTH4_ALMOST_FULL_LEVEL6)
+                                                      0.000000   0.144401 r
+  async_fifo_inst/U2/Y (OR2X1)                        0.041278   0.185679 r
+  async_fifo_inst/U3/Y (INVX1)                        0.025910   0.211589 f
+  async_fifo_inst/write_ptr_inst/write_en (write_ptr_DEPTH8_ADDR_WIDTH3_PTR_WIDTH4_ALMOST_FULL_LEVEL6)
+                                                      0.000000   0.211589 f
+  async_fifo_inst/write_ptr_inst/U28/Y (INVX1)        0.001895   0.213483 r
+  async_fifo_inst/write_ptr_inst/U33/Y (INVX1)        0.015279   0.228762 f
+  async_fifo_inst/write_ptr_inst/U51/Y (AND2X2)       0.040571   0.269334 f
+  async_fifo_inst/write_ptr_inst/U84/Y (OAI21X1)      0.039169   0.308502 r
+  async_fifo_inst/write_ptr_inst/U45/Y (INVX2)        0.022692   0.331195 f
+  async_fifo_inst/write_ptr_inst/U44/Y (INVX1)        0.010008   0.341202 r
+  async_fifo_inst/write_ptr_inst/U23/Y (INVX1)        0.032290   0.373492 f
+  async_fifo_inst/write_ptr_inst/wptr_bin_to_gray/bin[1] (bin2gray_WIDTH4_1)
+                                                      0.000000   0.373492 f
+  async_fifo_inst/write_ptr_inst/wptr_bin_to_gray/U3/Y (XOR2X1)
+                                                      0.052348   0.425840 r
+  async_fifo_inst/write_ptr_inst/wptr_bin_to_gray/gray[0] (bin2gray_WIDTH4_1)
+                                                      0.000000   0.425840 r
+  async_fifo_inst/write_ptr_inst/wptr_gray_reg[0]/D (DFFSR)
+                                                      0.000000   0.425840 r
+  data arrival time                                              0.425840
+
+  clock w_clk (rise edge)                             0.666667   0.666667
+  clock network delay (ideal)                         0.000000   0.666667
+  async_fifo_inst/write_ptr_inst/wptr_gray_reg[0]/CLK (DFFSR)
+                                                      0.000000   0.666667 r
+  library setup time                                  -0.092620  0.574047
+  data required time                                             0.574047
+  --------------------------------------------------------------------------
+  data required time                                             0.574047
+  data arrival time                                              -0.425840
+  --------------------------------------------------------------------------
+  slack (MET)                                                    0.148207
+
+
+  Startpoint: async_fifo_inst/write_ptr_inst/full_reg
+              (rising edge-triggered flip-flop clocked by w_clk)
+  Endpoint: async_fifo_inst/write_ptr_inst/wptr_bin_reg[1]
+            (rising edge-triggered flip-flop clocked by w_clk)
+  Path Group: w_clk
+  Path Type: max
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock w_clk (rise edge)                             0.000000   0.000000
+  clock network delay (ideal)                         0.000000   0.000000
+  async_fifo_inst/write_ptr_inst/full_reg/CLK (DFFSR) 0.000000   0.000000 r
+  async_fifo_inst/write_ptr_inst/full_reg/Q (DFFSR)   0.108832   0.108832 r
+  async_fifo_inst/write_ptr_inst/U46/Y (BUFX2)        0.035569   0.144401 r
+  async_fifo_inst/write_ptr_inst/full (write_ptr_DEPTH8_ADDR_WIDTH3_PTR_WIDTH4_ALMOST_FULL_LEVEL6)
+                                                      0.000000   0.144401 r
+  async_fifo_inst/U2/Y (OR2X1)                        0.041278   0.185679 r
+  async_fifo_inst/U3/Y (INVX1)                        0.025910   0.211589 f
+  async_fifo_inst/write_ptr_inst/write_en (write_ptr_DEPTH8_ADDR_WIDTH3_PTR_WIDTH4_ALMOST_FULL_LEVEL6)
+                                                      0.000000   0.211589 f
+  async_fifo_inst/write_ptr_inst/U26/Y (AND2X2)       0.034823   0.246412 f
+  async_fifo_inst/write_ptr_inst/U48/Y (AND2X2)       0.036962   0.283374 f
+  async_fifo_inst/write_ptr_inst/U38/Y (INVX1)        -0.002551  0.280823 r
+  async_fifo_inst/write_ptr_inst/U84/Y (OAI21X1)      0.011475   0.292298 f
+  async_fifo_inst/write_ptr_inst/U45/Y (INVX2)        0.016506   0.308804 r
+  async_fifo_inst/write_ptr_inst/U44/Y (INVX1)        0.017042   0.325846 f
+  async_fifo_inst/write_ptr_inst/U23/Y (INVX1)        0.037456   0.363302 r
+  async_fifo_inst/write_ptr_inst/U43/Y (BUFX2)        0.050047   0.413349 r
+  async_fifo_inst/write_ptr_inst/wptr_bin_reg[1]/D (DFFSR)
+                                                      0.000000   0.413349 r
+  data arrival time                                              0.413349
+
+  clock w_clk (rise edge)                             0.666667   0.666667
+  clock network delay (ideal)                         0.000000   0.666667
+  async_fifo_inst/write_ptr_inst/wptr_bin_reg[1]/CLK (DFFSR)
+                                                      0.000000   0.666667 r
+  library setup time                                  -0.081247  0.585420
+  data required time                                             0.585420
+  --------------------------------------------------------------------------
+  data required time                                             0.585420
+  data arrival time                                              -0.413349
+  --------------------------------------------------------------------------
+  slack (MET)                                                    0.172071
+
+
+  Startpoint: async_fifo_inst/write_ptr_inst/full_reg
+              (rising edge-triggered flip-flop clocked by w_clk)
+  Endpoint: async_fifo_inst/fifo_mem_inst/mem_reg[6][1]
+            (rising edge-triggered flip-flop clocked by w_clk)
+  Path Group: w_clk
+  Path Type: max
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock w_clk (rise edge)                             0.000000   0.000000
+  clock network delay (ideal)                         0.000000   0.000000
+  async_fifo_inst/write_ptr_inst/full_reg/CLK (DFFSR) 0.000000   0.000000 r
+  async_fifo_inst/write_ptr_inst/full_reg/Q (DFFSR)   0.108832   0.108832 r
+  async_fifo_inst/write_ptr_inst/U46/Y (BUFX2)        0.035569   0.144401 r
+  async_fifo_inst/write_ptr_inst/full (write_ptr_DEPTH8_ADDR_WIDTH3_PTR_WIDTH4_ALMOST_FULL_LEVEL6)
+                                                      0.000000   0.144401 r
+  async_fifo_inst/U2/Y (OR2X1)                        0.041278   0.185679 r
+  async_fifo_inst/U4/Y (INVX1)                        0.023329   0.209008 f
+  async_fifo_inst/fifo_mem_inst/write_en (fifo_mem_DATA_WIDTH8_ADDR_WIDTH3_DEPTH8)
+                                                      0.000000   0.209008 f
+  async_fifo_inst/fifo_mem_inst/U30/Y (AND2X1)        0.048710   0.257718 f
+  async_fifo_inst/fifo_mem_inst/U52/Y (NAND3X1)       0.042862   0.300580 r
+  async_fifo_inst/fifo_mem_inst/U300/Y (BUFX2)        0.095264   0.395844 r
+  async_fifo_inst/fifo_mem_inst/U38/Y (OAI21X1)       0.033524   0.429368 f
+  async_fifo_inst/fifo_mem_inst/mem_reg[6][1]/D (DFFPOSX1)
+                                                      0.000000   0.429368 f
+  data arrival time                                              0.429368
+
+  clock w_clk (rise edge)                             0.666667   0.666667
+  clock network delay (ideal)                         0.000000   0.666667
+  async_fifo_inst/fifo_mem_inst/mem_reg[6][1]/CLK (DFFPOSX1)
+                                                      0.000000   0.666667 r
+  library setup time                                  -0.056196  0.610471
+  data required time                                             0.610471
+  --------------------------------------------------------------------------
+  data required time                                             0.610471
+  data arrival time                                              -0.429368
+  --------------------------------------------------------------------------
+  slack (MET)                                                    0.181103
+
+
+  Startpoint: async_fifo_inst/write_ptr_inst/full_reg
+              (rising edge-triggered flip-flop clocked by w_clk)
+  Endpoint: async_fifo_inst/fifo_mem_inst/mem_reg[6][0]
+            (rising edge-triggered flip-flop clocked by w_clk)
+  Path Group: w_clk
+  Path Type: max
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock w_clk (rise edge)                             0.000000   0.000000
+  clock network delay (ideal)                         0.000000   0.000000
+  async_fifo_inst/write_ptr_inst/full_reg/CLK (DFFSR) 0.000000   0.000000 r
+  async_fifo_inst/write_ptr_inst/full_reg/Q (DFFSR)   0.108832   0.108832 r
+  async_fifo_inst/write_ptr_inst/U46/Y (BUFX2)        0.035569   0.144401 r
+  async_fifo_inst/write_ptr_inst/full (write_ptr_DEPTH8_ADDR_WIDTH3_PTR_WIDTH4_ALMOST_FULL_LEVEL6)
+                                                      0.000000   0.144401 r
+  async_fifo_inst/U2/Y (OR2X1)                        0.041278   0.185679 r
+  async_fifo_inst/U4/Y (INVX1)                        0.023329   0.209008 f
+  async_fifo_inst/fifo_mem_inst/write_en (fifo_mem_DATA_WIDTH8_ADDR_WIDTH3_DEPTH8)
+                                                      0.000000   0.209008 f
+  async_fifo_inst/fifo_mem_inst/U30/Y (AND2X1)        0.048710   0.257718 f
+  async_fifo_inst/fifo_mem_inst/U52/Y (NAND3X1)       0.042862   0.300580 r
+  async_fifo_inst/fifo_mem_inst/U300/Y (BUFX2)        0.095264   0.395844 r
+  async_fifo_inst/fifo_mem_inst/U36/Y (OAI21X1)       0.033524   0.429368 f
+  async_fifo_inst/fifo_mem_inst/mem_reg[6][0]/D (DFFPOSX1)
+                                                      0.000000   0.429368 f
+  data arrival time                                              0.429368
+
+  clock w_clk (rise edge)                             0.666667   0.666667
+  clock network delay (ideal)                         0.000000   0.666667
+  async_fifo_inst/fifo_mem_inst/mem_reg[6][0]/CLK (DFFPOSX1)
+                                                      0.000000   0.666667 r
+  library setup time                                  -0.056196  0.610471
+  data required time                                             0.610471
+  --------------------------------------------------------------------------
+  data required time                                             0.610471
+  data arrival time                                              -0.429368
+  --------------------------------------------------------------------------
+  slack (MET)                                                    0.181103
+
+
+1

@@ -1,0 +1,930 @@
+Info: [VCS_SAVE_RESTORE_INFO] ASLR (Address Space Layout Randomization) is detected on the machine. To enable $save functionality, ASLR will be switched off and simv re-executed.
+Please use '-no_save' simv switch to avoid this.
+
+                           Design Compiler Graphical 
+                                 DC Ultra (TM)
+                                  DFTMAX (TM)
+                              Power Compiler (TM)
+                                 DesignWare (R)
+                                 DC Expert (TM)
+                               Design Vision (TM)
+                               HDL Compiler (TM)
+                               VHDL Compiler (TM)
+                                  DFT Compiler
+                               Design Compiler(R)
+
+              Version V-2023.12-SP5-1 for linux64 - Sep 03, 2024 
+
+                    Copyright (c) 1988 - 2024 Synopsys, Inc.
+   This software and the associated documentation are proprietary to Synopsys,
+ Inc. This software may only be used in accordance with the terms and conditions
+ of a written license agreement with Synopsys, Inc. All other use, reproduction,
+   or distribution of this software is strictly prohibited.  Licensed Products
+     communicate with Synopsys servers for the purpose of providing software
+    updates, detecting software piracy and verifying that customers are using
+    Licensed Products in conformity with the applicable License Key for such
+  Licensed Products. Synopsys will use information gathered in connection with
+    this process to deliver software updates and pursue software pirates and
+                                   infringers.
+
+ Inclusivity & Diversity - Visit SolvNetPlus to read the "Synopsys Statement on
+            Inclusivity and Diversity" (Refer to article 000036315 at
+                        https://solvnetplus.synopsys.com)
+Initializing...
+Current time:       Sat Sep 26 08:25:38 2026
+Hostname:           nc-asu6-l06.apporto.com
+CPU Model:          Intel(R) Xeon(R) Platinum 8488C
+CPU Details:        Cores = 16 : Sockets = 1 : Cache Size = 107520 KB : Freq = 2.40 GHz
+OS:                 Linux 4.18.0-372.19.1.el8_6.x86_64
+RAM:                 61 GB (Free  48 GB)
+Swap:                 0 GB (Free   0 GB)
+Work Filesystem:    /home/a26403_asu mounted to nc-u24-nfs01.apporto.com:/homes/a26403_asu
+Tmp Filesystem:     /tmp mounted to tmpfs
+Work Disk:          3936 GB (Free 1514 GB)
+Tmp Disk:            30 GB (Free  30 GB)
+#/**************************************************/
+#/* Compile Script for Synopsys                    */
+#/*                                                */
+#/* dc_shell-t -f compile_dc.tcl                   */
+#/*                                                */
+#/* OSU FreePDK 45nm                               */
+#/**************************************************/
+#/* All verilog files, separated by spaces         */
+set script_dir [file dirname [file normalize [info script]]]
+/home/a26403_asu/ADDV/LAB1/synth
+set project_dir [file normalize [file join $script_dir ..]]
+/home/a26403_asu/ADDV/LAB1
+set my_verilog_files [list \
+      [file join $project_dir TESTBENCH fifo_if.sv] \
+      [file join $project_dir RTL bin2gray.sv] \
+      [file join $project_dir RTL gray2bin.sv] \
+      [file join $project_dir RTL fifo_mem.sv] \
+      [file join $project_dir RTL synchronizer.sv] \
+      [file join $project_dir RTL read_ptr.sv] \
+      [file join $project_dir RTL write_ptr.sv] \
+      [file join $project_dir RTL async_fifo.sv] \
+      [file join $project_dir RTL fifo_wrapper.sv] \
+      ]
+/home/a26403_asu/ADDV/LAB1/TESTBENCH/fifo_if.sv /home/a26403_asu/ADDV/LAB1/RTL/bin2gray.sv /home/a26403_asu/ADDV/LAB1/RTL/gray2bin.sv /home/a26403_asu/ADDV/LAB1/RTL/fifo_mem.sv /home/a26403_asu/ADDV/LAB1/RTL/synchronizer.sv /home/a26403_asu/ADDV/LAB1/RTL/read_ptr.sv /home/a26403_asu/ADDV/LAB1/RTL/write_ptr.sv /home/a26403_asu/ADDV/LAB1/RTL/async_fifo.sv /home/a26403_asu/ADDV/LAB1/RTL/fifo_wrapper.sv
+#/* Top-level Module                               */
+set my_toplevel   fifo_wrapper
+fifo_wrapper
+#/* The name of the clock pin. If no clock-pin     */
+#/* exists, pick anything                          */
+set my_wclock_pin w_clk
+w_clk
+set my_rclock_pin r_clk
+r_clk
+#/* Target frequency in MHz for optimization       */
+set my_wclk_freq_MHz 1500.0
+1500.0
+set my_rclk_freq_MHz 1500.0
+1500.0
+#/* Delay of input signals (Clock-to-Q, Package etc.)  */
+set my_input_delay_ns 0.1
+0.1
+#/* Reserved time for output signals (Holdtime etc.)   */
+set my_output_delay_ns 0.1
+0.1
+#/**************************************************/
+#/* No modifications needed below                  */
+#/**************************************************/
+set pdk_dir [getenv PDK_DIR]
+/usr/local2/cadence/NCSU/SRC/FreePDK45
+if {$pdk_dir eq ""} {
+   error "PDK_DIR is not set. Source env.cshrc (or set PDK_DIR) before running synthesis."
+}
+set OSU_FREEPDK [file join $pdk_dir osu_soc lib files]
+/usr/local2/cadence/NCSU/SRC/FreePDK45/osu_soc/lib/files
+if {![file isdirectory $OSU_FREEPDK]} {
+   error "FreePDK library directory does not exist: $OSU_FREEPDK"
+}
+set search_path [concat $search_path $OSU_FREEPDK [file join $project_dir RTL] [file join $project_dir TESTBENCH]]
+. /usr/local2/synopsys/syn_2023.12-SP51/libraries/syn /usr/local2/synopsys/syn_2023.12-SP51/dw/syn_ver /usr/local2/synopsys/syn_2023.12-SP51/dw/sim_ver /usr/local2/cadence/NCSU/SRC/FreePDK45/osu_soc/lib/files /home/a26403_asu/ADDV/LAB1/RTL /home/a26403_asu/ADDV/LAB1/TESTBENCH
+set alib_library_analysis_path $OSU_FREEPDK
+/usr/local2/cadence/NCSU/SRC/FreePDK45/osu_soc/lib/files
+set target_library [list gscl45nm.db]
+gscl45nm.db
+set link_library [concat \
+   "*" \
+   $target_library \
+   [list dw_foundation.sldb]]
+* gscl45nm.db dw_foundation.sldb
+define_design_lib WORK -path [file join $script_dir WORK]
+1
+set verilogout_show_unconnected_pins "true"
+true
+analyze -format sverilog $my_verilog_files
+Running PRESTO HDLC
+Compiling source file /home/a26403_asu/ADDV/LAB1/TESTBENCH/fifo_if.sv
+Compiling source file /home/a26403_asu/ADDV/LAB1/RTL/bin2gray.sv
+Compiling source file /home/a26403_asu/ADDV/LAB1/RTL/gray2bin.sv
+Compiling source file /home/a26403_asu/ADDV/LAB1/RTL/fifo_mem.sv
+Compiling source file /home/a26403_asu/ADDV/LAB1/RTL/synchronizer.sv
+Compiling source file /home/a26403_asu/ADDV/LAB1/RTL/read_ptr.sv
+Compiling source file /home/a26403_asu/ADDV/LAB1/RTL/write_ptr.sv
+Compiling source file /home/a26403_asu/ADDV/LAB1/RTL/async_fifo.sv
+Compiling source file /home/a26403_asu/ADDV/LAB1/RTL/fifo_wrapper.sv
+Presto compilation completed successfully.
+Loading db file '/usr/local2/cadence/NCSU/SRC/FreePDK45/osu_soc/lib/files/gscl45nm.db'
+Loading db file '/usr/local2/synopsys/syn_2023.12-SP51/libraries/syn/dw_foundation.sldb'
+1
+elaborate $my_toplevel
+Loading db file '/usr/local2/synopsys/syn_2023.12-SP51/libraries/syn/gtech.db'
+Loading db file '/usr/local2/synopsys/syn_2023.12-SP51/libraries/syn/standard.sldb'
+  Loading link library 'gscl45nm'
+  Loading link library 'gtech'
+Running PRESTO HDLC
+Presto compilation completed successfully. (fifo_wrapper)
+Elaborated 1 design.
+Current design is now 'fifo_wrapper'.
+Information: Building the design 'async_fifo' instantiated from design 'fifo_wrapper' with
+	the parameters "DATA_WIDTH=8,DEPTH=8,ADDR_WIDTH=3,PTR_WIDTH=4,ALMOST_FULL_LEVEL=6,ALMOST_EMPTY_LEVEL=2|((N%fifo%I%WORK/fifo_if%%DATA_WIDTH=8))". (HDL-193)
+Presto compilation completed successfully. (async_fifo_DATA_WIDTH8_DEPTH8_ADDR_WIDTH3_PTR_WIDTH4_ALMOST_FULL_LEVEL6_ALMOST_EMPTY_LEVEL2_I_fifo_fifo_if__DATA_WIDTH_8)
+Information: Building the design 'write_ptr' instantiated from design 'async_fifo_DATA_WIDTH8_DEPTH8_ADDR_WIDTH3_PTR_WIDTH4_ALMOST_FULL_LEVEL6_ALMOST_EMPTY_LEVEL2_I_fifo_fifo_if__DATA_WIDTH_8' with
+	the parameters "DEPTH=8,ADDR_WIDTH=3,PTR_WIDTH=4,ALMOST_FULL_LEVEL=6". (HDL-193)
+
+Inferred memory devices in process
+	in routine write_ptr_DEPTH8_ADDR_WIDTH3_PTR_WIDTH4_ALMOST_FULL_LEVEL6 line 80 in file
+		'/home/a26403_asu/ADDV/LAB1/RTL/write_ptr.sv'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|   almost_full_reg   | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+|    wptr_bin_reg     | Flip-flop |   4   |  Y  | N  | Y  | N  | N  | N  | N  |
+|    wptr_gray_reg    | Flip-flop |   4   |  Y  | N  | Y  | N  | N  | N  | N  |
+|      full_reg       | Flip-flop |   1   |  N  | N  | Y  | N  | N  | N  | N  |
+===============================================================================
+Presto compilation completed successfully. (write_ptr_DEPTH8_ADDR_WIDTH3_PTR_WIDTH4_ALMOST_FULL_LEVEL6)
+Information: Building the design 'read_ptr' instantiated from design 'async_fifo_DATA_WIDTH8_DEPTH8_ADDR_WIDTH3_PTR_WIDTH4_ALMOST_FULL_LEVEL6_ALMOST_EMPTY_LEVEL2_I_fifo_fifo_if__DATA_WIDTH_8' with
+	the parameters "DEPTH=8,ADDR_WIDTH=3,PTR_WIDTH=4,ALMOST_EMPTY_LEVEL=2". (HDL-193)
+
+Inferred memory devices in process
+	in routine read_ptr_DEPTH8_ADDR_WIDTH3_PTR_WIDTH4_ALMOST_EMPTY_LEVEL2 line 77 in file
+		'/home/a26403_asu/ADDV/LAB1/RTL/read_ptr.sv'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|  almost_empty_reg   | Flip-flop |   1   |  N  | N  | N  | Y  | N  | N  | N  |
+|    rptr_bin_reg     | Flip-flop |   4   |  Y  | N  | Y  | N  | N  | N  | N  |
+|    rptr_gray_reg    | Flip-flop |   4   |  Y  | N  | Y  | N  | N  | N  | N  |
+|      empty_reg      | Flip-flop |   1   |  N  | N  | N  | Y  | N  | N  | N  |
+===============================================================================
+Presto compilation completed successfully. (read_ptr_DEPTH8_ADDR_WIDTH3_PTR_WIDTH4_ALMOST_EMPTY_LEVEL2)
+Information: Building the design 'synchronizer' instantiated from design 'async_fifo_DATA_WIDTH8_DEPTH8_ADDR_WIDTH3_PTR_WIDTH4_ALMOST_FULL_LEVEL6_ALMOST_EMPTY_LEVEL2_I_fifo_fifo_if__DATA_WIDTH_8' with
+	the parameters "WIDTH=4". (HDL-193)
+
+Inferred memory devices in process
+	in routine synchronizer_WIDTH4 line 12 in file
+		'/home/a26403_asu/ADDV/LAB1/RTL/synchronizer.sv'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|    sync_ptr_reg     | Flip-flop |   4   |  Y  | N  | Y  | N  | N  | N  | N  |
+|    sync_ff1_reg     | Flip-flop |   4   |  Y  | N  | Y  | N  | N  | N  | N  |
+===============================================================================
+Presto compilation completed successfully. (synchronizer_WIDTH4)
+Information: Building the design 'fifo_mem' instantiated from design 'async_fifo_DATA_WIDTH8_DEPTH8_ADDR_WIDTH3_PTR_WIDTH4_ALMOST_FULL_LEVEL6_ALMOST_EMPTY_LEVEL2_I_fifo_fifo_if__DATA_WIDTH_8' with
+	the parameters "DATA_WIDTH=8,DEPTH=8,ADDR_WIDTH=3". (HDL-193)
+
+Inferred memory devices in process
+	in routine fifo_mem_DATA_WIDTH8_ADDR_WIDTH3_DEPTH8 line 20 in file
+		'/home/a26403_asu/ADDV/LAB1/RTL/fifo_mem.sv'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|       mem_reg       | Flip-flop |  64   |  Y  | N  | N  | N  | N  | N  | N  |
+===============================================================================
+
+Inferred memory devices in process
+	in routine fifo_mem_DATA_WIDTH8_ADDR_WIDTH3_DEPTH8 line 26 in file
+		'/home/a26403_asu/ADDV/LAB1/RTL/fifo_mem.sv'.
+===============================================================================
+|    Register Name    |   Type    | Width | Bus | MB | AR | AS | SR | SS | ST |
+===============================================================================
+|     r_data_reg      | Flip-flop |   8   |  Y  | N  | N  | N  | N  | N  | N  |
+===============================================================================
+Statistics for MUX_OPs
+================================================================================
+|              block name/line               | Inputs | Outputs | # sel inputs |
+================================================================================
+| fifo_mem_DATA_WIDTH8_ADDR_WIDTH3_DEPTH8/29 |   8    |    8    |      3       |
+================================================================================
+Presto compilation completed successfully. (fifo_mem_DATA_WIDTH8_ADDR_WIDTH3_DEPTH8)
+Information: Building the design 'bin2gray' instantiated from design 'write_ptr_DEPTH8_ADDR_WIDTH3_PTR_WIDTH4_ALMOST_FULL_LEVEL6' with
+	the parameters "WIDTH=4". (HDL-193)
+Presto compilation completed successfully. (bin2gray_WIDTH4)
+Information: Building the design 'gray2bin' instantiated from design 'write_ptr_DEPTH8_ADDR_WIDTH3_PTR_WIDTH4_ALMOST_FULL_LEVEL6' with
+	the parameters "WIDTH=4". (HDL-193)
+Presto compilation completed successfully. (gray2bin_WIDTH4)
+1
+current_design $my_toplevel
+Current design is 'fifo_wrapper'.
+{fifo_wrapper}
+link
+
+  Linking design 'fifo_wrapper'
+  Using the following designs and libraries:
+  --------------------------------------------------------------------------
+  * (8 designs)               /home/a26403_asu/ADDV/LAB1/synth/fifo_wrapper.db, etc
+  gscl45nm (library)          /usr/local2/cadence/NCSU/SRC/FreePDK45/osu_soc/lib/files/gscl45nm.db
+  dw_foundation.sldb (library) /usr/local2/synopsys/syn_2023.12-SP51/libraries/syn/dw_foundation.sldb
+
+1
+uniquify
+Information: Uniquified 2 instances of design 'synchronizer_WIDTH4'. (OPT-1056)
+Information: Uniquified 2 instances of design 'bin2gray_WIDTH4'. (OPT-1056)
+Information: Uniquified 2 instances of design 'gray2bin_WIDTH4'. (OPT-1056)
+1
+set my_wclk_period [expr 1000.0 / $my_wclk_freq_MHz]
+0.666666666667
+set my_rclk_period [expr 1000.0 / $my_rclk_freq_MHz]
+0.666666666667
+create_clock \
+   -name w_clk\
+   -period $my_wclk_period \
+   [get_ports $my_wclock_pin]
+1
+create_clock \
+   -name r_clk\
+   -period $my_rclk_period \
+   [get_ports $my_rclock_pin]
+1
+set_clock_groups \
+   -asynchronous \
+   -group [get_clocks w_clk] \
+   -group [get_clocks r_clk]
+1
+set_false_path -from [get_ports {w_rst_b r_rst_b}] 
+1
+set data_inputs [remove_from_collection \
+   [all_inputs]\
+   [get_ports {w_clk r_clk w_rst_b r_rst_b}]\
+   ]
+{write_en read_en w_data[7] w_data[6] w_data[5] w_data[4] w_data[3] w_data[2] w_data[1] w_data[0]}
+set_driving_cell  -lib_cell INVX1  $data_inputs
+Warning: Design rule attributes from the driving cell will be set on the port 'write_en'. (UID-401)
+Warning: Design rule attributes from the driving cell will be set on the port 'read_en'. (UID-401)
+Warning: Design rule attributes from the driving cell will be set on the port 'w_data[7]'. (UID-401)
+Warning: Design rule attributes from the driving cell will be set on the port 'w_data[6]'. (UID-401)
+Warning: Design rule attributes from the driving cell will be set on the port 'w_data[5]'. (UID-401)
+Warning: Design rule attributes from the driving cell will be set on the port 'w_data[4]'. (UID-401)
+Warning: Design rule attributes from the driving cell will be set on the port 'w_data[3]'. (UID-401)
+Warning: Design rule attributes from the driving cell will be set on the port 'w_data[2]'. (UID-401)
+Warning: Design rule attributes from the driving cell will be set on the port 'w_data[1]'. (UID-401)
+Warning: Design rule attributes from the driving cell will be set on the port 'w_data[0]'. (UID-401)
+1
+set write_inputs [add_to_collection [get_ports write_en] [get_ports "w_data"]]
+{write_en w_data[7] w_data[6] w_data[5] w_data[4] w_data[3] w_data[2] w_data[1] w_data[0]}
+set read_inputs [get_ports {read_en}]
+{read_en}
+set_input_delay $my_input_delay_ns -clock w_clk $write_inputs
+1
+set_input_delay $my_input_delay_ns -clock r_clk $read_inputs
+1
+set write_outputs [get_ports {full almost_full}]
+{full almost_full}
+set read_outputs [add_to_collection [get_ports {empty almost_empty}] [get_ports r_data]]
+{empty almost_empty r_data[7] r_data[6] r_data[5] r_data[4] r_data[3] r_data[2] r_data[1] r_data[0]}
+set_output_delay $my_output_delay_ns -clock w_clk $write_outputs
+1
+set_output_delay $my_output_delay_ns -clock r_clk $read_outputs
+1
+compile -map_effort medium
+Information: Checking out the license 'DesignWare'. (SEC-104)
+Information: Evaluating DesignWare library utilization. (UISN-27)
+
+============================================================================
+| DesignWare Building Block Library  |         Version         | Available |
+============================================================================
+| Basic DW Building Blocks           | V-2023.12-DWBB_202312.5 |     *     |
+| Licensed DW Building Blocks        | V-2023.12-DWBB_202312.5 |     *     |
+============================================================================
+
+====================================================================================================
+| Flow Information                                                                                 |
+----------------------------------------------------------------------------------------------------
+| Flow         | Design Compiler                                                                   |
+====================================================================================================
+| Design Information                                      | Value                                  |
+====================================================================================================
+| Number of Scenarios                                     | 0                                      |
+| Leaf Cell Count                                         | 178                                    |
+| Number of User Hierarchies                              | 10                                     |
+| Sequential Cell Count                                   | 108                                    |
+| Macro Count                                             | 0                                      |
+| Number of Power Domains                                 | 0                                      |
+| Number of Path Groups                                   | 3                                      |
+| Number of VT Class                                      | 0                                      |
+| Number of Clocks                                        | 2                                      |
+| Number of Dont Touch Cells                              | 11                                     |
+| Number of Dont Touch Nets                               | 0                                      |
+| Number of Size Only Cells                               | 0                                      |
+| Design with UPF Data                                    | false                                  |
+====================================================================================================
+
+Information: There are 20 potential problems in your design. Please run 'check_design' for more information. (LINT-99)
+
+
+
+  Beginning Pass 1 Mapping
+  ------------------------
+  Processing 'fifo_mem_DATA_WIDTH8_ADDR_WIDTH3_DEPTH8'
+  Processing 'synchronizer_WIDTH4_0'
+  Processing 'gray2bin_WIDTH4_0'
+  Processing 'bin2gray_WIDTH4_0'
+  Processing 'read_ptr_DEPTH8_ADDR_WIDTH3_PTR_WIDTH4_ALMOST_EMPTY_LEVEL2'
+Information: Added key list 'DesignWare' to design 'read_ptr_DEPTH8_ADDR_WIDTH3_PTR_WIDTH4_ALMOST_EMPTY_LEVEL2'. (DDB-72)
+  Processing 'write_ptr_DEPTH8_ADDR_WIDTH3_PTR_WIDTH4_ALMOST_FULL_LEVEL6'
+Information: Added key list 'DesignWare' to design 'write_ptr_DEPTH8_ADDR_WIDTH3_PTR_WIDTH4_ALMOST_FULL_LEVEL6'. (DDB-72)
+  Processing 'async_fifo_DATA_WIDTH8_DEPTH8_ADDR_WIDTH3_PTR_WIDTH4_ALMOST_FULL_LEVEL6_ALMOST_EMPTY_LEVEL2_I_fifo_fifo_if__DATA_WIDTH_8'
+  Processing 'fifo_wrapper'
+
+  Updating timing information
+Information: Updating design information... (UID-85)
+
+  Beginning Implementation Selection
+  ----------------------------------
+
+  Beginning Mapping Optimizations  (Medium effort)
+  -------------------------------
+  Mapping Optimization (Phase 1)
+
+                                  TOTAL                                      
+   ELAPSED            WORST NEG   SETUP    DESIGN                            
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT         
+  --------- --------- --------- --------- --------- -------------------------
+    0:00:01    1898.8      0.00       0.0     553.4                          
+    0:00:01    1898.8      0.00       0.0     553.4                          
+    0:00:01    1898.8      0.00       0.0     553.4                          
+    0:00:01    1898.8      0.00       0.0     553.4                          
+    0:00:01    1898.8      0.00       0.0     553.4                          
+    0:00:01    1854.7      0.04       0.1     508.2                          
+    0:00:01    1864.1      0.03       0.0     504.6                          
+    0:00:01    1861.7      0.02       0.0     504.6                          
+    0:00:01    1860.8      0.02       0.0     504.3                          
+    0:00:01    1866.4      0.01       0.0     506.0                          
+    0:00:01    1870.2      0.00       0.0     500.7                          
+    0:00:01    1873.0      0.00       0.0     500.2                          
+    0:00:01    1873.0      0.00       0.0     500.2                          
+    0:00:01    1873.0      0.00       0.0     500.2                          
+    0:00:01    1873.0      0.00       0.0     500.2                          
+    0:00:01    1912.4      0.01       0.0     399.5                          
+    0:00:01    1937.3      0.03       0.0     332.2                          
+    0:00:01    1971.1      0.03       0.1     286.3                          
+    0:00:01    1999.2      0.05       0.1     255.0                          
+    0:00:01    2032.5      0.05       0.1     230.8                          
+    0:00:01    2057.9      0.05       0.1     215.5                          
+    0:00:01    2084.2      0.05       0.2     199.6                          
+    0:00:01    2104.8      0.05       0.2     187.3                          
+    0:00:01    2121.7      0.05       0.2     177.9                          
+    0:00:01    2121.7      0.05       0.2     177.9                          
+    0:00:01    2123.1      0.00       0.0     192.2                          
+
+
+
+  Beginning Delay Optimization Phase
+  ----------------------------------
+
+                                  TOTAL                                      
+   ELAPSED            WORST NEG   SETUP    DESIGN                            
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT         
+  --------- --------- --------- --------- --------- -------------------------
+    0:00:01    2123.1      0.00       0.0     192.2                          
+    0:00:01    2123.1      0.00       0.0     192.2                          
+    0:00:01    2123.1      0.00       0.0     192.2                          
+    0:00:01    2123.1      0.00       0.0     192.2                          
+    0:00:01    2123.1      0.00       0.0     192.2                          
+
+
+  Beginning Design Rule Fixing  (max_capacitance)
+  ----------------------------
+
+                                  TOTAL                                      
+   ELAPSED            WORST NEG   SETUP    DESIGN                            
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT         
+  --------- --------- --------- --------- --------- -------------------------
+    0:00:01    2123.1      0.00       0.0     192.2                          
+    0:00:01    2230.6      0.00       0.0     144.1 async_fifo_inst/fifo_mem_inst/C178/net851
+    0:00:01    2366.2      0.00       0.0     123.7 async_fifo_inst/write_ptr_inst/wptr_gray[0]
+    0:00:01    2408.4      0.00       0.0     118.9 async_fifo_inst/write_ptr_inst/net1899
+    0:00:01    2407.0      0.00       0.0     118.9 async_fifo_inst/write_ptr_inst/net2547
+    0:00:01    2447.4      0.10       0.3     115.0 async_fifo_inst/fifo_mem_inst/r_data_reg[1]/D
+    0:00:01    2462.9      0.06       0.1     115.0 async_fifo_inst/write_ptr_inst/almost_full_reg/D
+    0:00:01    2466.2      0.01       0.0     115.0 async_fifo_inst/write_ptr_inst/full_reg/D
+    0:00:01    2479.3      0.00       0.0     115.0 async_fifo_inst/write_ptr_inst/almost_full_reg/D
+    0:00:01    2483.5      0.03       0.0     114.0 async_fifo_inst/write_ptr_inst/full_reg/D
+    0:00:01    2484.9      0.00       0.0     114.0                          
+
+
+  Beginning Area-Recovery Phase  (cleanup)
+  -----------------------------
+
+                                  TOTAL                                      
+   ELAPSED            WORST NEG   SETUP    DESIGN                            
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT         
+  --------- --------- --------- --------- --------- -------------------------
+    0:00:01    2484.9      0.00       0.0     114.0                          
+    0:00:01    2484.9      0.00       0.0     114.0                          
+    0:00:01    2392.0      0.00       0.0     114.0                          
+    0:00:01    2324.9      0.00       0.0     114.0                          
+    0:00:01    2297.7      0.00       0.0     114.0                          
+    0:00:01    2297.7      0.00       0.0     114.0                          
+    0:00:01    2297.7      0.00       0.0     114.0                          
+    0:00:01    2297.2      0.00       0.0     114.0                          
+    0:00:01    2278.5      0.02       0.2     114.0                          
+    0:00:01    2277.0      0.02       0.2     114.0                          
+    0:00:01    2277.0      0.02       0.2     114.0                          
+    0:00:01    2277.0      0.02       0.2     114.0                          
+    0:00:01    2277.0      0.02       0.2     114.0                          
+    0:00:01    2277.0      0.02       0.2     114.0                          
+    0:00:01    2277.0      0.02       0.2     114.0                          
+    0:00:01    2281.3      0.00       0.0     114.0                          
+Loading db file '/usr/local2/cadence/NCSU/SRC/FreePDK45/osu_soc/lib/files/gscl45nm.db'
+
+
+Note: Symbol # after min delay cost means estimated hold TNS across all active scenarios 
+
+
+  Optimization Complete
+  ---------------------
+Information: Total number of MV cells in the design.
+----------------------------------------------------------------------------------------------------
+ MV Cells                                           Total Number                                   
+----------------------------------------------------------------------------------------------------
+ Level Shifter:                                     0                                             
+ Enable Level Shifter:                              0                                             
+ Isolation Cell:                                    0                                             
+ Retention Cell:                                    0                                             
+ Retention Clamp Cell:                              0                                             
+ Switch Cell:                                       0                                             
+ Always-On Cell:                                    0                                             
+ Repeater Cell:                                     0                                             
+
+----------------------------------------------------------------------------------------------------
+Unmapped MV Cells 
+----------------------------------------------------------------------------------------------------
+0 Isolation Cells are unmapped 
+0 Retention Clamp Cells are unmapped 
+----------------------------------------------------------------------------------------------------
+1
+compile -incremental_mapping -map_effort medium
+====================================================================================================
+| Flow Information                                                                                 |
+----------------------------------------------------------------------------------------------------
+| Flow         | Design Compiler                                                                   |
+====================================================================================================
+| Design Information                                      | Value                                  |
+====================================================================================================
+| Number of Scenarios                                     | 0                                      |
+| Leaf Cell Count                                         | 652                                    |
+| Number of User Hierarchies                              | 10                                     |
+| Sequential Cell Count                                   | 108                                    |
+| Macro Count                                             | 0                                      |
+| Number of Power Domains                                 | 0                                      |
+| Number of Path Groups                                   | 3                                      |
+| Number of VT Class                                      | 0                                      |
+| Number of Clocks                                        | 2                                      |
+| Number of Dont Touch Cells                              | 0                                      |
+| Number of Dont Touch Nets                               | 0                                      |
+| Number of Size Only Cells                               | 0                                      |
+| Design with UPF Data                                    | false                                  |
+====================================================================================================
+
+Information: There are 9 potential problems in your design. Please run 'check_design' for more information. (LINT-99)
+
+
+
+  Beginning Pass 1 Mapping  (Incremental)
+  ------------------------
+
+  Updating timing information
+Information: Updating design information... (UID-85)
+
+  Beginning Mapping Optimizations  (Medium effort)  (Incremental)
+  -------------------------------
+
+  Beginning Incremental Implementation Selection
+  ----------------------------------------------
+
+  Beginning Delay Optimization Phase
+  ----------------------------------
+
+                                  TOTAL                                      
+   ELAPSED            WORST NEG   SETUP    DESIGN                            
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT         
+  --------- --------- --------- --------- --------- -------------------------
+    0:00:00    2281.3      0.00       0.0     114.0                          
+    0:00:00    2281.3      0.00       0.0     114.0                          
+    0:00:00    2281.3      0.00       0.0     114.0                          
+
+
+  Beginning Design Rule Fixing  (max_capacitance)
+  ----------------------------
+
+                                  TOTAL                                      
+   ELAPSED            WORST NEG   SETUP    DESIGN                            
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT         
+  --------- --------- --------- --------- --------- -------------------------
+    0:00:00    2281.3      0.00       0.0     114.0                          
+Loading db file '/usr/local2/cadence/NCSU/SRC/FreePDK45/osu_soc/lib/files/gscl45nm.db'
+
+
+Note: Symbol # after min delay cost means estimated hold TNS across all active scenarios 
+
+
+  Optimization Complete
+  ---------------------
+Information: Total number of MV cells in the design.
+----------------------------------------------------------------------------------------------------
+ MV Cells                                           Total Number                                   
+----------------------------------------------------------------------------------------------------
+ Level Shifter:                                     0                                             
+ Enable Level Shifter:                              0                                             
+ Isolation Cell:                                    0                                             
+ Retention Cell:                                    0                                             
+ Retention Clamp Cell:                              0                                             
+ Switch Cell:                                       0                                             
+ Always-On Cell:                                    0                                             
+ Repeater Cell:                                     0                                             
+
+----------------------------------------------------------------------------------------------------
+Unmapped MV Cells 
+----------------------------------------------------------------------------------------------------
+0 Isolation Cells are unmapped 
+0 Retention Clamp Cells are unmapped 
+----------------------------------------------------------------------------------------------------
+1
+# Repair remaining library design-rule violations (for example, max capacitance)
+# after timing-driven mapping. Keep the library limits intact.
+compile -only_design_rule
+====================================================================================================
+| Flow Information                                                                                 |
+----------------------------------------------------------------------------------------------------
+| Flow         | Design Compiler                                                                   |
+====================================================================================================
+| Design Information                                      | Value                                  |
+====================================================================================================
+| Number of Scenarios                                     | 0                                      |
+| Leaf Cell Count                                         | 652                                    |
+| Number of User Hierarchies                              | 10                                     |
+| Sequential Cell Count                                   | 108                                    |
+| Macro Count                                             | 0                                      |
+| Number of Power Domains                                 | 0                                      |
+| Number of Path Groups                                   | 3                                      |
+| Number of VT Class                                      | 0                                      |
+| Number of Clocks                                        | 2                                      |
+| Number of Dont Touch Cells                              | 0                                      |
+| Number of Dont Touch Nets                               | 0                                      |
+| Number of Size Only Cells                               | 0                                      |
+| Design with UPF Data                                    | false                                  |
+====================================================================================================
+
+Information: There are 9 potential problems in your design. Please run 'check_design' for more information. (LINT-99)
+
+
+
+  Beginning Pass 1 Mapping  (Incremental)
+  ------------------------
+
+  Updating timing information
+Information: Updating design information... (UID-85)
+
+  Beginning Mapping Optimizations  (Incremental)
+  -------------------------------
+
+  Beginning Delay Optimization Phase
+  ----------------------------------
+
+                                  TOTAL                                      
+   ELAPSED            WORST NEG   SETUP    DESIGN                            
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT         
+  --------- --------- --------- --------- --------- -------------------------
+    0:00:01    2281.3      0.00       0.0     114.0                          
+
+
+  Beginning Design Rule Fixing  (max_capacitance)
+  ----------------------------
+
+                                  TOTAL                                      
+   ELAPSED            WORST NEG   SETUP    DESIGN                            
+    TIME      AREA      SLACK     COST    RULE COST         ENDPOINT         
+  --------- --------- --------- --------- --------- -------------------------
+    0:00:01    2281.3      0.00       0.0     114.0                          
+Loading db file '/usr/local2/cadence/NCSU/SRC/FreePDK45/osu_soc/lib/files/gscl45nm.db'
+
+
+Note: Symbol # after min delay cost means estimated hold TNS across all active scenarios 
+
+
+  Optimization Complete
+  ---------------------
+Information: Total number of MV cells in the design.
+----------------------------------------------------------------------------------------------------
+ MV Cells                                           Total Number                                   
+----------------------------------------------------------------------------------------------------
+ Level Shifter:                                     0                                             
+ Enable Level Shifter:                              0                                             
+ Isolation Cell:                                    0                                             
+ Retention Cell:                                    0                                             
+ Retention Clamp Cell:                              0                                             
+ Switch Cell:                                       0                                             
+ Always-On Cell:                                    0                                             
+ Repeater Cell:                                     0                                             
+
+----------------------------------------------------------------------------------------------------
+Unmapped MV Cells 
+----------------------------------------------------------------------------------------------------
+0 Isolation Cells are unmapped 
+0 Retention Clamp Cells are unmapped 
+----------------------------------------------------------------------------------------------------
+1
+set_app_var report_default_significant_digits 6
+6
+check_design
+ 
+****************************************
+check_design summary:
+Version:     V-2023.12-SP5-1
+Date:        Sat Sep 26 08:25:42 2026
+****************************************
+
+                   Name                                            Total
+--------------------------------------------------------------------------------
+Inputs/Outputs                                                      9
+    Feedthrough (LINT-29)                                           3
+    Shorted outputs (LINT-31)                                       6
+--------------------------------------------------------------------------------
+
+Warning: In design 'bin2gray_WIDTH4_1', input port 'bin[3]' is connected directly to output port 'gray[3]'. (LINT-29)
+Warning: In design 'gray2bin_WIDTH4_0', input port 'gray[3]' is connected directly to output port 'bin[3]'. (LINT-29)
+Warning: In design 'bin2gray_WIDTH4_0', input port 'bin[3]' is connected directly to output port 'gray[3]'. (LINT-29)
+Warning: In design 'write_ptr_DEPTH8_ADDR_WIDTH3_PTR_WIDTH4_ALMOST_FULL_LEVEL6', output port 'w_addr[2]' is connected directly to output port 'wptr_bin[2]'. (LINT-31)
+Warning: In design 'write_ptr_DEPTH8_ADDR_WIDTH3_PTR_WIDTH4_ALMOST_FULL_LEVEL6', output port 'w_addr[1]' is connected directly to output port 'wptr_bin[1]'. (LINT-31)
+Warning: In design 'write_ptr_DEPTH8_ADDR_WIDTH3_PTR_WIDTH4_ALMOST_FULL_LEVEL6', output port 'w_addr[0]' is connected directly to output port 'wptr_bin[0]'. (LINT-31)
+Warning: In design 'read_ptr_DEPTH8_ADDR_WIDTH3_PTR_WIDTH4_ALMOST_EMPTY_LEVEL2', output port 'r_addr[2]' is connected directly to output port 'rptr_bin[2]'. (LINT-31)
+Warning: In design 'read_ptr_DEPTH8_ADDR_WIDTH3_PTR_WIDTH4_ALMOST_EMPTY_LEVEL2', output port 'r_addr[1]' is connected directly to output port 'rptr_bin[1]'. (LINT-31)
+Warning: In design 'read_ptr_DEPTH8_ADDR_WIDTH3_PTR_WIDTH4_ALMOST_EMPTY_LEVEL2', output port 'r_addr[0]' is connected directly to output port 'rptr_bin[0]'. (LINT-31)
+1
+report_constraint -all_violators
+Information: Updating design information... (UID-85)
+ 
+****************************************
+Report : constraint
+        -all_violators
+Design : fifo_wrapper
+Version: V-2023.12-SP5-1
+Date   : Sat Sep 26 08:25:42 2026
+****************************************
+
+
+   max_capacitance
+
+                             Required        Actual
+   Net                      Capacitance    Capacitance       Slack
+   -----------------------------------------------------------------
+   async_fifo_inst/fifo_mem_inst/n1
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n3
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n4
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n5
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n6
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n7
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n8
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n9
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n10
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n28
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n38
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n48
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n57
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n67
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n76
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n85
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n269
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n270
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n271
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n272
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n273
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n274
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n275
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n276
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n277
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n278
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n279
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n280
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n281
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n282
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n283
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n284
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n285
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n286
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n287
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n288
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n289
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n290
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n291
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n292
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n293
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n294
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n295
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n296
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n297
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n298
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n299
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n300
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n301
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n302
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n303
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n304
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n305
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n306
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n307
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n308
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n309
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n310
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n311
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n312
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n317
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n318
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n319
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n320
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/read_ptr_inst/n27
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/read_ptr_inst/n38
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/read_ptr_inst/n40
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/read_ptr_inst/n45
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/read_ptr_inst/n66
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/read_ptr_inst/n67
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/read_ptr_inst/n68
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/read_ptr_inst/n69
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/read_ptr_inst/n70
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/read_ptr_inst/n71
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/read_ptr_inst/n72
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/read_ptr_inst/n73
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/read_ptr_inst/n74
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/rptr_gray_sync[3]
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/rptr_sync_inst/n24
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/rptr_sync_inst/n25
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/rptr_sync_inst/n26
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/rptr_sync_inst/sync_ff1[0]
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/rptr_sync_inst/sync_ff1[1]
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/rptr_sync_inst/sync_ff1[2]
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/rptr_sync_inst/sync_ff1[3]
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/wptr_sync_inst/n17
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/wptr_sync_inst/n18
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/wptr_sync_inst/n19
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/wptr_sync_inst/n20
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/wptr_sync_inst/sync_ff1[0]
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/wptr_sync_inst/sync_ff1[1]
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/wptr_sync_inst/sync_ff1[2]
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/wptr_sync_inst/sync_ff1[3]
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/write_ptr_inst/n35
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/write_ptr_inst/n70
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/write_ptr_inst/n77
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/write_ptr_inst/n78
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/write_ptr_inst/n88
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/write_ptr_inst/n89
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/write_ptr_inst/n90
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/write_ptr_inst/n91
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/write_ptr_inst/n92
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/write_ptr_inst/n93
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/write_ptr_inst/n94
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/write_ptr_inst/n95
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/write_ptr_inst/n96
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+
+   -----------------------------------------------------------------
+   Total                      106             -0.163130 
+
+1
+#set filename [format "%s%s"  $my_toplevel ".vh"]
+#write -f verilog -output $filename
+#set filename [format "%s%s"  $my_toplevel ".sdc"]
+#write_sdc $filename
+#set filename [format "%s%s"  $my_toplevel ".db"]
+#write -f db -hier -output $filename -xg_force_db
+redirect [file join $script_dir timing.rep] { report_timing -max_paths 10 }
+redirect [file join $script_dir clocks.rep] { report_clocks -attributes [all_clocks] }
+redirect [file join $script_dir constraints.rep] { report_constraint -all_violators }
+redirect [file join $script_dir max_capacitance.rep] { report_constraint -all_violators -max_capacitance }
+redirect [file join $script_dir port.rep] { report_port -verbose }
+redirect [file join $script_dir cell.rep] { report_cell }
+redirect [file join $script_dir power.rep] { report_power }
+redirect [file join $script_dir area.rep] { report_area }
+write -f verilog -hierarchy -output [file join $script_dir ${my_toplevel}.v]
+Writing verilog file '/home/a26403_asu/ADDV/LAB1/synth/fifo_wrapper.v'.
+Warning: Verilog 'assign' or 'tran' statements are written out. (VO-4)
+1
+write_sdc [file join $script_dir ${my_toplevel}.sdc]
+1
+quit
+
+Memory usage for this session 112 Mbytes.
+Memory usage for this session including child processes 112 Mbytes.
+CPU usage for this session 4 seconds ( 0.00 hours ).
+Elapsed time for this session 7 seconds ( 0.00 hours ).
+
+Thank you...

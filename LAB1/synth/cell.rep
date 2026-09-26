@@ -1,0 +1,24 @@
+ 
+****************************************
+Report : cell
+Design : fifo_wrapper
+Version: V-2023.12-SP5-1
+Date   : Sat Sep 26 08:25:42 2026
+****************************************
+
+Attributes:
+    b - black box (unknown)
+    h - hierarchical
+    n - noncombinational
+    p - parameterized
+    r - removable
+    u - contains unmapped logic
+
+Cell                      Reference       Library             Area  Attributes
+--------------------------------------------------------------------------------
+async_fifo_inst           async_fifo_DATA_WIDTH8_DEPTH8_ADDR_WIDTH3_PTR_WIDTH4_ALMOST_FULL_LEVEL6_ALMOST_EMPTY_LEVEL2_I_fifo_fifo_if__DATA_WIDTH_8
+                                                          2281.267265
+                                                                    h, n, p
+--------------------------------------------------------------------------------
+Total 1 cells                                             2281.267265
+1

@@ -1,0 +1,233 @@
+ 
+****************************************
+Report : constraint
+        -all_violators
+        -max_capacitance
+Design : fifo_wrapper
+Version: V-2023.12-SP5-1
+Date   : Sat Sep 26 08:25:42 2026
+****************************************
+
+
+   max_capacitance
+
+                             Required        Actual
+   Net                      Capacitance    Capacitance       Slack
+   -----------------------------------------------------------------
+   async_fifo_inst/fifo_mem_inst/n1
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n3
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n4
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n5
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n6
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n7
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n8
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n9
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n10
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n28
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n38
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n48
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n57
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n67
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n76
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n85
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n269
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n270
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n271
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n272
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n273
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n274
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n275
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n276
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n277
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n278
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n279
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n280
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n281
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n282
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n283
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n284
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n285
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n286
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n287
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n288
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n289
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n290
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n291
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n292
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n293
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n294
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n295
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n296
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n297
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n298
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n299
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n300
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n301
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n302
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n303
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n304
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n305
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n306
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n307
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n308
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n309
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n310
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n311
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n312
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n317
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n318
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n319
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/fifo_mem_inst/n320
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/read_ptr_inst/n27
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/read_ptr_inst/n38
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/read_ptr_inst/n40
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/read_ptr_inst/n45
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/read_ptr_inst/n66
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/read_ptr_inst/n67
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/read_ptr_inst/n68
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/read_ptr_inst/n69
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/read_ptr_inst/n70
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/read_ptr_inst/n71
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/read_ptr_inst/n72
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/read_ptr_inst/n73
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/read_ptr_inst/n74
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/rptr_gray_sync[3]
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/rptr_sync_inst/n24
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/rptr_sync_inst/n25
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/rptr_sync_inst/n26
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/rptr_sync_inst/sync_ff1[0]
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/rptr_sync_inst/sync_ff1[1]
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/rptr_sync_inst/sync_ff1[2]
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/rptr_sync_inst/sync_ff1[3]
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/wptr_sync_inst/n17
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/wptr_sync_inst/n18
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/wptr_sync_inst/n19
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/wptr_sync_inst/n20
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/wptr_sync_inst/sync_ff1[0]
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/wptr_sync_inst/sync_ff1[1]
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/wptr_sync_inst/sync_ff1[2]
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/wptr_sync_inst/sync_ff1[3]
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/write_ptr_inst/n35
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/write_ptr_inst/n70
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/write_ptr_inst/n77
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/write_ptr_inst/n78
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/write_ptr_inst/n88
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/write_ptr_inst/n89
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/write_ptr_inst/n90
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/write_ptr_inst/n91
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/write_ptr_inst/n92
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/write_ptr_inst/n93
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/write_ptr_inst/n94
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/write_ptr_inst/n95
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+   async_fifo_inst/write_ptr_inst/n96
+                            0.000000       0.001539       -0.001539 (VIOLATED)
+
+   -----------------------------------------------------------------
+   Total                      106             -0.163130 
+
+1
