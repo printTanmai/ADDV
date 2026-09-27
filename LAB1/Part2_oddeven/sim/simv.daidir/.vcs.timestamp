@@ -1,5 +1,5 @@
 0
-36
+44
 +itf+/usr/local2/synopsys/vcs_2024/vcs/W-2024.09-SP2-3/linux64/lib/vcsdp_lite.tab
 +vcsd1
 +vpi
@@ -21,11 +21,19 @@
 -Mxcflags= -pipe -fPIC -I/usr/local2/synopsys/vcs_2024/vcs/W-2024.09-SP2-3/include
 -Mxllcflags=
 -P
--Xvcs_run_simv=1
+-Xufe=2steps
+-Xufe=2steps
+-Xufe=2steps
+-Xufe=2steps
 -debug_access+all
 -fsdb
 -full64
 -gen_obj
+-kdb
+-kdb=common_elab
+-kdb=common_elab
+-kdb=common_elab
+-lca
 -picarchive
 -sverilog
 -timescale=1ns/1ps
@@ -36,14 +44,14 @@
 ../RTL/router.sv
 ../RTL/oddeven.sv
 ../TESTBENCH/oddeven_tb.sv
-60
+63
 which_declare=declare -f
 XRDP_SOCKET_PATH=/run/xrdp
 XRDP_SESSION=1
-XRDP_PULSE_SOURCE_SOCKET=xrdp_chansrv_audio_in_socket_13
-XRDP_PULSE_SINK_SOCKET=xrdp_chansrv_audio_out_socket_13
+XRDP_PULSE_SOURCE_SOCKET=xrdp_chansrv_audio_in_socket_11
+XRDP_PULSE_SINK_SOCKET=xrdp_chansrv_audio_out_socket_11
 XMODIFIERS=@im=ibus
-XDG_SESSION_ID=c6231
+XDG_SESSION_ID=c1507
 XDG_RUNTIME_DIR=/run/user/1809401
 XDG_MENU_PREFIX=gnome-
 XDG_DATA_DIRS=/home/a25397_asu/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share:/usr/share
@@ -56,6 +64,7 @@ VCS_PYTHON3=/usr/local2/synopsys/vcs_2024/vcs/W-2024.09-SP2-3/linux64/bin/Python
 VCS_PATHMAP_PRELOAD_DONE=1
 VCS_MX_HOME_INTERNAL=1
 VCS_MODE_FLAG=64
+VCS_LCAMSG_PRINT_OFF=1
 VCS_INTERNAL_CONVERTEDLIBS=
 VCS_HOME=/usr/local2/synopsys/vcs_2024/vcs/W-2024.09-SP2-3
 VCS_EXEC_DONE=1
@@ -66,11 +75,13 @@ UNAME=/bin/uname
 TOOL_HOME=/usr/local2/synopsys/vcs_2024/vcs/W-2024.09-SP2-3/linux64
 SSH_AUTH_SOCK=/run/user/1809401/keyring/ssh
 SSH_ASKPASS=/usr/libexec/openssh/gnome-ssh-askpass
-SSH_AGENT_PID=2014461
+SSH_AGENT_PID=169685
+SNPS_VERDI_INTERNAL_LP_XML_NEW_FLOW=1
+SNPS_VCS_VHDL_WRAPPER_KDB=1
 SNPS_VCS_PYTHON3=/usr/local2/synopsys/vcs_2024/vcs/W-2024.09-SP2-3/linux64/bin/Python3/bin/python3
 SNPS_VCS_CLANG_PATH=/usr/local2/synopsys/vcs_2024/vcs/W-2024.09-SP2-3/linux64/clang
 SNPS_INTERNAL_VCS_LINUX_OS=linux
-SESSION_MANAGER=local/unix:@/tmp/.ICE-unix/2014287,unix/unix:/tmp/.ICE-unix/2014287
+SESSION_MANAGER=local/unix:@/tmp/.ICE-unix/169491,unix/unix:/tmp/.ICE-unix/169491
 SCRNAME=vcs
 SCRIPT_NAME=vcs
 QT_IM_MODULE=ibus
@@ -79,8 +90,8 @@ PDK_DIR=/usr/local2/cadence/NCSU/SRC/FreePDK45
 OVA_UUM=0
 OSTYPE=linux
 MFLAGS=
-MAKE_TERMOUT=/dev/pts/0
-MAKE_TERMERR=/dev/pts/0
+MAKE_TERMOUT=/dev/pts/1
+MAKE_TERMERR=/dev/pts/1
 MAKELEVEL=1
 MAKEFLAGS=
 LESSOPEN=||/usr/bin/lesspipe.sh %s
@@ -90,7 +101,7 @@ HOSTTYPE=x86_64-linux
 HISTCONTROL=ignoreboth
 GROUP=a25397_asu
 GNOME_TERMINAL_SERVICE=:1.75
-GNOME_TERMINAL_SCREEN=/org/gnome/Terminal/screen/e1a0da78_e0ad_4a81_b6bb_62a9491e99e5
+GNOME_TERMINAL_SCREEN=/org/gnome/Terminal/screen/585dd4d9_c49f_43d8_b3dc_1f5fc2db12f6
 GNOME_DESKTOP_SESSION_ID=this-is-deprecated
 GJS_DEBUG_TOPICS=JS ERROR;JS LOG
 GJS_DEBUG_OUTPUT=stderr
@@ -104,7 +115,7 @@ BASH_FUNC_which%%=() {  ( alias;_ eval ${which_declare} ) | /usr/bin/which --tty
 1790458107 ../RTL/oddeven.sv
 1790458107 ../RTL/router.sv
 1790458107 ../RTL/read_arbiter.sv
-1790458107 ../RTL/sync_fifo.sv
+1790464480 ../RTL/sync_fifo.sv
 1750737971 /usr/local2/synopsys/verdi_2024.09/verdi_2024/share/PLI/VCS/LINUX64/verdi.tab
 1751080315 /usr/local2/synopsys/vcs_2024/vcs/W-2024.09-SP2-3/linux64/lib/vcsdp_lite.tab
 4
@@ -112,5 +123,5 @@ BASH_FUNC_which%%=() {  ( alias;_ eval ${which_declare} ) | /usr/bin/which --tty
 1751081831 /usr/local2/synopsys/vcs_2024/vcs/W-2024.09-SP2-3/linux64/lib/liberrorinf.so
 1751081823 /usr/local2/synopsys/vcs_2024/vcs/W-2024.09-SP2-3/linux64/lib/libsnpsmalloc.so
 1751081835 /usr/local2/synopsys/vcs_2024/vcs/W-2024.09-SP2-3/linux64/lib/libvfs.so
-1790462513 simv.daidir
+1790465446 simv.daidir
 -1 partitionlib

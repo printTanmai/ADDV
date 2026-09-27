@@ -27,52 +27,55 @@ module sync_fifo #(
     assign w_addr = wptr[ADDR_WIDTH-1:0];
     assign r_addr = rptr[ADDR_WIDTH-1:0];
 
-    // write pointer - explicit wrap since FIFO_DEPTH isn't a power of 2
+    //write pointer with explicit wrap for a non-power-of-two FIFO depth
     always_comb begin
         wptr_next = wptr;
-        if (write_en && !full) begin
-            if (w_addr == FIFO_DEPTH-1)
+
+        if(write_en && !full) begin
+            if(w_addr == FIFO_DEPTH-1)
                 wptr_next = {~wptr[PTR_WIDTH-1], {ADDR_WIDTH{1'b0}}};
             else
                 wptr_next = wptr + 1'b1;
         end
     end
 
-    // read pointer - same explicit wrap
+    //read pointer with the same explicit wrap
     always_comb begin
         rptr_next = rptr;
-        if (read_en && !empty) begin
-            if (r_addr == FIFO_DEPTH-1)
+
+        if(read_en && !empty) begin
+            if(r_addr == FIFO_DEPTH-1)
                 rptr_next = {~rptr[PTR_WIDTH-1], {ADDR_WIDTH{1'b0}}};
             else
                 rptr_next = rptr + 1'b1;
         end
     end
 
-    //single clock domain: compare both next pointers so the flags reflect
-    //simultaneous reads and writes on the current clock edge
-    assign full_next  = (wptr_next[ADDR_WIDTH-1:0] == rptr_next[ADDR_WIDTH-1:0]) &&
-                         (wptr_next[PTR_WIDTH-1] != rptr_next[PTR_WIDTH-1]);
+    //both next pointers are used because this is a single-clock FIFO
+    assign full_next =
+        (wptr_next[ADDR_WIDTH-1:0] == rptr_next[ADDR_WIDTH-1:0]) &&
+        (wptr_next[PTR_WIDTH-1] != rptr_next[PTR_WIDTH-1]);
+
     assign empty_next = (rptr_next == wptr_next);
 
-    //the arbiter samples the current FIFO head on the read clock edge
+    //show the current FIFO head so the arbiter can sample it on a read edge
     assign data_out = mem[r_addr];
 
-    always_ff @(posedge clk) begin
-        if (rst) begin
+    always @(posedge clk) begin
+        if(rst) begin
             wptr  <= '0;
             rptr  <= '0;
             full  <= 1'b0;
             empty <= 1'b1;
-        end else begin
+        end
+        else begin
             wptr  <= wptr_next;
             rptr  <= rptr_next;
             full  <= full_next;
             empty <= empty_next;
 
-            if (write_en && !full)
+            if(write_en && !full)
                 mem[w_addr] <= data_in;
-
         end
     end
 

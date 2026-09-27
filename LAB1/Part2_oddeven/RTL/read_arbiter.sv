@@ -1,3 +1,4 @@
+//two-state read controller that enforces even, odd, even, odd ordering
 module read_arbiter #(
     parameter int DATA_WIDTH = 8
 )(
@@ -25,6 +26,7 @@ module read_arbiter #(
     assign even_has_data = !even_empty;
     assign odd_has_data  = !odd_empty;
 
+    //pause when the FIFO required for the next parity is empty
     assign can_output = read_en && ((expect_even && even_has_data) ||
                                      (!expect_even && odd_has_data));
 

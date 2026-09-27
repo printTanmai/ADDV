@@ -1,9 +1,0 @@
-{"vcs1":{"timestamp_begin":1790462510.403134101, "rt":0.95, "ut":0.10, "st":0.06}}
-{"vcselab":{"timestamp_begin":1790462511.402113948, "rt":0.87, "ut":0.12, "st":0.04}}
-{"link":{"timestamp_begin":1790462512.303309010, "rt":0.14, "ut":0.08, "st":0.03}}
-{"SNPS_VCS_INTERNAL_ROOT_START_TIME": 1790462510.188232598}
-{"VCS_COMP_START_TIME": 1790462510.188232598}
-{"VCS_COMP_END_TIME": 1790462513.602572719}
-{"VCS_USER_OPTIONS": "-R -full64 -sverilog -timescale=1ns/1ps ../RTL/sync_fifo.sv ../RTL/read_arbiter.sv ../RTL/router.sv ../RTL/oddeven.sv ../TESTBENCH/oddeven_tb.sv -debug_access+all"}
-{"vcs1": {"peak_mem": 346968}}
-{"vcselab": {"peak_mem": 199772}}

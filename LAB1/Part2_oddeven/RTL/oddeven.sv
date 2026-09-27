@@ -1,3 +1,5 @@
+//top-level odd/even stream formatter
+//even and odd values are stored separately and read in alternating order
 module oddeven (
     input  logic       clk,
     input  logic       reset,
