@@ -6,18 +6,18 @@
 // - You need to modify these arrays to match the instructions in memfile.dat file used to initialize imem
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 module MIPS_Testbench ();
-    reg clk;
-    reg reset;
-    wire [31:0] writedata, dataadr;
-    wire memwrite;
+    logic clk;
+    logic reset;
+    logic [31:0] writedata, dataadr;
+    logic memwrite;
 
-    integer i;
-    integer j;
+    int i;
+    int j;
 
     // expected memory writes
-    parameter N = 2; 
-    reg [31:0] expected_data[N:1];
-    reg [31:0] expected_addr[N:1]; 
+    parameter int N = 2;
+    logic [31:0] expected_data[N:1];
+    logic [31:0] expected_addr[N:1];
     
     // Instantiate top module
     top dut(
@@ -46,7 +46,7 @@ module MIPS_Testbench ();
     end
     
     // Monitor memory write signals
-    always begin
+    initial begin
         // Initialize reset
         reset = 1'b1;
         @(posedge clk);
@@ -69,4 +69,11 @@ module MIPS_Testbench ();
         $display("TEST COMPLETE");
         $finish;
     end
+
+    initial begin
+        $fsdbDumpfile("novas.fsdb");
+        $fsdbDumpvars(0, MIPS_Testbench);
+    end
+    
 endmodule
+

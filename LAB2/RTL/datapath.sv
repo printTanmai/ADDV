@@ -14,23 +14,23 @@
 // Datapath module
 //////////////////////////////////////////////////////////////////////
 module datapath (
-    input clk, reset,
-    input memtoreg, pcsrc,
-    input alusrc, regdst,
-    input regwrite, jump,
-    input [2:0] alucontrol,
-    output zero,
-    output [31:0] pc,
-    input [31:0] instr,
-    output [31:0] aluout, writedata,
-    input [31:0] readdata
+    input logic clk, reset,
+    input logic memtoreg, pcsrc,
+    input logic alusrc, regdst,
+    input logic regwrite, jump,
+    input logic [2:0] alucontrol,
+    output logic zero,
+    output logic [31:0] pc,
+    input logic [31:0] instr,
+    output logic [31:0] aluout, writedata,
+    input logic [31:0] readdata
 );
 
-    wire [4:0] writereg;
-    wire [31:0] pcnext, pcnextbr, pcplus4, pcbranch;
-    wire [31:0] signimm, signimmsh;
-    wire [31:0] srca, srcb;
-    wire [31:0] result;
+    logic [4:0] writereg;
+    logic [31:0] pcnext, pcnextbr, pcplus4, pcbranch;
+    logic [31:0] signimm, signimmsh;
+    logic [31:0] srca, srcb;
+    logic [31:0] result;
     
     // next PC logic
     flopr #(32) pcreg(clk, reset, pcnext, pc);
@@ -56,19 +56,19 @@ endmodule
 // Register File Module
 //////////////////////////////////////////////////////////////////////
 module regfile (
-    input clk,
-    input we3,
-    input [4:0] ra1, ra2, wa3,
-    input [31:0] wd3,
-    output [31:0] rd1, rd2
+    input logic clk,
+    input logic we3,
+    input logic [4:0] ra1, ra2, wa3,
+    input logic [31:0] wd3,
+    output logic [31:0] rd1, rd2
 );
     
-    reg [31:0] rf[31:0];
+    logic [31:0] rf[31:0];
     // three ported register file
     // read two ports combinationally
     // write third port on rising edge of clock
     // register 0 hardwired to 0
-    always @ (posedge clk)
+    always_ff @(posedge clk)
         if (we3) rf[wa3] <= wd3;
 
     assign rd1 = (ra1 != 0) ? rf[ra1] : 0;
@@ -79,11 +79,11 @@ endmodule
 // ALU Module
 ////////////////////////////////////////////////////////////////////// 
 module alu(
-    input [31:0] a,          // First operand
-    input [31:0] b,          // Second operand
-    input [2:0] control,     // ALU control signal
-    output reg [31:0] result, // ALU result
-    output zero              // Zero flag
+    input logic [31:0] a,          // First operand
+    input logic [31:0] b,          // Second operand
+    input logic [2:0] control,     // ALU control signal
+    output logic [31:0] result, // ALU result
+    output logic zero              // Zero flag
 );
 
     // Define ALU operations based on control signal
@@ -94,7 +94,7 @@ module alu(
     localparam ALU_SLT = 3'b111;
     
     // Calculate result based on control input
-    always @(*) begin
+    always_comb begin
         case(control)
             ALU_AND: result = a & b;                     // AND
             ALU_OR:  result = a | b;                     // OR
@@ -115,8 +115,8 @@ endmodule
 // Adder Module
 //////////////////////////////////////////////////////////////////////
 module adder (
-    input [31:0] a, b,
-    output [31:0] y
+    input logic [31:0] a, b,
+    output logic [31:0] y
 );
     assign y = a + b;
 endmodule
@@ -126,9 +126,9 @@ endmodule
 // 2-to-1 Multiplexer Module
 //////////////////////////////////////////////////////////////////////
 module mux2 # (parameter WIDTH = 8) (
-    input [WIDTH-1:0] d0, d1,
-    input s,
-    output [WIDTH-1:0] y
+    input logic [WIDTH-1:0] d0, d1,
+    input logic s,
+    output logic [WIDTH-1:0] y
 );
     assign y = s ? d1 : d0;
 endmodule
@@ -138,8 +138,8 @@ endmodule
 // Shift Left by 2 Module
 //////////////////////////////////////////////////////////////////////
 module sl2 (
-    input [31:0] a,
-    output [31:0] y
+    input logic [31:0] a,
+    output logic [31:0] y
 );
     // shift left by 2
     assign y = {a[29:0], 2'b00};
@@ -150,8 +150,8 @@ endmodule
 // Sign Extension Module
 //////////////////////////////////////////////////////////////////////
 module signext (
-    input [15:0] a,
-    output [31:0] y
+    input logic [15:0] a,
+    output logic [31:0] y
 );
     assign y = {{16{a[15]}}, a};
 endmodule
@@ -161,11 +161,11 @@ endmodule
 // Flop Register Module
 //////////////////////////////////////////////////////////////////////
 module flopr # (parameter WIDTH = 8)(
-    input clk, reset,
-    input [WIDTH-1:0] d,
-    output reg [WIDTH-1:0] q
+    input logic clk, reset,
+    input logic [WIDTH-1:0] d,
+    output logic [WIDTH-1:0] q
 );
-    always @ (posedge clk, posedge reset)
+    always_ff @(posedge clk or posedge reset)
         if (reset) q <= 0;
         else q <= d;
 endmodule
