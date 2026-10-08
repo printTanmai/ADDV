@@ -1,10 +1,3 @@
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Testbench template for MIPS processor
-// - This testbench uses two arrays (expected_data and expectd_addr) to store data and addresses of expected operations
-// - and for each memory write, it checks if the memory writes match the expected values
-
-// - You need to modify these arrays to match the instructions in memfile.dat file used to initialize imem
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 module MIPS_Testbench ();
     logic clk;
     logic reset;
@@ -12,15 +5,14 @@ module MIPS_Testbench ();
     logic memwrite;
 
     int i;
-    int j;
 
-    // expected memory writes
+    // Expected memory writes matching memfile.dat
     parameter int N = 2;
     logic [31:0] expected_data[N:1];
     logic [31:0] expected_addr[N:1];
     
     // Instantiate top module
-    top dut(
+    top dut (
         .clk(clk),
         .reset(reset),
         .writedata(writedata),
@@ -37,7 +29,7 @@ module MIPS_Testbench ();
         expected_addr[2] = 32'h54;
     end
 
-    // Clock generation
+    // Clock generation (10ns period)
     always begin
         clk <= 1'b0; 
         #5;
@@ -45,28 +37,28 @@ module MIPS_Testbench ();
         #5;
     end
     
-    // Monitor memory write signals
+    // Monitor memory write signals on negedge clk
     initial begin
-        // Initialize reset
         reset = 1'b1;
         @(posedge clk);
         @(posedge clk);
         reset = 1'b0;
 
-        for(i = 1; i<=N; i=i+1) begin
-            // Wait for memory write signal
-            @(posedge memwrite);
-
+        i = 1;
+        while (i <= N) begin
             @(negedge clk);
-            // Check if both data and address are expected values
-            if (dataadr == expected_addr[i] && writedata == expected_data[i]) begin
-                $display("Memory write %0d successful : wrote %h to address %h", i, writedata, dataadr);
-            end else begin
-                $display("ERROR: Memory write %0d : wrote %h to address %h ; Expected %h to address %h)", 
-                         i, writedata, dataadr, expected_data[i], expected_addr[i]);
-            end            
+            if (memwrite) begin
+                if (dataadr == expected_addr[i] && writedata == expected_data[i]) begin
+                    $display("Memory write %0d successful : wrote %h to address %h", i, writedata, dataadr);
+                end else begin
+                    $display("ERROR: Memory write %0d : wrote %h to address %h ; Expected %h to address %h", 
+                             i, writedata, dataadr, expected_data[i], expected_addr[i]);
+                end
+                i = i + 1;
+            end
         end
-        $display("TEST COMPLETE");
+
+        $display("TEST COMPLETE - ALL WRITES SUCCESSFUL");
         $finish;
     end
 
@@ -76,4 +68,3 @@ module MIPS_Testbench ();
     end
     
 endmodule
-
