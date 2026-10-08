@@ -17,6 +17,13 @@ TB_DIR := ../TESTBENCH
 SV_SOURCES := \
 	$(RTL_DIR)/controller.sv \
 	$(RTL_DIR)/datapath.sv \
+	$(RTL_DIR)/flopenc.sv \
+	$(RTL_DIR)/hazard_unit.sv \
+	$(RTL_DIR)/mux3.sv \
+	$(RTL_DIR)/pipe_ex_mem.sv \
+	$(RTL_DIR)/pipe_id_ex.sv \
+	$(RTL_DIR)/pipe_if_id.sv \
+	$(RTL_DIR)/pipe_mem_wb.sv \
 	$(RTL_DIR)/top.sv \
 	$(TB_DIR)/testbench.sv
 
