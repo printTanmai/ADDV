@@ -45,7 +45,6 @@ module datapath (
     logic [31:0] rd1_E, rd2_E, signimm_E, signimmsh_E, pcplus4_E;
     logic [4:0]  rd_E;
     logic [31:0] srca_E, writedata_E, srcb_E;
-    logic [31:0] srca_E_reg, srcb_E_reg;
     logic [31:0] aluout_E, pcbranch_E;
     logic        zero_E;
 
@@ -141,25 +140,12 @@ module datapath (
         .d0(writedata_E), .d1(signimm_E), .s(alusrc_E), .y(srcb_E)
     );
 
-    always_ff @(posedge clk, posedge reset) begin
-        if (reset) begin
-            srca_E_reg <= '0;
-            srcb_E_reg <= '0;
-        end else if (flushE) begin
-            srca_E_reg <= '0;
-            srcb_E_reg <= '0;
-        end else begin
-            srca_E_reg <= srca_E;
-            srcb_E_reg <= srcb_E;
-        end
-    end
-
     mux2 #(5) wrmux (
         .d0(rt_E), .d1(rd_E), .s(regdst_E), .y(writereg_E)
     );
 
     alu alu_inst (
-        .a(srca_E_reg), .b(srcb_E_reg),
+        .a(srca_E), .b(srcb_E),
         .control(alucontrol_E),
         .result(aluout_E), .zero(zero_E)
     );

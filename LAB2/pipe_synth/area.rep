@@ -3,7 +3,7 @@
 Report : area
 Design : mips
 Version: V-2023.12-SP5-1
-Date   : Fri Oct  9 04:48:23 2026
+Date   : Fri Oct  9 07:52:12 2026
 ****************************************
 
 Library(s) Used:
@@ -11,20 +11,20 @@ Library(s) Used:
     gscl45nm (File: /usr/local2/cadence/NCSU/SRC/FreePDK45/osu_soc/lib/files/gscl45nm.db)
 
 Number of ports:                          163
-Number of nets:                         10230
-Number of cells:                        10158
-Number of combinational cells:           8738
-Number of sequential cells:              1418
+Number of nets:                          9820
+Number of cells:                         9743
+Number of combinational cells:           8387
+Number of sequential cells:              1354
 Number of macros/black boxes:               0
-Number of buf/inv:                       3561
+Number of buf/inv:                       3664
 Number of references:                      23
 
-Combinational area:              20269.066639
-Buf/Inv area:                     5717.481778
-Noncombinational area:           12312.554718
+Combinational area:              20252.641209
+Buf/Inv area:                     6081.189261
+Noncombinational area:           11651.780304
 Macro/Black Box area:                0.000000
 Net Interconnect area:      undefined  (No wire load specified)
 
-Total cell area:                 32581.621357
+Total cell area:                 31904.421513
 Total area:                 undefined
 1

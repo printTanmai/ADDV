@@ -7,7 +7,7 @@ Report : power
         -analysis_effort low
 Design : mips
 Version: V-2023.12-SP5-1
-Date   : Fri Oct  9 04:48:23 2026
+Date   : Fri Oct  9 07:52:12 2026
 ****************************************
 
 
@@ -34,12 +34,12 @@ Attributes
 i - Including register clock pin internal power
 
 
-  Cell Internal Power  =  11.4000 mW   (93%)
-  Net Switching Power  = 805.9479 uW    (7%)
+  Cell Internal Power  =  10.7080 mW   (92%)
+  Net Switching Power  = 903.2040 uW    (8%)
                          ---------
-Total Dynamic Power    =  12.2059 mW  (100%)
+Total Dynamic Power    =  11.6112 mW  (100%)
 
-Cell Leakage Power     = 166.2046 uW
+Cell Leakage Power     = 173.3744 uW
 
 
                  Internal         Switching           Leakage            Total
@@ -48,10 +48,10 @@ Power Group      Power            Power               Power              Power  
 io_pad             0.0000            0.0000            0.0000            0.0000  (   0.00%)
 memory             0.0000            0.0000            0.0000            0.0000  (   0.00%)
 black_box          0.0000            0.0000            0.0000            0.0000  (   0.00%)
-clock_network      9.7254            0.0000            0.0000            9.7254  (  78.61%)  i
-register           0.5820        4.1121e-02        9.6725e+04            0.7198  (   5.82%)
+clock_network      8.9755            0.0000            0.0000            8.9755  (  76.16%)  i
+register           0.6000        3.4690e-02        8.9774e+04            0.7245  (   6.15%)
 sequential         0.0000            0.0000            0.0000            0.0000  (   0.00%)
-combinational      1.0926            0.7648        6.9480e+04            1.9269  (  15.57%)
+combinational      1.1325            0.8685        8.3601e+04            2.0846  (  17.69%)
 --------------------------------------------------------------------------------------------------
-Total             11.4000 mW         0.8059 mW     1.6620e+05 nW        12.3721 mW
+Total             10.7080 mW         0.9032 mW     1.7337e+05 nW        11.7846 mW
 1

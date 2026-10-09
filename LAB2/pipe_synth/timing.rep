@@ -6,7 +6,7 @@ Report : timing
         -max_paths 1
 Design : mips
 Version: V-2023.12-SP5-1
-Date   : Fri Oct  9 04:48:22 2026
+Date   : Fri Oct  9 07:52:11 2026
 ****************************************
 
  # A fanout number of 1000 was used for high fanout net computations.
@@ -14,105 +14,97 @@ Date   : Fri Oct  9 04:48:22 2026
 Operating Conditions: typical   Library: gscl45nm
 Wire Load Model Mode: top
 
-  Startpoint: dp/srcb_E_reg_reg[1]
+  Startpoint: dp/reg_mem_wb/memtoreg_W_reg
               (rising edge-triggered flip-flop clocked by clk)
-  Endpoint: dp/reg_id_ex/rd1_E_reg[1]
+  Endpoint: dp/reg_id_ex/rd1_E_reg[0]
             (rising edge-triggered flip-flop clocked by clk)
   Path Group: clk
   Path Type: max
 
-  Point                                    Incr       Path
-  -----------------------------------------------------------
-  clock clk (rise edge)                    0.00       0.00
-  clock network delay (ideal)              0.00       0.00
-  dp/srcb_E_reg_reg[1]/CLK (DFFSR)         0.00 #     0.00 r
-  dp/srcb_E_reg_reg[1]/Q (DFFSR)           0.12       0.12 r
-  U5633/Y (BUFX4)                          0.03       0.15 r
-  U10351/Y (AND2X2)                        0.03       0.18 r
-  U10378/Y (INVX1)                         0.02       0.20 f
-  U7092/Y (OAI21X1)                        0.03       0.23 r
-  U7486/Y (AND2X2)                         0.03       0.26 r
-  U7488/Y (INVX1)                          0.01       0.28 f
-  U7094/Y (NAND2X1)                        0.04       0.32 r
-  U7095/Y (AOI21X1)                        0.03       0.35 f
-  U12174/Y (AND2X2)                        0.04       0.38 f
-  U12175/Y (INVX1)                         0.00       0.38 r
-  U7097/Y (AOI22X1)                        0.01       0.40 f
-  U12983/Y (AND2X2)                        0.05       0.45 f
-  U5543/Y (NAND2X1)                        0.02       0.47 r
-  U8618/Y (AND2X2)                         0.04       0.51 r
-  U8622/Y (INVX1)                          0.01       0.52 f
-  U12615/Y (AND2X2)                        0.04       0.56 f
-  U12616/Y (INVX1)                         0.00       0.55 r
-  U12613/Y (AND2X2)                        0.03       0.58 r
-  U12614/Y (INVX1)                         0.02       0.60 f
-  U13185/Y (AND2X2)                        0.04       0.64 f
-  U13186/Y (INVX1)                         0.00       0.64 r
-  U12088/Y (AND2X2)                        0.03       0.67 r
-  U12089/Y (INVX1)                         0.02       0.69 f
-  U7107/Y (AOI21X1)                        0.04       0.73 r
-  U5540/Y (NAND2X1)                        0.02       0.75 f
-  U13802/Y (AND2X2)                        0.04       0.79 f
-  U13803/Y (INVX1)                         0.00       0.79 r
-  U7110/Y (AOI21X1)                        0.01       0.81 f
-  U7111/Y (NAND2X1)                        0.02       0.82 r
-  U7112/Y (NAND2X1)                        0.02       0.84 f
-  U7247/Y (AND2X2)                         0.04       0.88 f
-  U7250/Y (INVX1)                          0.00       0.88 r
-  U7114/Y (AOI21X1)                        0.01       0.89 f
-  U5579/Y (AND2X2)                         0.04       0.92 f
-  U8633/Y (AND2X2)                         0.03       0.96 f
-  U8636/Y (INVX1)                          0.00       0.96 r
-  U8630/Y (AND2X2)                         0.03       0.99 r
-  U8631/Y (INVX1)                          0.02       1.00 f
-  U5590/Y (NAND2X1)                        0.02       1.02 r
-  U5561/Y (NAND2X1)                        0.02       1.05 f
-  U7121/Y (AOI21X1)                        0.04       1.08 r
-  U13775/Y (AND2X2)                        0.03       1.12 r
-  U13776/Y (INVX1)                         0.02       1.13 f
-  U12617/Y (AND2X2)                        0.04       1.17 f
-  U12619/Y (INVX1)                         0.00       1.17 r
-  U6822/Y (AND2X2)                         0.03       1.20 r
-  U6823/Y (INVX1)                          0.02       1.22 f
-  U7196/Y (AOI21X1)                        0.03       1.26 r
-  U13181/Y (INVX1)                         0.02       1.28 f
-  U10459/Y (OR2X2)                         0.04       1.31 f
-  U10485/Y (INVX1)                         0.00       1.31 r
-  U10456/Y (OR2X2)                         0.04       1.35 r
-  U10457/Y (INVX1)                         0.02       1.37 f
-  U7489/Y (NOR3X1)                         0.03       1.40 r
-  U7509/Y (NAND3X1)                        0.02       1.42 f
-  U8984/Y (BUFX2)                          0.03       1.46 f
-  U7510/Y (NOR3X1)                         0.04       1.50 r
-  U7511/Y (NAND3X1)                        0.03       1.52 f
-  U5172/Y (BUFX2)                          0.04       1.56 f
-  U10528/Y (AND2X2)                        0.04       1.60 f
-  U5480/Y (AND2X2)                         0.03       1.64 f
-  U5571/Y (INVX2)                          0.04       1.67 r
-  U5614/Y (OR2X2)                          0.09       1.77 r
-  U5139/Y (INVX1)                          0.06       1.83 f
-  U9818/Y (NAND2X1)                        0.01       1.83 r
-  U13135/Y (INVX1)                         0.02       1.86 f
-  U12585/Y (AND2X2)                        0.04       1.89 f
-  U12586/Y (INVX1)                         0.00       1.89 r
-  U12589/Y (AND2X2)                        0.03       1.92 r
-  U12590/Y (INVX1)                         0.02       1.93 f
-  U9824/Y (NOR3X1)                         0.02       1.96 r
-  U9825/Y (OAI21X1)                        0.02       1.98 f
-  dp/reg_id_ex/rd1_E_reg[1]/D (DFFSR)      0.00       1.98 f
-  data arrival time                                   1.98
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clk (rise edge)                                   0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  dp/reg_mem_wb/memtoreg_W_reg/CLK (DFFSR)                0.00 #     0.00 r
+  dp/reg_mem_wb/memtoreg_W_reg/Q (DFFSR)                  0.11       0.11 r
+  U5945/Y (INVX1)                                         0.02       0.13 f
+  U5944/Y (INVX1)                                         0.04       0.17 r
+  U6716/Y (MUX2X1)                                        0.04       0.21 f
+  U6912/Y (INVX1)                                         0.15       0.36 r
+  U6914/Y (NOR2X1)                                        0.07       0.43 f
+  U6907/Y (NOR2X1)                                        0.03       0.46 r
+  U6304/Y (AND2X2)                                        0.04       0.50 r
+  U12371/Y (OR2X2)                                        0.05       0.55 r
+  U12369/Y (AND2X2)                                       0.03       0.58 r
+  U12370/Y (INVX1)                                        0.01       0.59 f
+  U12368/Y (AND2X2)                                       0.04       0.63 f
+  U5166/Y (INVX1)                                         0.00       0.63 r
+  U6322/Y (AND2X2)                                        0.03       0.66 r
+  U5195/Y (INVX1)                                         0.02       0.68 f
+  U5825/Y (NAND2X1)                                       0.01       0.69 r
+  U12960/Y (AND2X2)                                       0.03       0.73 r
+  U12961/Y (INVX1)                                        0.02       0.74 f
+  U13469/Y (AND2X2)                                       0.04       0.78 f
+  U13470/Y (INVX1)                                        0.00       0.78 r
+  U8786/Y (AND2X2)                                        0.03       0.81 r
+  U8790/Y (INVX1)                                         0.01       0.82 f
+  U8780/Y (AND2X2)                                        0.04       0.86 f
+  U8782/Y (INVX1)                                         0.00       0.86 r
+  U6309/Y (AND2X2)                                        0.03       0.89 r
+  U5193/Y (INVX1)                                         0.02       0.91 f
+  U13036/Y (AND2X2)                                       0.04       0.94 f
+  U13037/Y (INVX1)                                        0.00       0.94 r
+  U13034/Y (AND2X2)                                       0.03       0.97 r
+  U13035/Y (INVX1)                                        0.02       0.99 f
+  U11589/Y (AND2X2)                                       0.04       1.03 f
+  U11590/Y (INVX1)                                        0.00       1.03 r
+  U6415/Y (AND2X2)                                        0.03       1.06 r
+  U6416/Y (INVX1)                                         0.02       1.09 f
+  U12360/Y (AND2X1)                                       0.04       1.13 f
+  U12361/Y (INVX1)                                        0.00       1.13 r
+  U7222/Y (OAI21X1)                                       0.01       1.14 f
+  U7225/Y (MUX2X1)                                        0.05       1.19 r
+  U7226/Y (OAI21X1)                                       0.03       1.22 f
+  U7491/Y (NOR3X1)                                        0.05       1.26 r
+  U7492/Y (INVX1)                                         0.03       1.29 f
+  U7493/Y (NOR3X1)                                        0.02       1.31 r
+  U7057/Y (AND2X2)                                        0.03       1.35 r
+  U7059/Y (INVX1)                                         0.02       1.36 f
+  U7496/Y (NOR3X1)                                        0.05       1.41 r
+  U7205/Y (AND2X2)                                        0.03       1.44 r
+  U7206/Y (INVX1)                                         0.02       1.46 f
+  U7499/Y (NOR3X1)                                        0.02       1.49 r
+  U5685/Y (NAND2X1)                                       0.03       1.51 f
+  U7501/Y (NOR3X1)                                        0.03       1.54 r
+  U5823/Y (NAND2X1)                                       0.02       1.56 f
+  U5749/Y (NOR2X1)                                        0.03       1.59 r
+  U5734/Y (NAND2X1)                                       0.02       1.61 f
+  U7523/Y (AND2X2)                                        0.05       1.66 f
+  U5838/Y (NAND2X1)                                       0.01       1.67 r
+  U5802/Y (INVX1)                                         0.03       1.70 f
+  U13148/Y (AND2X2)                                       0.07       1.77 f
+  U5905/Y (INVX8)                                         0.04       1.80 r
+  U7477/Y (AND2X2)                                        0.03       1.84 r
+  U7478/Y (INVX1)                                         0.02       1.85 f
+  U12011/Y (NAND2X1)                                      0.01       1.87 r
+  U8581/Y (INVX1)                                         0.02       1.89 f
+  U8582/Y (NOR2X1)                                        0.03       1.92 r
+  U8583/Y (INVX1)                                         0.02       1.94 f
+  U8610/Y (AOI21X1)                                       0.03       1.97 r
+  U8611/Y (OAI21X1)                                       0.02       1.98 f
+  dp/reg_id_ex/rd1_E_reg[0]/D (DFFSR)                     0.00       1.98 f
+  data arrival time                                                  1.98
 
-  clock clk (rise edge)                    2.00       2.00
-  clock network delay (ideal)              0.00       2.00
-  dp/reg_id_ex/rd1_E_reg[1]/CLK (DFFSR)
-                                           0.00       2.00 r
-  library setup time                      -0.02       1.98
-  data required time                                  1.98
-  -----------------------------------------------------------
-  data required time                                  1.98
-  data arrival time                                  -1.98
-  -----------------------------------------------------------
-  slack (MET)                                         0.00
+  clock clk (rise edge)                                   2.00       2.00
+  clock network delay (ideal)                             0.00       2.00
+  dp/reg_id_ex/rd1_E_reg[0]/CLK (DFFSR)                   0.00       2.00 r
+  library setup time                                     -0.02       1.98
+  data required time                                                 1.98
+  --------------------------------------------------------------------------
+  data required time                                                 1.98
+  data arrival time                                                 -1.98
+  --------------------------------------------------------------------------
+  slack (MET)                                                        0.00
 
 
 1
