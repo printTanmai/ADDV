@@ -3,7 +3,12 @@ module mux3 #(parameter WIDTH = 32) (
     input  logic [1:0]       s,
     output logic [WIDTH-1:0] y
 );
-    assign y = (s == 2'b00) ? d0 :
-               (s == 2'b01) ? d1 :
-               (s == 2'b10) ? d2 : 'x;
+    always_comb begin
+        unique case (s)
+            2'b00:   y = d0;
+            2'b01:   y = d1;
+            2'b10:   y = d2;
+            default: y = 'x;
+        endcase
+    end
 endmodule

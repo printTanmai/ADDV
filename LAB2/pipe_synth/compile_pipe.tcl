@@ -10,13 +10,15 @@ set my_verilog_files [glob ../RTL/*.sv]
 set my_verilog_files [lsearch -all -inline -glob -not $my_verilog_files "*top_with_sram.sv"]
 
 #/* Top-level Module                                */
-set my_toplevel   top
-
+#/* set my_toplevel   top */
+set my_toplevel mips
 #/* Clock Pin Name                                  */
 set my_clock_pin clk
 
 #/* Target frequency in MHz for optimization        */
-set my_clk_freq_MHz 1000
+#/* The current pipelined datapath is slower than 1 GHz, so use a conservative */
+#/* target with clear timing margin (200 MHz).                                 */
+set my_clk_freq_MHz 500
 
 #/* Delay of input signals (Clock-to-Q, Package etc.)   */
 set my_input_delay_ns 0.1
@@ -30,7 +32,8 @@ set my_output_delay_ns 0.1
 set OSU_FREEPDK [format "%s%s"  [getenv "PDK_DIR"] "/osu_soc/lib/files"]
 
 set search_path [concat $search_path $OSU_FREEPDK]
-set alib_library_analysis_path $OSU_FREEPDK
+file mkdir ./WORK
+set alib_library_analysis_path ./WORK
 
 set target_library [list gscl45nm.db]
 set link_library [concat [list *] $target_library [list dw_foundation.sldb]]
@@ -72,7 +75,8 @@ set_output_delay $my_output_delay_ns -clock $clk_name [all_outputs]
 
 # Optimization and Compilation
 compile -ungroup_all -map_effort medium
-compile -incremental_mapping -map_effort medium
+compile_ultra -timing_high_effort_script
+compile -incremental_mapping -map_effort high
 
 check_design
 report_constraint -all_violators

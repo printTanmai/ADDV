@@ -7,7 +7,7 @@ module MIPS_Testbench ();
     int i;
 
     // Expected memory writes matching memfile.dat
-    parameter int N = 2;
+    parameter int N = 3;
     logic [31:0] expected_data[N:1];
     logic [31:0] expected_addr[N:1];
     
@@ -21,12 +21,19 @@ module MIPS_Testbench ();
     );
     
     // Initialize expected data and addresses
+
     initial begin
-        expected_data[1] = 32'h7;
+        // Checkpoint 1 (Case 1: Basic ISA ops)
+        expected_data[1] = 32'h0f; // 15 in hex
         expected_addr[1] = 32'h50;
 
-        expected_data[2] = 32'h7;
+        // Checkpoint 2 (Case 2: ADD Data hazards & Forwarding)
+        expected_data[2] = 32'h28; // 40 in hex
         expected_addr[2] = 32'h54;
+
+        // Checkpoint 3 (Case 3: BEQ Control hazards & Flushing)
+        expected_data[3] = 32'h12; // 18 in hex
+        expected_addr[3] = 32'h58;
     end
 
     // Clock generation (10ns period)
@@ -57,7 +64,7 @@ module MIPS_Testbench ();
                 i = i + 1;
             end
         end
-
+        
         $display("TEST COMPLETE - ALL WRITES SUCCESSFUL");
         $finish;
     end
