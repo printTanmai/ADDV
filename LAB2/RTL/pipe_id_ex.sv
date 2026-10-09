@@ -27,7 +27,22 @@ module pipe_id_ex (
     output logic [31:0] pcplus4_E
 );
     always_ff @(posedge clk, posedge reset) begin
-        if (reset || clr) begin
+        if (reset) begin
+            regwrite_E   <= 1'b0;
+            memtoreg_E   <= 1'b0;
+            memwrite_E   <= 1'b0;
+            alucontrol_E <= 3'b0;
+            alusrc_E     <= 1'b0;
+            regdst_E     <= 1'b0;
+            branch_E     <= 1'b0;
+            rd1_E        <= '0;
+            rd2_E        <= '0;
+            rs_E         <= '0;
+            rt_E         <= '0;
+            rd_E         <= '0;
+            signimm_E    <= '0;
+            pcplus4_E    <= '0;
+        end else if (clr) begin
             regwrite_E   <= 1'b0;
             memtoreg_E   <= 1'b0;
             memwrite_E   <= 1'b0;
