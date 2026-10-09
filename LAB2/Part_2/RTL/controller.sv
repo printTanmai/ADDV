@@ -3,9 +3,12 @@ module controller (
     output logic       memtoreg, memwrite,
     output logic       alusrc, regdst,
     output logic       regwrite, jump, branch,
-    output logic [2:0] alucontrol
+    output logic [2:0] alucontrol,
+    output logic       muladd
 );
     logic [1:0] aluop;
+
+    assign muladd = (op == 6'b000000) && (funct == 6'b011000);
 
     maindec md (
         .op(op),
@@ -44,6 +47,7 @@ module maindec (
         6'b101011: controls = 9'b001010000; // SW
         6'b000100: controls = 9'b000100001; // BEQ
         6'b001000: controls = 9'b101000000; // ADDI
+        6'b011101: controls = 9'b100000000; // PERFMON: write counter value to rt
         6'b000010: controls = 9'b000000100; // J
         default:   controls = 9'bxxxxxxxxx;
     endcase
@@ -63,6 +67,7 @@ module aludec (
             6'b100100: alucontrol = 3'b000; // AND
             6'b100101: alucontrol = 3'b001; // OR
             6'b101010: alucontrol = 3'b111; // SLT
+            6'b011000: alucontrol = 3'b011; // MULADD: rd = rs * rt + rd
             default:   alucontrol = 3'bxxx;
         endcase
     endcase

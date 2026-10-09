@@ -41,13 +41,14 @@ module mips (
     // Control Signals
     logic [5:0] op_D, funct_D;
     logic       memtoreg_D, memwrite_D, alusrc_D, regdst_D, regwrite_D, jump_D, branch_D;
+    logic       muladd_D;
     logic [2:0] alucontrol_D;
 
     // Hazard Signals
     logic       stallF, stallD, flushD, flushE;
-    logic [1:0] forwardaE, forwardbE;
-    logic [4:0] rs_D, rt_D, rs_E, rt_E, writereg_E, writereg_M, writereg_W;
-    logic       regwrite_E, regwrite_M, regwrite_W, memtoreg_E, pcsrc_E;
+    logic [1:0] forwardaE, forwardbE, forwardcE;
+    logic [4:0] rs_D, rt_D, rd_D, rs_E, rt_E, rd_E, writereg_E, writereg_M, writereg_W;
+    logic       regwrite_E, regwrite_M, regwrite_W, memtoreg_E, perfmon_E, pcsrc_E;
 
     controller c (
         .op(op_D),
@@ -59,7 +60,8 @@ module mips (
         .regwrite(regwrite_D),
         .jump(jump_D),
         .branch(branch_D),
-        .alucontrol(alucontrol_D)
+        .alucontrol(alucontrol_D),
+        .muladd(muladd_D)
     );
 
     datapath dp (
@@ -71,30 +73,32 @@ module mips (
 
         .stallF(stallF), .stallD(stallD),
         .flushD(flushD), .flushE(flushE),
-        .forwardaE(forwardaE), .forwardbE(forwardbE),
+        .forwardaE(forwardaE), .forwardbE(forwardbE), .forwardcE(forwardcE),
 
         .pc(pc), .instr(instr),
         .aluout(aluout), .writedata(writedata),
         .readdata(readdata), .memwrite(memwrite),
 
         .op_D(op_D), .funct_D(funct_D),
-        .rs_D(rs_D), .rt_D(rt_D),
-        .rs_E(rs_E), .rt_E(rt_E), .writereg_E(writereg_E),
+        .rs_D(rs_D), .rt_D(rt_D), .rd_D(rd_D),
+        .rs_E(rs_E), .rt_E(rt_E), .rd_E(rd_E), .writereg_E(writereg_E),
         .writereg_M(writereg_M), .writereg_W(writereg_W),
         .regwrite_E(regwrite_E), .regwrite_M(regwrite_M), .regwrite_W(regwrite_W),
-        .memtoreg_E(memtoreg_E), .pcsrc_E(pcsrc_E)
+        .memtoreg_E(memtoreg_E), .perfmon_E(perfmon_E), .pcsrc_E(pcsrc_E)
     );
 
     hazard_unit hu (
-        .rs_D(rs_D), .rt_D(rt_D),
-        .rs_E(rs_E), .rt_E(rt_E),
+        .rs_D(rs_D), .rt_D(rt_D), .rd_D(rd_D),
+        .rs_E(rs_E), .rt_E(rt_E), .rd_E(rd_E),
+        .muladd_D(muladd_D),
         .writereg_E(writereg_E), .writereg_M(writereg_M), .writereg_W(writereg_W),
         .regwrite_E(regwrite_E), .regwrite_M(regwrite_M), .regwrite_W(regwrite_W),
-        .memtoreg_E(memtoreg_E), .pcsrc_E(pcsrc_E), .jump_D(jump_D),
+        .memtoreg_E(memtoreg_E), .perfmon_E(perfmon_E),
+        .pcsrc_E(pcsrc_E), .jump_D(jump_D),
 
         .stallF(stallF), .stallD(stallD),
         .flushD(flushD), .flushE(flushE),
-        .forwardaE(forwardaE), .forwardbE(forwardbE)
+        .forwardaE(forwardaE), .forwardbE(forwardbE), .forwardcE(forwardcE)
     );
 endmodule
 

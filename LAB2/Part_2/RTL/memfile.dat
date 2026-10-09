@@ -43,3 +43,20 @@ ac0f0054 // sw   $15, 84($0)   # STORE 2: Write $15 (val: 40 / 0x28) to addr 0x5
 20140063 // addi $20, $0, 99   # [TRAP 2 - FLUSHED IN IF]
 0293b820 // add  $23, $20, $19 # [BRANCH TARGET] $23 = 2 + 16 = 18 (0x12)
 ac170058 // sw   $23, 88($0)   # STORE 3: Write $23 (val: 18 / 0x12) to addr 0x58
+
+// ====================================================================
+// CASE 4: MULADD with destination register as the third operand
+// ====================================================================
+20180003 // addi   $24, $0, 3
+20190004 // addi   $25, $0, 4
+201a0005 // addi   $26, $0, 5
+0319d018 // muladd $26, $24, $25 # $26 = 3 * 4 + old $26 = 17
+0319d018 // muladd $26, $24, $25 # $26 = 3 * 4 + 17 = 29 (forward old rd)
+ac1a005c // sw     $26, 92($0)   # STORE 4: Write 29 to address 0x5c
+8c1b005c // lw     $27, 92($0)   # Load 29 for MULADD's third operand
+0319d818 // muladd $27, $24, $25 # Load-use stall; $27 = 29 + 3 * 4 = 41
+ac1b0060 // sw     $27, 96($0)   # STORE 5: Write 41 to address 0x60
+741c0001 // perfmon $28, 1      # Read completed-instruction count
+ac1c0064 // sw      $28, 100($0) # STORE 6: Save instruction counter
+741d0000 // perfmon $29, 0      # Read elapsed-cycle count
+ac1d0068 // sw      $29, 104($0) # STORE 7: Save cycle counter
