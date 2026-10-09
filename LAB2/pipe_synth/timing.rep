@@ -1,0 +1,43 @@
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 1
+Design : top
+Version: V-2023.12-SP5-1
+Date   : Fri Oct  9 03:39:29 2026
+****************************************
+
+Operating Conditions: typical   Library: gscl45nm
+Wire Load Model Mode: top
+
+  Startpoint: mips_inst/dp/reg_ex_mem/aluout_M_reg[0]/CLK
+              (internal path startpoint clocked by clk)
+  Endpoint: dataadr[0] (output port clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clk (rise edge)                                   0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  input external delay                                    0.00       0.00 r
+  mips_inst/dp/reg_ex_mem/aluout_M_reg[0]/CLK (DFFSR)     0.00       0.00 r
+  mips_inst/dp/reg_ex_mem/aluout_M_reg[0]/Q (DFFSR)       0.11       0.11 f
+  U678/Y (BUFX2)                                          0.03       0.15 f
+  dataadr[0] (out)                                        0.00       0.15 f
+  data arrival time                                                  0.15
+
+  clock clk (rise edge)                                   1.00       1.00
+  clock network delay (ideal)                             0.00       1.00
+  output external delay                                  -0.10       0.90
+  data required time                                                 0.90
+  --------------------------------------------------------------------------
+  data required time                                                 0.90
+  data arrival time                                                 -0.15
+  --------------------------------------------------------------------------
+  slack (MET)                                                        0.75
+
+
+1

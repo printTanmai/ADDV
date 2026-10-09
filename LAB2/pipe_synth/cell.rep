@@ -1,0 +1,119 @@
+ 
+****************************************
+Report : cell
+Design : top
+Version: V-2023.12-SP5-1
+Date   : Fri Oct  9 03:39:29 2026
+****************************************
+
+Attributes:
+    b - black box (unknown)
+    d - dont_touch
+    h - hierarchical
+    n - noncombinational
+    r - removable
+    u - contains unmapped logic
+
+Cell                      Reference       Library             Area  Attributes
+--------------------------------------------------------------------------------
+U613                      BUFX2           gscl45nm        2.346500  
+U614                      BUFX2           gscl45nm        2.346500  
+U652                      BUFX2           gscl45nm        2.346500  
+U674                      BUFX2           gscl45nm        2.346500  
+U678                      BUFX2           gscl45nm        2.346500  
+U680                      BUFX2           gscl45nm        2.346500  
+U682                      BUFX2           gscl45nm        2.346500  
+U687                      BUFX2           gscl45nm        2.346500  
+U690                      BUFX2           gscl45nm        2.346500  
+U724                      BUFX2           gscl45nm        2.346500  
+U725                      BUFX2           gscl45nm        2.346500  
+U726                      BUFX2           gscl45nm        2.346500  
+U727                      BUFX2           gscl45nm        2.346500  
+U728                      BUFX2           gscl45nm        2.346500  
+U729                      BUFX2           gscl45nm        2.346500  
+U730                      BUFX2           gscl45nm        2.346500  
+U731                      BUFX2           gscl45nm        2.346500  
+U732                      BUFX2           gscl45nm        2.346500  
+U742                      BUFX2           gscl45nm        2.346500  
+U743                      BUFX2           gscl45nm        2.346500  
+U746                      BUFX2           gscl45nm        2.346500  
+U747                      BUFX2           gscl45nm        2.346500  
+U748                      BUFX2           gscl45nm        2.346500  
+U749                      BUFX2           gscl45nm        2.346500  
+U753                      BUFX2           gscl45nm        2.346500  
+U764                      BUFX2           gscl45nm        2.346500  
+U765                      BUFX2           gscl45nm        2.346500  
+U766                      BUFX2           gscl45nm        2.346500  
+U767                      BUFX2           gscl45nm        2.346500  
+U768                      BUFX2           gscl45nm        2.346500  
+U785                      BUFX2           gscl45nm        2.346500  
+U1137                     BUFX2           gscl45nm        2.346500  
+mips_inst/dp/reg_ex_mem/U74
+                          INVX1           gscl45nm        1.407900  d
+mips_inst/dp/reg_ex_mem/aluout_M_reg[0]
+                          DFFSR           gscl45nm        10.324600 n
+mips_inst/dp/reg_ex_mem/aluout_M_reg[1]
+                          DFFSR           gscl45nm        10.324600 n
+mips_inst/dp/reg_ex_mem/aluout_M_reg[2]
+                          DFFSR           gscl45nm        10.324600 n
+mips_inst/dp/reg_ex_mem/aluout_M_reg[3]
+                          DFFSR           gscl45nm        10.324600 n
+mips_inst/dp/reg_ex_mem/aluout_M_reg[4]
+                          DFFSR           gscl45nm        10.324600 n
+mips_inst/dp/reg_ex_mem/aluout_M_reg[5]
+                          DFFSR           gscl45nm        10.324600 n
+mips_inst/dp/reg_ex_mem/aluout_M_reg[6]
+                          DFFSR           gscl45nm        10.324600 n
+mips_inst/dp/reg_ex_mem/aluout_M_reg[7]
+                          DFFSR           gscl45nm        10.324600 n
+mips_inst/dp/reg_ex_mem/aluout_M_reg[8]
+                          DFFSR           gscl45nm        10.324600 n
+mips_inst/dp/reg_ex_mem/aluout_M_reg[9]
+                          DFFSR           gscl45nm        10.324600 n
+mips_inst/dp/reg_ex_mem/aluout_M_reg[10]
+                          DFFSR           gscl45nm        10.324600 n
+mips_inst/dp/reg_ex_mem/aluout_M_reg[11]
+                          DFFSR           gscl45nm        10.324600 n
+mips_inst/dp/reg_ex_mem/aluout_M_reg[12]
+                          DFFSR           gscl45nm        10.324600 n
+mips_inst/dp/reg_ex_mem/aluout_M_reg[13]
+                          DFFSR           gscl45nm        10.324600 n
+mips_inst/dp/reg_ex_mem/aluout_M_reg[14]
+                          DFFSR           gscl45nm        10.324600 n
+mips_inst/dp/reg_ex_mem/aluout_M_reg[15]
+                          DFFSR           gscl45nm        10.324600 n
+mips_inst/dp/reg_ex_mem/aluout_M_reg[16]
+                          DFFSR           gscl45nm        10.324600 n
+mips_inst/dp/reg_ex_mem/aluout_M_reg[17]
+                          DFFSR           gscl45nm        10.324600 n
+mips_inst/dp/reg_ex_mem/aluout_M_reg[18]
+                          DFFSR           gscl45nm        10.324600 n
+mips_inst/dp/reg_ex_mem/aluout_M_reg[19]
+                          DFFSR           gscl45nm        10.324600 n
+mips_inst/dp/reg_ex_mem/aluout_M_reg[20]
+                          DFFSR           gscl45nm        10.324600 n
+mips_inst/dp/reg_ex_mem/aluout_M_reg[21]
+                          DFFSR           gscl45nm        10.324600 n
+mips_inst/dp/reg_ex_mem/aluout_M_reg[22]
+                          DFFSR           gscl45nm        10.324600 n
+mips_inst/dp/reg_ex_mem/aluout_M_reg[23]
+                          DFFSR           gscl45nm        10.324600 n
+mips_inst/dp/reg_ex_mem/aluout_M_reg[24]
+                          DFFSR           gscl45nm        10.324600 n
+mips_inst/dp/reg_ex_mem/aluout_M_reg[25]
+                          DFFSR           gscl45nm        10.324600 n
+mips_inst/dp/reg_ex_mem/aluout_M_reg[26]
+                          DFFSR           gscl45nm        10.324600 n
+mips_inst/dp/reg_ex_mem/aluout_M_reg[27]
+                          DFFSR           gscl45nm        10.324600 n
+mips_inst/dp/reg_ex_mem/aluout_M_reg[28]
+                          DFFSR           gscl45nm        10.324600 n
+mips_inst/dp/reg_ex_mem/aluout_M_reg[29]
+                          DFFSR           gscl45nm        10.324600 n
+mips_inst/dp/reg_ex_mem/aluout_M_reg[30]
+                          DFFSR           gscl45nm        10.324600 n
+mips_inst/dp/reg_ex_mem/aluout_M_reg[31]
+                          DFFSR           gscl45nm        10.324600 n
+--------------------------------------------------------------------------------
+Total 65 cells                                            406.883104
+1
