@@ -15,83 +15,54 @@
 `define ADDR_STRIDE_WIDTH 8
 `define MAX_BITS_POOL 3
 
-module matmul_4x4_systolic(
-    clk,
-    reset,
-    pe_reset,
-    start_mat_mul,
-    done_mat_mul,
-    address_mat_a,
-    address_mat_b,
-    address_mat_c,
-    address_stride_a,
-    address_stride_b,
-    address_stride_c,
-    a_data,
-    b_data,
-    a_data_in, //Data values coming in from previous matmul - systolic connections
-    b_data_in,
-    c_data_in, //Data values coming in from previous matmul - systolic shifting
-    c_data_out, //Data values going out to next matmul - systolic shifting
-    a_data_out,
-    b_data_out,
-    a_addr,
-    b_addr,
-    c_addr,
-    c_data_available,
-    validity_mask_a_rows,
-    validity_mask_a_cols_b_rows,
-    validity_mask_b_cols,
-    final_mat_mul_size,
-    a_loc,
-    b_loc
-    );
+module matmul_4x4_systolic (
+    input logic clk,
+    input logic reset,
+    input logic pe_reset,
+    input logic start_mat_mul,
+    output logic done_mat_mul,
+    input logic [`AWIDTH-1:0] address_mat_a,
+    input logic [`AWIDTH-1:0] address_mat_b,
+    input logic [`AWIDTH-1:0] address_mat_c,
+    input logic [`ADDR_STRIDE_WIDTH-1:0] address_stride_a,
+    input logic [`ADDR_STRIDE_WIDTH-1:0] address_stride_b,
+    input logic [`ADDR_STRIDE_WIDTH-1:0] address_stride_c,
+    input logic [`MAT_MUL_SIZE*`DWIDTH-1:0] a_data,
+    input logic [`MAT_MUL_SIZE*`DWIDTH-1:0] b_data,
+    input logic [`MAT_MUL_SIZE*`DWIDTH-1:0] a_data_in,
+    input logic [`MAT_MUL_SIZE*`DWIDTH-1:0] b_data_in,
+    input logic [`MAT_MUL_SIZE*`DWIDTH-1:0] c_data_in,
+    output wire [`MAT_MUL_SIZE*`DWIDTH-1:0] c_data_out,
+    output wire [`MAT_MUL_SIZE*`DWIDTH-1:0] a_data_out,
+    output wire [`MAT_MUL_SIZE*`DWIDTH-1:0] b_data_out,
+    output wire [`AWIDTH-1:0] a_addr,
+    output wire [`AWIDTH-1:0] b_addr,
+    output wire [`AWIDTH-1:0] c_addr,
+    output wire c_data_available,
+    input logic [`MASK_WIDTH-1:0] validity_mask_a_rows,
+    input logic [`MASK_WIDTH-1:0] validity_mask_a_cols_b_rows,
+    input logic [`MASK_WIDTH-1:0] validity_mask_b_cols,
+    input logic [7:0] final_mat_mul_size,
+    input logic [7:0] a_loc,
+    input logic [7:0] b_loc
+);
+    wire row_latch_en;
 
-    input clk;
-    input reset;
-    input pe_reset;
-    input start_mat_mul;
-    output done_mat_mul;
-    input [`AWIDTH-1:0] address_mat_a;
-    input [`AWIDTH-1:0] address_mat_b;
-    input [`AWIDTH-1:0] address_mat_c;
-    input [`ADDR_STRIDE_WIDTH-1:0] address_stride_a;
-    input [`ADDR_STRIDE_WIDTH-1:0] address_stride_b;
-    input [`ADDR_STRIDE_WIDTH-1:0] address_stride_c;
-    input [`MAT_MUL_SIZE*`DWIDTH-1:0] a_data;
-    input [`MAT_MUL_SIZE*`DWIDTH-1:0] b_data;
-    input [`MAT_MUL_SIZE*`DWIDTH-1:0] a_data_in;
-    input [`MAT_MUL_SIZE*`DWIDTH-1:0] b_data_in;
-    input [`MAT_MUL_SIZE*`DWIDTH-1:0] c_data_in;
-    output [`MAT_MUL_SIZE*`DWIDTH-1:0] c_data_out;
-    output [`MAT_MUL_SIZE*`DWIDTH-1:0] a_data_out;
-    output [`MAT_MUL_SIZE*`DWIDTH-1:0] b_data_out;
-    output [`AWIDTH-1:0] a_addr;
-    output [`AWIDTH-1:0] b_addr;
-    output [`AWIDTH-1:0] c_addr;
-    output c_data_available;
-    input [`MASK_WIDTH-1:0] validity_mask_a_rows;
-    input [`MASK_WIDTH-1:0] validity_mask_a_cols_b_rows;
-    input [`MASK_WIDTH-1:0] validity_mask_b_cols;
     //7:0 is okay here. We aren't going to make a matmul larger than 128x128
     //In fact, these will get optimized out by the synthesis tool, because
     //we hardcode them at the instantiation level.
-    input [7:0] final_mat_mul_size;
-    input [7:0] a_loc;
-    input [7:0] b_loc;
 
 //////////////////////////////////////////////////////////////////////////
 // Logic for clock counting and when to assert done
 //////////////////////////////////////////////////////////////////////////
 
-    reg done_mat_mul;
     //This is 7 bits because the expectation is that clock count will be pretty
     //small. For large matmuls, this will need to increased to have more bits.
     //In general, a systolic multiplier takes f(N)+P cycles, where N is the size 
     //of the matmul and P is the number of pipleine stages in the MAC block.
     //f(N) is a function describing the number of cycles taken to perform matmul
     //with a systolic array strcture.
-    reg [7:0] clk_cnt;
+    logic [7:0] clk_cnt;
     
     //Finding out number of cycles to assert matmul done.
     wire [7:0] clk_cnt_for_done;
@@ -100,8 +71,7 @@ module matmul_4x4_systolic(
     assign cycles_for_matmul = 8'd14;
     assign clk_cnt_for_done = (cycles_for_matmul + `NUM_CYCLES_IN_MAC) ;  
 
-
-    always @(posedge clk) 
+    always_ff @(posedge clk) 
     begin
         if (reset || ~start_mat_mul) 
         begin
@@ -121,7 +91,6 @@ module matmul_4x4_systolic(
             clk_cnt <= clk_cnt + 1;
         end
     end
-
 
     wire [`DWIDTH-1:0] a0_data;
     wire [`DWIDTH-1:0] a1_data;
@@ -176,7 +145,6 @@ module matmul_4x4_systolic(
         .b_loc(b_loc)
         );
 
-
 //////////////////////////////////////////////////////////////////////////
 // Logic to mux data_in coming from neighboring matmuls
 //////////////////////////////////////////////////////////////////////////
@@ -226,7 +194,6 @@ module matmul_4x4_systolic(
     assign b1 = (a_loc==0) ? b1_data_delayed_1 : b1_data_in;
     assign b2 = (a_loc==0) ? b2_data_delayed_2 : b2_data_in;
     assign b3 = (a_loc==0) ? b3_data_delayed_3 : b3_data_in;
-    
 
     wire [`DWIDTH-1:0] matrixC00;
     wire [`DWIDTH-1:0] matrixC01;
@@ -244,7 +211,6 @@ module matmul_4x4_systolic(
     wire [`DWIDTH-1:0] matrixC31;
     wire [`DWIDTH-1:0] matrixC32;
     wire [`DWIDTH-1:0] matrixC33;
-    
 
 //////////////////////////////////////////////////////////////////////////
 // Instantiation of the output logic
@@ -322,83 +288,49 @@ endmodule
 //////////////////////////////////////////////////////////////////////////
 // Output logic
 //////////////////////////////////////////////////////////////////////////
-module output_logic(
-    clk,
-    reset,
-    start_mat_mul,
-    done_mat_mul,
-    address_mat_c,
-    address_stride_c,
-    c_data_in,
-    c_data_out, //Data values going out to next matmul - systolic shifting
-    c_addr,
-    c_data_available,
-    clk_cnt,
-    row_latch_en,
-    final_mat_mul_size,
-    matrixC00,
-    matrixC01,
-    matrixC02,
-    matrixC03,
-    matrixC10,
-    matrixC11,
-    matrixC12,
-    matrixC13,
-    matrixC20,
-    matrixC21,
-    matrixC22,
-    matrixC23,
-    matrixC30,
-    matrixC31,
-    matrixC32,
-    matrixC33
-    );
-
-    input clk;
-    input reset;
-    input start_mat_mul;
-    input done_mat_mul;
-    input [`AWIDTH-1:0] address_mat_c;
-    input [`ADDR_STRIDE_WIDTH-1:0] address_stride_c;
-    input [`MAT_MUL_SIZE*`DWIDTH-1:0] c_data_in;
-    output [`MAT_MUL_SIZE*`DWIDTH-1:0] c_data_out;
-    output [`AWIDTH-1:0] c_addr;
-    output c_data_available;
-    input [7:0] clk_cnt;
-    output row_latch_en;
-    input [7:0] final_mat_mul_size;
-    input [`DWIDTH-1:0] matrixC00;
-    input [`DWIDTH-1:0] matrixC01;
-    input [`DWIDTH-1:0] matrixC02;
-    input [`DWIDTH-1:0] matrixC03;
-    input [`DWIDTH-1:0] matrixC10;
-    input [`DWIDTH-1:0] matrixC11;
-    input [`DWIDTH-1:0] matrixC12;
-    input [`DWIDTH-1:0] matrixC13;
-    input [`DWIDTH-1:0] matrixC20;
-    input [`DWIDTH-1:0] matrixC21;
-    input [`DWIDTH-1:0] matrixC22;
-    input [`DWIDTH-1:0] matrixC23;
-    input [`DWIDTH-1:0] matrixC30;
-    input [`DWIDTH-1:0] matrixC31;
-    input [`DWIDTH-1:0] matrixC32;
-    input [`DWIDTH-1:0] matrixC33;
-    
-    wire row_latch_en;
+module output_logic (
+    input logic clk,
+    input logic reset,
+    input logic start_mat_mul,
+    input logic done_mat_mul,
+    input logic [`AWIDTH-1:0] address_mat_c,
+    input logic [`ADDR_STRIDE_WIDTH-1:0] address_stride_c,
+    input logic [`MAT_MUL_SIZE*`DWIDTH-1:0] c_data_in,
+    output logic [`MAT_MUL_SIZE*`DWIDTH-1:0] c_data_out,
+    output logic [`AWIDTH-1:0] c_addr,
+    output logic c_data_available,
+    input logic [7:0] clk_cnt,
+    output wire row_latch_en,
+    input logic [7:0] final_mat_mul_size,
+    input logic [`DWIDTH-1:0] matrixC00,
+    input logic [`DWIDTH-1:0] matrixC01,
+    input logic [`DWIDTH-1:0] matrixC02,
+    input logic [`DWIDTH-1:0] matrixC03,
+    input logic [`DWIDTH-1:0] matrixC10,
+    input logic [`DWIDTH-1:0] matrixC11,
+    input logic [`DWIDTH-1:0] matrixC12,
+    input logic [`DWIDTH-1:0] matrixC13,
+    input logic [`DWIDTH-1:0] matrixC20,
+    input logic [`DWIDTH-1:0] matrixC21,
+    input logic [`DWIDTH-1:0] matrixC22,
+    input logic [`DWIDTH-1:0] matrixC23,
+    input logic [`DWIDTH-1:0] matrixC30,
+    input logic [`DWIDTH-1:0] matrixC31,
+    input logic [`DWIDTH-1:0] matrixC32,
+    input logic [`DWIDTH-1:0] matrixC33
+);
 
 //////////////////////////////////////////////////////////////////////////
 // Logic to capture matrix C data from the PEs and shift it out
 //////////////////////////////////////////////////////////////////////////
     assign row_latch_en = ((clk_cnt == ((final_mat_mul_size<<2) - final_mat_mul_size -1 +`NUM_CYCLES_IN_MAC)));
-    
-    reg c_data_available;
-    reg [`AWIDTH-1:0] c_addr;
-    reg start_capturing_c_data;
+
+    logic start_capturing_c_data;
     integer counter;
-    reg [`MAT_MUL_SIZE*`DWIDTH-1:0] c_data_out;
-    reg [`MAT_MUL_SIZE*`DWIDTH-1:0] c_data_out_1;
-    reg [`MAT_MUL_SIZE*`DWIDTH-1:0] c_data_out_2;
-    reg [`MAT_MUL_SIZE*`DWIDTH-1:0] c_data_out_3;
+
+    logic [`MAT_MUL_SIZE*`DWIDTH-1:0] c_data_out_1;
+    logic [`MAT_MUL_SIZE*`DWIDTH-1:0] c_data_out_2;
+    logic [`MAT_MUL_SIZE*`DWIDTH-1:0] c_data_out_3;
     
     wire [`MAT_MUL_SIZE*`DWIDTH-1:0] col0;
     wire [`MAT_MUL_SIZE*`DWIDTH-1:0] col1;
@@ -415,7 +347,7 @@ module output_logic(
     assign condition_to_start_shifting_output = row_latch_en ;  
 
 //For larger matmuls, this logic will have more entries in the case statement
-    always @(posedge clk) 
+    always_ff @(posedge clk) 
     begin
         if (reset | ~start_mat_mul) 
         begin
@@ -474,67 +406,39 @@ endmodule
 //////////////////////////////////////////////////////////////////////////
 // Systolic data setup
 //////////////////////////////////////////////////////////////////////////
-module systolic_data_setup(
-    clk,
-    reset,
-    start_mat_mul,
-    a_addr,
-    b_addr,
-    address_mat_a,
-    address_mat_b,
-    address_stride_a,
-    address_stride_b,
-    a_data,
-    b_data,
-    clk_cnt,
-    a0_data,
-    a1_data_delayed_1,
-    a2_data_delayed_2,
-    a3_data_delayed_3,
-    b0_data,
-    b1_data_delayed_1,
-    b2_data_delayed_2,
-    b3_data_delayed_3,
-    validity_mask_a_rows,
-    validity_mask_a_cols_b_rows,
-    validity_mask_b_cols,
-    final_mat_mul_size,
-    a_loc,
-    b_loc
-    );
+module systolic_data_setup (
+    input logic clk,
+    input logic reset,
+    input logic start_mat_mul,
+    output logic [`AWIDTH-1:0] a_addr,
+    output logic [`AWIDTH-1:0] b_addr,
+    input logic [`AWIDTH-1:0] address_mat_a,
+    input logic [`AWIDTH-1:0] address_mat_b,
+    input logic [`ADDR_STRIDE_WIDTH-1:0] address_stride_a,
+    input logic [`ADDR_STRIDE_WIDTH-1:0] address_stride_b,
+    input logic [`MAT_MUL_SIZE*`DWIDTH-1:0] a_data,
+    input logic [`MAT_MUL_SIZE*`DWIDTH-1:0] b_data,
+    input logic [7:0] clk_cnt,
+    output wire [`DWIDTH-1:0] a0_data,
+    output logic [`DWIDTH-1:0] a1_data_delayed_1,
+    output logic [`DWIDTH-1:0] a2_data_delayed_2,
+    output logic [`DWIDTH-1:0] a3_data_delayed_3,
+    output wire [`DWIDTH-1:0] b0_data,
+    output logic [`DWIDTH-1:0] b1_data_delayed_1,
+    output logic [`DWIDTH-1:0] b2_data_delayed_2,
+    output logic [`DWIDTH-1:0] b3_data_delayed_3,
+    input logic [`MASK_WIDTH-1:0] validity_mask_a_rows,
+    input logic [`MASK_WIDTH-1:0] validity_mask_a_cols_b_rows,
+    input logic [`MASK_WIDTH-1:0] validity_mask_b_cols,
+    input logic [7:0] final_mat_mul_size,
+    input logic [7:0] a_loc,
+    input logic [7:0] b_loc
+);
 
-    input clk;
-    input reset;
-    input start_mat_mul;
-    output [`AWIDTH-1:0] a_addr;
-    output [`AWIDTH-1:0] b_addr;
-    input [`AWIDTH-1:0] address_mat_a;
-    input [`AWIDTH-1:0] address_mat_b;
-    input [`ADDR_STRIDE_WIDTH-1:0] address_stride_a;
-    input [`ADDR_STRIDE_WIDTH-1:0] address_stride_b;
-    input [`MAT_MUL_SIZE*`DWIDTH-1:0] a_data;
-    input [`MAT_MUL_SIZE*`DWIDTH-1:0] b_data;
-    input [7:0] clk_cnt;
-    output [`DWIDTH-1:0] a0_data;
-    output [`DWIDTH-1:0] a1_data_delayed_1;
-    output [`DWIDTH-1:0] a2_data_delayed_2;
-    output [`DWIDTH-1:0] a3_data_delayed_3;
-    output [`DWIDTH-1:0] b0_data;
-    output [`DWIDTH-1:0] b1_data_delayed_1;
-    output [`DWIDTH-1:0] b2_data_delayed_2;
-    output [`DWIDTH-1:0] b3_data_delayed_3;
-    input [`MASK_WIDTH-1:0] validity_mask_a_rows;
-    input [`MASK_WIDTH-1:0] validity_mask_a_cols_b_rows;
-    input [`MASK_WIDTH-1:0] validity_mask_b_cols;
-    input [7:0] final_mat_mul_size;
-    input [7:0] a_loc;
-    input [7:0] b_loc;
-    
-    wire [`DWIDTH-1:0] a0_data;
     wire [`DWIDTH-1:0] a1_data;
     wire [`DWIDTH-1:0] a2_data;
     wire [`DWIDTH-1:0] a3_data;
-    wire [`DWIDTH-1:0] b0_data;
+
     wire [`DWIDTH-1:0] b1_data;
     wire [`DWIDTH-1:0] b2_data;
     wire [`DWIDTH-1:0] b3_data;
@@ -542,10 +446,10 @@ module systolic_data_setup(
 //////////////////////////////////////////////////////////////////////////
 // Logic to generate addresses to BRAM A
 //////////////////////////////////////////////////////////////////////////
-    reg [`AWIDTH-1:0] a_addr;
-    reg a_mem_access; //flag that tells whether the matmul is trying to access memory or not
+
+    logic a_mem_access; //flag that tells whether the matmul is trying to access memory or not
     
-    always @(posedge clk) 
+    always_ff @(posedge clk) 
     begin
         if ((reset || ~start_mat_mul) || (clk_cnt >= (a_loc<<`LOG2_MAT_MUL_SIZE)+final_mat_mul_size)) begin
             a_addr <= address_mat_a-address_stride_a;
@@ -561,8 +465,8 @@ module systolic_data_setup(
 //////////////////////////////////////////////////////////////////////////
 // Logic to generate valid signals for data coming from BRAM A
 //////////////////////////////////////////////////////////////////////////
-    reg [7:0] a_mem_access_counter;
-    always @(posedge clk) 
+    logic [7:0] a_mem_access_counter;
+    always_ff @(posedge clk) 
     begin
         if (reset || ~start_mat_mul) 
             a_mem_access_counter <= 0;
@@ -590,14 +494,13 @@ module systolic_data_setup(
     assign a3_data = a_data[4*`DWIDTH-1:3*`DWIDTH] & {`DWIDTH{a_data_valid}} & {`DWIDTH{validity_mask_a_rows[3]}};
 
 //For larger matmuls, more such delaying flops will be needed
-    reg [`DWIDTH-1:0] a1_data_delayed_1;
-    reg [`DWIDTH-1:0] a2_data_delayed_1;
-    reg [`DWIDTH-1:0] a2_data_delayed_2;
-    reg [`DWIDTH-1:0] a3_data_delayed_1;
-    reg [`DWIDTH-1:0] a3_data_delayed_2;
-    reg [`DWIDTH-1:0] a3_data_delayed_3;
-    
-    always @(posedge clk) 
+
+    logic [`DWIDTH-1:0] a2_data_delayed_1;
+
+    logic [`DWIDTH-1:0] a3_data_delayed_1;
+    logic [`DWIDTH-1:0] a3_data_delayed_2;
+
+    always_ff @(posedge clk) 
     begin
         if (reset || ~start_mat_mul || clk_cnt==0) 
         begin
@@ -622,10 +525,10 @@ module systolic_data_setup(
 //////////////////////////////////////////////////////////////////////////
 // Logic to generate addresses to BRAM B
 //////////////////////////////////////////////////////////////////////////
-    reg [`AWIDTH-1:0] b_addr;
-    reg b_mem_access; //flag that tells whether the matmul is trying to access memory or not
 
-    always @(posedge clk) 
+    logic b_mem_access; //flag that tells whether the matmul is trying to access memory or not
+
+    always_ff @(posedge clk) 
     begin
         if ((reset || ~start_mat_mul) || (clk_cnt >= (b_loc<<`LOG2_MAT_MUL_SIZE)+final_mat_mul_size)) 
         begin
@@ -642,8 +545,8 @@ module systolic_data_setup(
 //////////////////////////////////////////////////////////////////////////
 // Logic to generate valid signals for data coming from BRAM B
 //////////////////////////////////////////////////////////////////////////
-    reg [7:0] b_mem_access_counter;
-    always @(posedge clk) 
+    logic [7:0] b_mem_access_counter;
+    always_ff @(posedge clk) 
     begin
         if (reset || ~start_mat_mul) 
             b_mem_access_counter <= 0;
@@ -661,7 +564,6 @@ module systolic_data_setup(
         (validity_mask_a_cols_b_rows[3]==1'b0 && b_mem_access_counter==4)) ?
         1'b0 : (b_mem_access_counter >= `MEM_ACCESS_LATENCY);
 
-
 //////////////////////////////////////////////////////////////////////////
 // Logic to delay certain parts of the data received from BRAM B (systolic data setup)
 //////////////////////////////////////////////////////////////////////////
@@ -672,14 +574,13 @@ module systolic_data_setup(
     assign b3_data = b_data[4*`DWIDTH-1:3*`DWIDTH] & {`DWIDTH{b_data_valid}} & {`DWIDTH{validity_mask_b_cols[3]}};
 
 //For larger matmuls, more such delaying flops will be needed
-    reg [`DWIDTH-1:0] b1_data_delayed_1;
-    reg [`DWIDTH-1:0] b2_data_delayed_1;
-    reg [`DWIDTH-1:0] b2_data_delayed_2;
-    reg [`DWIDTH-1:0] b3_data_delayed_1;
-    reg [`DWIDTH-1:0] b3_data_delayed_2;
-    reg [`DWIDTH-1:0] b3_data_delayed_3;
-    
-    always @(posedge clk) 
+
+    logic [`DWIDTH-1:0] b2_data_delayed_1;
+
+    logic [`DWIDTH-1:0] b3_data_delayed_1;
+    logic [`DWIDTH-1:0] b3_data_delayed_2;
+
+    always_ff @(posedge clk) 
     begin
         if (reset || ~start_mat_mul || clk_cnt==0) 
         begin
@@ -703,68 +604,41 @@ module systolic_data_setup(
 
 endmodule
 
-
-
 //////////////////////////////////////////////////////////////////////////
 // Systolically connected PEs
 //////////////////////////////////////////////////////////////////////////
-module systolic_pe_matrix(
-    reset,
-    clk,
-    pe_reset,
-    start_mat_mul,
-    a0, a1, a2, a3,
-    b0, b1, b2, b3,
-    matrixC00,
-    matrixC01,
-    matrixC02,
-    matrixC03,
-    matrixC10,
-    matrixC11,
-    matrixC12,
-    matrixC13,
-    matrixC20,
-    matrixC21,
-    matrixC22,
-    matrixC23,
-    matrixC30,
-    matrixC31,
-    matrixC32,
-    matrixC33,
-    a_data_out,
-    b_data_out
-    );
-
-    input clk;
-    input reset;
-    input pe_reset;
-    input start_mat_mul;
-    input [`DWIDTH-1:0] a0;
-    input [`DWIDTH-1:0] a1;
-    input [`DWIDTH-1:0] a2;
-    input [`DWIDTH-1:0] a3;
-    input [`DWIDTH-1:0] b0;
-    input [`DWIDTH-1:0] b1;
-    input [`DWIDTH-1:0] b2;
-    input [`DWIDTH-1:0] b3;
-    output [`DWIDTH-1:0] matrixC00;
-    output [`DWIDTH-1:0] matrixC01;
-    output [`DWIDTH-1:0] matrixC02;
-    output [`DWIDTH-1:0] matrixC03;
-    output [`DWIDTH-1:0] matrixC10;
-    output [`DWIDTH-1:0] matrixC11;
-    output [`DWIDTH-1:0] matrixC12;
-    output [`DWIDTH-1:0] matrixC13;
-    output [`DWIDTH-1:0] matrixC20;
-    output [`DWIDTH-1:0] matrixC21;
-    output [`DWIDTH-1:0] matrixC22;
-    output [`DWIDTH-1:0] matrixC23;
-    output [`DWIDTH-1:0] matrixC30;
-    output [`DWIDTH-1:0] matrixC31;
-    output [`DWIDTH-1:0] matrixC32;
-    output [`DWIDTH-1:0] matrixC33;
-    output [`MAT_MUL_SIZE*`DWIDTH-1:0] a_data_out;
-    output [`MAT_MUL_SIZE*`DWIDTH-1:0] b_data_out;
+module systolic_pe_matrix (
+    input logic reset,
+    input logic clk,
+    input logic pe_reset,
+    input logic start_mat_mul,
+    input logic [`DWIDTH-1:0] a0,
+    input logic [`DWIDTH-1:0] a1,
+    input logic [`DWIDTH-1:0] a2,
+    input logic [`DWIDTH-1:0] a3,
+    input logic [`DWIDTH-1:0] b0,
+    input logic [`DWIDTH-1:0] b1,
+    input logic [`DWIDTH-1:0] b2,
+    input logic [`DWIDTH-1:0] b3,
+    output wire [`DWIDTH-1:0] matrixC00,
+    output wire [`DWIDTH-1:0] matrixC01,
+    output wire [`DWIDTH-1:0] matrixC02,
+    output wire [`DWIDTH-1:0] matrixC03,
+    output wire [`DWIDTH-1:0] matrixC10,
+    output wire [`DWIDTH-1:0] matrixC11,
+    output wire [`DWIDTH-1:0] matrixC12,
+    output wire [`DWIDTH-1:0] matrixC13,
+    output wire [`DWIDTH-1:0] matrixC20,
+    output wire [`DWIDTH-1:0] matrixC21,
+    output wire [`DWIDTH-1:0] matrixC22,
+    output wire [`DWIDTH-1:0] matrixC23,
+    output wire [`DWIDTH-1:0] matrixC30,
+    output wire [`DWIDTH-1:0] matrixC31,
+    output wire [`DWIDTH-1:0] matrixC32,
+    output wire [`DWIDTH-1:0] matrixC33,
+    output wire [`MAT_MUL_SIZE*`DWIDTH-1:0] a_data_out,
+    output wire [`MAT_MUL_SIZE*`DWIDTH-1:0] b_data_out
+);
 
     wire [`DWIDTH-1:0] a00to01, a01to02, a02to03, a03to04;
     wire [`DWIDTH-1:0] a10to11, a11to12, a12to13, a13to14;
@@ -778,8 +652,7 @@ module systolic_pe_matrix(
     
     wire effective_rst;
     assign effective_rst = reset | pe_reset;
-    
-    
+
     //There are a total of 16 PEs arranged in a mesh structure like in the lecture slides. 	
 	//Each PE has a number. PE00 is the top-left PE. PE01 is the second PE on the first row. 
 	//PE10 is the first PE on the second row. PE33 is the bottom right PE.	
@@ -815,38 +688,26 @@ module systolic_pe_matrix(
 
 endmodule
 
-
 //////////////////////////////////////////////////////////////////////////
 // Processing element (PE)
 //////////////////////////////////////////////////////////////////////////
-module processing_element(
-    reset, 
-    clk, 
-    in_a,
-    in_b, 
-    out_a, 
-    out_b, 
-    out_c
-    );
+module processing_element (
+    input logic reset,
+    input logic clk,
+    input logic [`DWIDTH-1:0] in_a,
+    input logic [`DWIDTH-1:0] in_b,
+    output logic [`DWIDTH-1:0] out_a,
+    output logic [`DWIDTH-1:0] out_b,
+    output wire [`DWIDTH-1:0] out_c //reduced precision
+);
 
-    input reset;
-    input clk;
-    input  [`DWIDTH-1:0] in_a;
-    input  [`DWIDTH-1:0] in_b;
-    output [`DWIDTH-1:0] out_a;
-    output [`DWIDTH-1:0] out_b;
-    output [`DWIDTH-1:0] out_c;  //reduced precision
-
-    reg [`DWIDTH-1:0] out_a;
-    reg [`DWIDTH-1:0] out_b;
-    wire [`DWIDTH-1:0] out_c;
     wire [`DWIDTH-1:0] out_mac;
 
     assign out_c = out_mac;
     
     seq_mac u_mac(.a(in_a), .b(in_b), .out(out_mac), .reset(reset), .clk(clk));
 
-    always @(posedge clk)
+    always_ff @(posedge clk)
     begin
         if(reset) 
         begin
@@ -865,17 +726,17 @@ endmodule
 //////////////////////////////////////////////////////////////////////////
 // Multiply-and-accumulate (MAC) block
 //////////////////////////////////////////////////////////////////////////
-module seq_mac(a, b, out, reset, clk);
-    input [`DWIDTH-1:0] a;
-    input [`DWIDTH-1:0] b;
-    input reset;
-    input clk;
-    output [`DWIDTH-1:0] out;
+module seq_mac (
+    input logic [`DWIDTH-1:0] a,
+    input logic [`DWIDTH-1:0] b,
+    output logic [`DWIDTH-1:0] out,
+    input logic reset,
+    input logic clk
+);
 
-    reg [`DWIDTH-1:0] out;
-    reg [`DWIDTH-1:0] a_flop, b_flop, mult;
+    logic [`DWIDTH-1:0] a_flop, b_flop, mult;
 
-    always @(posedge clk)
+    always_ff @(posedge clk)
     begin
         if(reset)
         begin
