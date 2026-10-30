@@ -8,7 +8,7 @@
 `define LOG2_MAT_MUL_SIZE 2
 
 `define BB_MAT_MUL_SIZE `MAT_MUL_SIZE
-`define NUM_CYCLES_IN_MAC 3
+`define NUM_CYCLES_IN_MAC 1
 `define MEM_ACCESS_LATENCY 1
 `define REG_DATAWIDTH 32
 `define REG_ADDRWIDTH 8
@@ -44,7 +44,8 @@ module matmul_4x4_systolic (
     input logic [`MASK_WIDTH-1:0] validity_mask_b_cols,
     input logic [7:0] final_mat_mul_size,
     input logic [7:0] a_loc,
-    input logic [7:0] b_loc
+    input logic [7:0] b_loc,
+    output wire exception
 );
     wire row_latch_en;
 
@@ -280,7 +281,8 @@ module matmul_4x4_systolic (
         .matrixC32(matrixC32),
         .matrixC33(matrixC33),
         .a_data_out(a_data_out),
-        .b_data_out(b_data_out)
+        .b_data_out(b_data_out),
+        .exception(exception)
         );
 
 endmodule
@@ -637,7 +639,8 @@ module systolic_pe_matrix (
     output wire [`DWIDTH-1:0] matrixC32,
     output wire [`DWIDTH-1:0] matrixC33,
     output wire [`MAT_MUL_SIZE*`DWIDTH-1:0] a_data_out,
-    output wire [`MAT_MUL_SIZE*`DWIDTH-1:0] b_data_out
+    output wire [`MAT_MUL_SIZE*`DWIDTH-1:0] b_data_out,
+    output wire exception
 );
 
     wire [`DWIDTH-1:0] a00to01, a01to02, a02to03, a03to04;
@@ -653,6 +656,16 @@ module systolic_pe_matrix (
     wire effective_rst;
     assign effective_rst = reset | pe_reset;
 
+    wire exception00, exception01, exception02, exception03;
+    wire exception10, exception11, exception12, exception13;
+    wire exception20, exception21, exception22, exception23;
+    wire exception30, exception31, exception32, exception33;
+
+    assign exception = exception00 | exception01 | exception02 | exception03 |
+                       exception10 | exception11 | exception12 | exception13 |
+                       exception20 | exception21 | exception22 | exception23 |
+                       exception30 | exception31 | exception32 | exception33;
+
     //There are a total of 16 PEs arranged in a mesh structure like in the lecture slides. 	
 	//Each PE has a number. PE00 is the top-left PE. PE01 is the second PE on the first row. 
 	//PE10 is the first PE on the second row. PE33 is the bottom right PE.	
@@ -663,25 +676,25 @@ module systolic_pe_matrix (
 	//Signals matrixCxx are the output results from each PE.
 	//Reset and clock signals of all PEs are the same.	
 
-	processing_element pe00(.reset(effective_rst), .clk(clk), .in_a(a0),      .in_b(b0), .out_a(a00to01), .out_b(b00to10), .out_c(matrixC00));
-	processing_element pe01(.reset(effective_rst), .clk(clk), .in_a(a00to01), .in_b(b1), .out_a(a01to02), .out_b(b01to11), .out_c(matrixC01));
-	processing_element pe02(.reset(effective_rst), .clk(clk), .in_a(a01to02), .in_b(b2), .out_a(a02to03), .out_b(b02to12), .out_c(matrixC02));
-	processing_element pe03(.reset(effective_rst), .clk(clk), .in_a(a02to03), .in_b(b3), .out_a(a03to04), .out_b(b03to13), .out_c(matrixC03));
+	processing_element pe00(.reset(effective_rst), .clk(clk), .in_a(a0),      .in_b(b0), .out_a(a00to01), .out_b(b00to10), .out_c(matrixC00), .exception(exception00));
+	processing_element pe01(.reset(effective_rst), .clk(clk), .in_a(a00to01), .in_b(b1), .out_a(a01to02), .out_b(b01to11), .out_c(matrixC01), .exception(exception01));
+	processing_element pe02(.reset(effective_rst), .clk(clk), .in_a(a01to02), .in_b(b2), .out_a(a02to03), .out_b(b02to12), .out_c(matrixC02), .exception(exception02));
+	processing_element pe03(.reset(effective_rst), .clk(clk), .in_a(a02to03), .in_b(b3), .out_a(a03to04), .out_b(b03to13), .out_c(matrixC03), .exception(exception03));
 
-	processing_element pe10(.reset(effective_rst), .clk(clk), .in_a(a1),      .in_b(b00to10), .out_a(a10to11), .out_b(b10to20), .out_c(matrixC10));
-	processing_element pe11(.reset(effective_rst), .clk(clk), .in_a(a10to11), .in_b(b01to11), .out_a(a11to12), .out_b(b11to21), .out_c(matrixC11));
-	processing_element pe12(.reset(effective_rst), .clk(clk), .in_a(a11to12), .in_b(b02to12), .out_a(a12to13), .out_b(b12to22), .out_c(matrixC12));
-	processing_element pe13(.reset(effective_rst), .clk(clk), .in_a(a12to13), .in_b(b03to13), .out_a(a13to14), .out_b(b13to23), .out_c(matrixC13));
+	processing_element pe10(.reset(effective_rst), .clk(clk), .in_a(a1),      .in_b(b00to10), .out_a(a10to11), .out_b(b10to20), .out_c(matrixC10), .exception(exception10));
+	processing_element pe11(.reset(effective_rst), .clk(clk), .in_a(a10to11), .in_b(b01to11), .out_a(a11to12), .out_b(b11to21), .out_c(matrixC11), .exception(exception11));
+	processing_element pe12(.reset(effective_rst), .clk(clk), .in_a(a11to12), .in_b(b02to12), .out_a(a12to13), .out_b(b12to22), .out_c(matrixC12), .exception(exception12));
+	processing_element pe13(.reset(effective_rst), .clk(clk), .in_a(a12to13), .in_b(b03to13), .out_a(a13to14), .out_b(b13to23), .out_c(matrixC13), .exception(exception13));
 
-	processing_element pe20(.reset(effective_rst), .clk(clk), .in_a(a2),      .in_b(b10to20), .out_a(a20to21), .out_b(b20to30), .out_c(matrixC20));
-	processing_element pe21(.reset(effective_rst), .clk(clk), .in_a(a20to21), .in_b(b11to21), .out_a(a21to22), .out_b(b21to31), .out_c(matrixC21));
-	processing_element pe22(.reset(effective_rst), .clk(clk), .in_a(a21to22), .in_b(b12to22), .out_a(a22to23), .out_b(b22to32), .out_c(matrixC22));
-	processing_element pe23(.reset(effective_rst), .clk(clk), .in_a(a22to23), .in_b(b13to23), .out_a(a23to24), .out_b(b23to33), .out_c(matrixC23));
+	processing_element pe20(.reset(effective_rst), .clk(clk), .in_a(a2),      .in_b(b10to20), .out_a(a20to21), .out_b(b20to30), .out_c(matrixC20), .exception(exception20));
+	processing_element pe21(.reset(effective_rst), .clk(clk), .in_a(a20to21), .in_b(b11to21), .out_a(a21to22), .out_b(b21to31), .out_c(matrixC21), .exception(exception21));
+	processing_element pe22(.reset(effective_rst), .clk(clk), .in_a(a21to22), .in_b(b12to22), .out_a(a22to23), .out_b(b22to32), .out_c(matrixC22), .exception(exception22));
+	processing_element pe23(.reset(effective_rst), .clk(clk), .in_a(a22to23), .in_b(b13to23), .out_a(a23to24), .out_b(b23to33), .out_c(matrixC23), .exception(exception23));
 
-	processing_element pe30(.reset(effective_rst), .clk(clk), .in_a(a3),      .in_b(b20to30), .out_a(a30to31), .out_b(b30to40), .out_c(matrixC30));
-	processing_element pe31(.reset(effective_rst), .clk(clk), .in_a(a30to31), .in_b(b21to31), .out_a(a31to32), .out_b(b31to41), .out_c(matrixC31));
-	processing_element pe32(.reset(effective_rst), .clk(clk), .in_a(a31to32), .in_b(b22to32), .out_a(a32to33), .out_b(b32to42), .out_c(matrixC32));
-	processing_element pe33(.reset(effective_rst), .clk(clk), .in_a(a32to33), .in_b(b23to33), .out_a(a33to34), .out_b(b33to43), .out_c(matrixC33));
+	processing_element pe30(.reset(effective_rst), .clk(clk), .in_a(a3),      .in_b(b20to30), .out_a(a30to31), .out_b(b30to40), .out_c(matrixC30), .exception(exception30));
+	processing_element pe31(.reset(effective_rst), .clk(clk), .in_a(a30to31), .in_b(b21to31), .out_a(a31to32), .out_b(b31to41), .out_c(matrixC31), .exception(exception31));
+	processing_element pe32(.reset(effective_rst), .clk(clk), .in_a(a31to32), .in_b(b22to32), .out_a(a32to33), .out_b(b32to42), .out_c(matrixC32), .exception(exception32));
+	processing_element pe33(.reset(effective_rst), .clk(clk), .in_a(a32to33), .in_b(b23to33), .out_a(a33to34), .out_b(b33to43), .out_c(matrixC33), .exception(exception33));
 
     assign a_data_out = {a33to34,a23to24,a13to14,a03to04};
     assign b_data_out = {b33to43,b32to42,b31to41,b30to40};
@@ -698,14 +711,22 @@ module processing_element (
     input logic [`DWIDTH-1:0] in_b,
     output logic [`DWIDTH-1:0] out_a,
     output logic [`DWIDTH-1:0] out_b,
-    output wire [`DWIDTH-1:0] out_c //reduced precision
+    output wire [`DWIDTH-1:0] out_c, //reduced precision
+    output wire exception
 );
 
     wire [`DWIDTH-1:0] out_mac;
 
     assign out_c = out_mac;
     
-    seq_mac u_mac(.a(in_a), .b(in_b), .out(out_mac), .reset(reset), .clk(clk));
+    seq_mac u_mac(
+        .a(in_a),
+        .b(in_b),
+        .out(out_mac),
+        .exception(exception),
+        .reset(reset),
+        .clk(clk)
+    );
 
     always_ff @(posedge clk)
     begin
@@ -730,30 +751,39 @@ module seq_mac (
     input logic [`DWIDTH-1:0] a,
     input logic [`DWIDTH-1:0] b,
     output logic [`DWIDTH-1:0] out,
+    output wire exception,
     input logic reset,
     input logic clk
 );
 
-    logic [`DWIDTH-1:0] a_flop, b_flop, mult;
+    logic [`DWIDTH-1:0] mult_result;
+    logic [`DWIDTH-1:0] add_result;
+
+    logic mul_exception;
+    logic add_exception;
+
+    assign exception = mul_exception | add_exception;
+
+    fp8_multiplier u_fp8_mult (
+        .a(a),
+        .b(b),
+        .result(mult_result),
+        .exception(mul_exception)
+    );
+
+    fp8_adder u_fp8_add (
+        .a(mult_result),
+        .b(out),
+        .result(add_result),
+        .exception(add_exception)
+    );
 
     always_ff @(posedge clk)
     begin
-        if(reset)
-        begin
-            out <= 0;
-            a_flop <= 0;
-            b_flop <= 0;
-            mult <= 0;
-        end
+        if (reset)
+            out <= 8'h00;
         else
-        begin
-            a_flop <= a;
-            b_flop <= b;
-
-            mult <= a_flop * b_flop; 
-            out <= mult + out; 
-        end
-            
+            out <= add_result;
     end
 
 endmodule

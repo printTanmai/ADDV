@@ -10,6 +10,10 @@ module matmul_tb;
     // Driven by the DUT
     wire done;
 
+    // Exception output from the 4x4 systolic matrix multiplier.
+    wire exception;
+    assign exception = u_matmul.u_matmul_4x4.exception;
+
 
     ////////////////////////////////////////////
     // Device Under Test
@@ -48,33 +52,102 @@ module matmul_tb;
     // Reset generation
     ////////////////////////////////////////////
 
-    initial begin
-        resetn    = 1'b0;
-        pe_resetn = 1'b0;
-
-        #55;
-
-        resetn    = 1'b1;
-        pe_resetn = 1'b1;
-    end
+    // Reset is controlled by the test sequence below so that both
+    // required FP8 test cases can run in the same simulation.
 
 
     ////////////////////////////////////////////
     // Perform test
     ////////////////////////////////////////////
 
-    initial begin
-        start = 1'b0;
+    integer errors;
+    integer i;
 
-        #115;
+    initial begin
+        start     = 1'b0;
+        resetn    = 1'b0;
+        pe_resetn = 1'b0;
+        errors    = 0;
+
+        ////////////////////////////////////////////////////////////////////
+        // Test 1: Normal FP8 matrix multiplication
+        // A = identity matrix, B = all 1.0, therefore C = B.
+        // FP8 E3M4 encodings: 0.0 = 8'h00, 1.0 = 8'h30.
+        ////////////////////////////////////////////////////////////////////
+
+        u_matmul.matrix_A.ram[3] = {8'h30, 8'h00, 8'h00, 8'h00};
+        u_matmul.matrix_A.ram[2] = {8'h00, 8'h30, 8'h00, 8'h00};
+        u_matmul.matrix_A.ram[1] = {8'h00, 8'h00, 8'h30, 8'h00};
+        u_matmul.matrix_A.ram[0] = {8'h00, 8'h00, 8'h00, 8'h30};
+
+        u_matmul.matrix_B.ram[3] = {8'h30, 8'h30, 8'h30, 8'h30};
+        u_matmul.matrix_B.ram[2] = {8'h30, 8'h30, 8'h30, 8'h30};
+        u_matmul.matrix_B.ram[1] = {8'h30, 8'h30, 8'h30, 8'h30};
+        u_matmul.matrix_B.ram[0] = {8'h30, 8'h30, 8'h30, 8'h30};
+
+        #55;
+        resetn    = 1'b1;
+        pe_resetn = 1'b1;
+
+        #60;
         start = 1'b1;
+        @(posedge done);
+        start = 1'b0;
+        #40;
+
+        for (i = 0; i < 4; i = i + 1) begin
+            if (u_matmul.matrix_C.ram[i] !== {8'h30, 8'h30, 8'h30, 8'h30}) begin
+                $display("ERROR: Normal FP8 test C RAM[%0d] = %h, expected 30303030",
+                         i, u_matmul.matrix_C.ram[i]);
+                errors = errors + 1;
+            end
+        end
+
+        if (errors == 0)
+            $display("PASS: Normal FP8 matrix multiplication");
+
+        ////////////////////////////////////////////////////////////////////
+        // Test 2: FP8 exception case
+        // Infinity multiplied by zero is invalid and produces NaN.
+        // FP8 E3M4 encodings: +Inf = 8'h70, NaN = 8'h78.
+        ////////////////////////////////////////////////////////////////////
+
+        resetn    = 1'b0;
+        pe_resetn = 1'b0;
+        #40;
+
+        for (i = 0; i < 4; i = i + 1) begin
+            u_matmul.matrix_A.ram[i] = {8'h70, 8'h70, 8'h70, 8'h70};
+            u_matmul.matrix_B.ram[i] = {8'h00, 8'h00, 8'h00, 8'h00};
+            u_matmul.matrix_C.ram[i] = 32'h00000000;
+        end
+
+        resetn    = 1'b1;
+        pe_resetn = 1'b1;
+        #60;
+
+        start = 1'b1;
+        wait (exception === 1'b1);
+        $display("PASS: FP8 exception asserted");
 
         @(posedge done);
-
         start = 1'b0;
+        #40;
+
+        for (i = 0; i < 4; i = i + 1) begin
+            if (u_matmul.matrix_C.ram[i] !== {8'h78, 8'h78, 8'h78, 8'h78}) begin
+                $display("ERROR: Exception FP8 test C RAM[%0d] = %h, expected 78787878",
+                         i, u_matmul.matrix_C.ram[i]);
+                errors = errors + 1;
+            end
+        end
+
+        if (errors == 0)
+            $display("PASS: All Part 2 FP8 tests passed");
+        else
+            $display("FAIL: Part 2 completed with %0d error(s)", errors);
 
         #100;
-
         $finish;
     end
 
@@ -113,6 +186,7 @@ module matmul_tb;
     // 9 1 0 5     9 6 3 2     54 40 46 13     36 28 2E 0D
 
 
+    /*
     initial begin
 
         // A is stored in row-major format.
@@ -157,6 +231,7 @@ module matmul_tb;
         u_matmul.matrix_B.ram[0] =
             {8'h00, 8'h03, 8'h01, 8'h01};
     end
+    */
 
 
     ////////////////////////////////////////////
