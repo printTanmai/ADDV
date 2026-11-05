@@ -27,6 +27,12 @@ module async_fifo #(
     logic write_en;
     logic read_en;
 
+`ifdef FIFO_SIMULATION
+    int drop_every;
+    int attempted_write_count;
+    logic drop_write;
+`endif
+
     // Memory addresses
     logic [ADDR_WIDTH-1:0] w_addr;
     logic [ADDR_WIDTH-1:0] r_addr;
@@ -63,10 +69,30 @@ module async_fifo #(
 
     assign fifo.r_data = r_data;
 
-    //always_comb begin
+`ifdef FIFO_SIMULATION
+    initial begin
+        drop_every = 0;
+        if (!$value$plusargs("DROP_EVERY=%d", drop_every))
+            drop_every = 0;
+    end
+
+    always_comb begin
+        drop_write = (drop_every > 0) && fifo.write_en && !full &&
+                     (((attempted_write_count + 1) % drop_every) == 0);
+    end
+
+    always_ff @(posedge w_clk or negedge w_rst_b) begin
+        if (!w_rst_b)
+            attempted_write_count <= 0;
+        else if (fifo.write_en && !full)
+            attempted_write_count <= attempted_write_count + 1;
+    end
+
+    assign write_en = fifo.write_en && !full && !drop_write;
+`else
     assign write_en = fifo.write_en && !full;
+`endif
     assign read_en  = fifo.read_en  && !empty;
-    //end
 
     // Write pointer logic
 

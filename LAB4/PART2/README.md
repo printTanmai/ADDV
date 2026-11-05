@@ -1,152 +1,109 @@
-# Odd/Even Stream Formatter
+# Part 1: Asynchronous FIFO
 
-This project accepts an 8-bit stream containing an equal number of even and
-odd values. It stores the two parities in separate synchronous FIFOs and
-produces an output stream that alternates between even and odd values. The
-order of values within each parity stream is preserved.
+This directory contains the asynchronous FIFO RTL, its SystemVerilog testbench,
+and the VCS and Design Compiler flows. Run commands from the relevant `sim/` or
+`synth/` directory so that build products stay with that flow.
 
-## Directory Structure
+## Project layout
 
 ```text
-Part2_oddeven_submission/
-|-- RTL/
-|   |-- oddeven.sv
-|   |-- router.sv
-|   |-- sync_fifo.sv
-|   `-- read_arbiter.sv
-|-- TESTBENCH/
-|   `-- oddeven_tb.sv
-|-- sim/
-|   `-- Makefile
-|-- README.md
-`-- REPORT_SECTIONS.md
+Part1_Async_FIFO/
+├── RTL/         FIFO, pointer, synchronizer, Gray-code, and wrapper modules
+├── TESTBENCH/   FIFO interface and self-checking testbench
+├── sim/         VCS simulation Makefile
+├── synth/       Design Compiler Tcl and Makefile
+└── env.cshrc    Synopsys tools, license, and PDK environment
 ```
 
-## Design Overview
+## Requirements
 
-The design contains four RTL modules:
+- Synopsys VCS for simulation
+- Synopsys Design Compiler and the OSU FreePDK45 library for synthesis
+- A supported C shell (`csh` or `tcsh`) to source `env.cshrc`
+- Access to the Synopsys license server configured in `env.cshrc`
 
-- `router.sv` examines `data_in[0]` and routes each accepted value to the even
-  or odd FIFO.
-- `sync_fifo.sv` stores values in arrival order. Each FIFO has a depth of 40.
-- `read_arbiter.sv` is a two-state controller that alternates between the even
-  and odd FIFOs. If the required FIFO is empty, it pauses and holds the current
-  output value.
-- `oddeven.sv` connects the router, two FIFOs, and read arbiter.
+The environment file contains site-specific installation and license paths. If
+you use a different machine, update those paths to match its tool installation.
 
-## Design Assumptions
+## Set up the environment
 
-- Exactly 80 input items are offered during every 100 clock cycles.
-- Each set of 80 input items contains 40 even and 40 odd values.
-- Read requests are generated at a rate of 8 requests per 10 clock cycles.
-- The arbiter begins by expecting an even value after reset.
-- A paused cycle does not produce a new output item. `data_out` holds its
-  previous value instead of being forced to zero.
+From a terminal, enter the Part 1 directory in C shell and source the environment
+file. Keep this shell open while running VCS or Design Compiler:
 
-## Testbench
-
-The testbench is procedural SystemVerilog and does not use classes or UVM. It
-asserts `write_en` for eight cycles and deasserts it for two cycles in every
-ten-cycle group. The same pattern is used for `read_en`. The testbench verifies
-the rates by counting exactly 80 write requests and 80 read requests during
-each 100-cycle input window.
-
-Two cases are tested:
-
-1. Forty odd values followed by forty even values. This is the depth-setting
-   case and fills the odd FIFO to 40 entries.
-2. Alternating even and odd values. This checks balanced operation without a
-   long parity burst.
-
-Separate software scoreboards model the even and odd FIFOs. The testbench
-checks data values, alternating parity, FIFO occupancy flags, accepted writes,
-accepted reads, and complete draining of both FIFOs.
-
-## FIFO Depth
-
-Each 80-item window contains 40 values of each parity. In the worst ordering,
-all 40 values of a parity that is not currently expected can arrive before the
-other parity appears. None of those values can be read during that interval,
-so the required FIFO depth is 40. Both FIFOs use the same depth because either
-parity can become the blocked stream.
-
-## Running the Simulation
-
-The course environment must be loaded before running VCS. From the project
-directory:
-
-```bash
+```csh
+cd LAB1/Part1_Async_FIFO
 source env.cshrc
-cd sim
 ```
 
-Compile and run:
+The script sets `VCS_HOME`, `VERDI_HOME`, the Synopsys license variables,
+`PDK_DIR`, and the tool paths.
 
-```bash
-make clean
+## Run the simulation
+
+```csh
+cd sim
 make compile_and_sim
 ```
 
-The expected final console message is:
+`compile_and_sim` compiles the interface, RTL, and testbench with VCS, then runs
+the simulation. The self-checking testbench reports its checks and errors in the
+terminal. To compile without running, use `make compile`; then run the resulting
+binary with `./simv`. The `make sim` target compiles and runs it:
 
-```text
-ODDEVEN TESTBENCH PASSED
-```
-
-## Opening the Waveforms
-
-Compile with the Verdi database options, run the executable, and open the FSDB
-file:
-
-```bash
-make clean
-make compile_verdi
+```csh
+make compile
 ./simv
-make waves_verdi
 ```
 
-Useful waveform signals are:
+Optional targets are `make compile_verdi` to build a Verdi database,
+`make verdi` to open that database, and `make waves_verdi` to open it with a
+waveform file. `make clean` removes generated simulation products from `sim/`.
 
-```text
-clk
-reset
-data_in
-write_en
-data_out
-read_en
-dut.even_wen
-dut.odd_wen
-dut.even_full
-dut.even_empty
-dut.odd_full
-dut.odd_empty
-dut.even_ren
-dut.odd_ren
-dut.arbiter_inst.expect_even
+## Run synthesis
+
+In the same environment-enabled shell:
+
+```csh
+cd ../synth
+make synth
 ```
 
-## Bug Fixed During Verification
+The Makefile runs `dc_shell-t -f compile_dc.tcl`. The Tcl resolves RTL and
+testbench paths relative to the Part 1 directory, so it does not depend on the
+terminal's starting directory. It elaborates `fifo_wrapper`, maps to the
+FreePDK45 `gscl45nm.db` library, applies timing constraints, and writes a mapped
+Verilog netlist and SDC beside the Tcl script.
 
-The original FIFO registered its read output on the same edge that the arbiter
-sampled it. As a result, the arbiter received the previous FIFO value. The FIFO
-also calculated its flags using one next pointer and one old pointer, causing
-one-cycle occupancy errors. The corrected FIFO exposes the current head value
-combinationally and calculates both flags using the next read and write
-pointers. More detail is provided in `REPORT_SECTIONS.md`.
+The synthesis constraints in `compile_dc.tcl` are:
 
-## Submission Notes
+- Separate 1.5 GHz `w_clk` and `r_clk` clocks (0.6667 ns period each).
+- The two clocks are declared asynchronous with `set_clock_groups`, so DC does
+  not attempt to close timing on paths crossing between the clock domains.
+- False paths from the active-low reset ports `w_rst_b` and `r_rst_b`.
+- 0.1 ns input delays on `write_en`/`w_data` relative to `w_clk` and `read_en`
+  relative to `r_clk`.
+- 0.1 ns output delays on `full`/`almost_full` relative to `w_clk` and on
+  `empty`/`almost_empty`/`r_data` relative to `r_clk`.
+- `INVX1` is used as the modeled driver for data/control inputs. No explicit
+  external output loads are specified in this synthesis estimate.
 
-Submit the RTL, testbench, Makefile, README, report sections, and the annotated
-waveform images. Do not submit simulator-generated files or directories such
-as:
+DC generates `fifo_wrapper.v`, `fifo_wrapper.sdc`, `synth.log`, and timing,
+constraint, capacitance, area, power, clock, cell, and port reports. These files
+are tool outputs and are intentionally not tracked in Git; regenerate them with
+`make synth`. `make clean_synth` removes the DC work database and intermediate
+files. `make clean` also removes the generated reports, netlist, SDC, and log.
 
-```text
-csrc/
-simv
-simv.daidir/
-novas.fsdb
-ucli.key
-*.log
-verdiLog/
-```
+### Interpreting synthesis reports
 
+Timing, area, and power are pre-layout estimates using the selected library and
+Design Compiler's synthesis models. The power report uses low-effort estimated
+switching activity; annotate realistic activity for a more representative power
+estimate. Total cell area is available in `area.rep`; wire/interconnect area is
+not available from this flow.
+
+The supplied FreePDK45 library has zero `max_capacitance` values on some output
+pins. Design Compiler treats those as zero-load limits, so the capacitance
+report can show violations even when the actual net capacitance is very small.
+The design-rule-only compile pass is enabled, but those library limits need a
+corrected, characterized library value to be cleared legitimately. Do not hide
+them by relaxing constraints without validating the library data.
