@@ -29,10 +29,17 @@ module dpi_checker #(
 	int expected_data;
 	int model_empty;
 	int model_full;
+	int error_count;
+
+	task automatic report_error(input string message);
+		error_count = error_count + 1;
+		$error("%s", message);
+	endtask
 
 	initial begin
 		empty_settle_cycles = 3;
 		full_settle_cycles = 3;
+		error_count = 0;
 		if (!fifo_model_init(DEPTH))
 			$fatal(1, "DPI FIFO model initialization failed (depth=%0d)", DEPTH);
 	end
@@ -48,11 +55,11 @@ module dpi_checker #(
 	always @(posedge w_clk) begin : write_model_update
 		if (w_rst_b && write_en && !full) begin
 			if (fifo_model_is_full()) begin
-				$error("DUT accepted write data 0x%0h while the reference FIFO is full", w_data);
+				report_error($sformatf("DUT accepted write data 0x%0h while the reference FIFO is full", w_data));
 			end else begin
 				model_result = fifo_model_push(int'(w_data));
 				if (!model_result)
-					$error("DPI model rejected accepted write data 0x%0h", w_data);
+					report_error($sformatf("DPI model rejected accepted write data 0x%0h", w_data));
 			end
 			empty_settle_cycles = 3;
 		end
@@ -62,11 +69,11 @@ module dpi_checker #(
 		if (r_rst_b && read_en && !empty) begin
 			expected_data = fifo_model_pop();
 			if (expected_data < 0)
-				$error("DPI model underflow while DUT accepted a read");
+				report_error("DPI model underflow while DUT accepted a read");
 			#1ps;
 			if (r_data !== DATA_WIDTH'(expected_data))
-				$error("FIFO data mismatch: expected 0x%0h, got 0x%0h at %0t",
-					   DATA_WIDTH'(expected_data), r_data, $time);
+				report_error($sformatf("FIFO data mismatch: expected 0x%0h, got 0x%0h at %0t",
+								 DATA_WIDTH'(expected_data), r_data, $time));
 			full_settle_cycles = 3;
 		end
 	end
@@ -78,8 +85,8 @@ module dpi_checker #(
 			if (empty_settle_cycles > 0)
 				empty_settle_cycles = empty_settle_cycles - 1;
 			else if (empty !== 1'(model_empty))
-				$error("FIFO empty mismatch: model=%0b DUT=%0b at %0t",
-					   model_empty, empty, $time);
+				report_error($sformatf("FIFO empty mismatch: model=%0b DUT=%0b at %0t",
+								 model_empty, empty, $time));
 		end
 	end
 
@@ -90,8 +97,8 @@ module dpi_checker #(
 			if (full_settle_cycles > 0)
 				full_settle_cycles = full_settle_cycles - 1;
 			else if (full !== 1'(model_full))
-				$error("FIFO full mismatch: model=%0b DUT=%0b at %0t",
-					   model_full, full, $time);
+				report_error($sformatf("FIFO full mismatch: model=%0b DUT=%0b at %0t",
+								 model_full, full, $time));
 		end
 	end
 endmodule

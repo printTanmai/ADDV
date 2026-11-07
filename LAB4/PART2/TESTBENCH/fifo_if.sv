@@ -52,4 +52,3 @@ interface fifo_if #(
     
     
 endinterface
-

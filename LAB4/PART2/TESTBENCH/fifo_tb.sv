@@ -114,7 +114,14 @@ module fifo_tb;
 				$error("Expected empty after draining FIFO (round %0d)", round);
 		end
 
-		$display("FIFO DPI test completed");
+		if (checker.error_count != 0)
+			$fatal(1, "FIFO DPI test failed with %0d checker error(s)", checker.error_count);
+		$display("FIFO DPI test passed");
 		$finish;
 	end
+
+initial begin
+    $fsdbDumpfile("novas.fsdb");
+    $fsdbDumpvars(0, fifo_tb);
+end
 endmodule

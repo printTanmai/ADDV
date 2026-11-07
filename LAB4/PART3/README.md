@@ -1,152 +1,56 @@
-# Odd/Even Stream Formatter
+# Part 3: SystemVerilog Scoreboard Verification
 
-This project accepts an 8-bit stream containing an equal number of even and
-odd values. It stores the two parities in separate synchronous FIFOs and
-produces an output stream that alternates between even and odd values. The
-order of values within each parity stream is preserved.
+This part verifies the asynchronous FIFO with a SystemVerilog transaction,
+monitor, mailbox, and queue-based scoreboard.
 
-## Directory Structure
+## Contents
 
-```text
-Part2_oddeven_submission/
-|-- RTL/
-|   |-- oddeven.sv
-|   |-- router.sv
-|   |-- sync_fifo.sv
-|   `-- read_arbiter.sv
-|-- TESTBENCH/
-|   `-- oddeven_tb.sv
-|-- sim/
-|   `-- Makefile
-|-- README.md
-`-- REPORT_SECTIONS.md
-```
+- `RTL/`: asynchronous FIFO implementation.
+- `TESTBENCH/fifo_if.sv`: separate write- and read-side interfaces.
+- `TESTBENCH/fifo_transaction.sv`: operation, data, acceptance, status, and
+  timestamp fields for monitored transactions.
+- `TESTBENCH/fifo_monitor.sv`: independent write/read clock samplers and the
+  `FIFO_LOG` plusarg-controlled logger.
+- `TESTBENCH/fifo_scoreboard.sv`: queue-based reference model and read-data
+  checks.
+- `sim/`: VCS simulation and Verdi build targets.
 
-## Design Overview
+## Run the simulation
 
-The design contains four RTL modules:
+From a C shell, source the environment and run the test from `sim/`:
 
-- `router.sv` examines `data_in[0]` and routes each accepted value to the even
-  or odd FIFO.
-- `sync_fifo.sv` stores values in arrival order. Each FIFO has a depth of 40.
-- `read_arbiter.sv` is a two-state controller that alternates between the even
-  and odd FIFOs. If the required FIFO is empty, it pauses and holds the current
-  output value.
-- `oddeven.sv` connects the router, two FIFOs, and read arbiter.
-
-## Design Assumptions
-
-- Exactly 80 input items are offered during every 100 clock cycles.
-- Each set of 80 input items contains 40 even and 40 odd values.
-- Read requests are generated at a rate of 8 requests per 10 clock cycles.
-- The arbiter begins by expecting an even value after reset.
-- A paused cycle does not produce a new output item. `data_out` holds its
-  previous value instead of being forced to zero.
-
-## Testbench
-
-The testbench is procedural SystemVerilog and does not use classes or UVM. It
-asserts `write_en` for eight cycles and deasserts it for two cycles in every
-ten-cycle group. The same pattern is used for `read_en`. The testbench verifies
-the rates by counting exactly 80 write requests and 80 read requests during
-each 100-cycle input window.
-
-Two cases are tested:
-
-1. Forty odd values followed by forty even values. This is the depth-setting
-   case and fills the odd FIFO to 40 entries.
-2. Alternating even and odd values. This checks balanced operation without a
-   long parity burst.
-
-Separate software scoreboards model the even and odd FIFOs. The testbench
-checks data values, alternating parity, FIFO occupancy flags, accepted writes,
-accepted reads, and complete draining of both FIFOs.
-
-## FIFO Depth
-
-Each 80-item window contains 40 values of each parity. In the worst ordering,
-all 40 values of a parity that is not currently expected can arrive before the
-other parity appears. None of those values can be read during that interval,
-so the required FIFO depth is 40. Both FIFOs use the same depth because either
-parity can become the blocked stream.
-
-## Running the Simulation
-
-The course environment must be loaded before running VCS. From the project
-directory:
-
-```bash
+```csh
+cd PART3/sim
 source env.cshrc
-cd sim
+make sim
 ```
 
-Compile and run:
+The normal simulation checks output data against the SV queue and ends with
+`FIFO SystemVerilog scoreboard test completed`. `make sim` saves compiler and
+simulation output in `compile.log` and `sim.log`.
 
-```bash
-make clean
-make compile_and_sim
+The monitor logger is controlled at runtime with `FIFO_LOG`: `0` disables
+monitor messages, `1` prints brief operation and timestamp messages, and `2`
+prints all transaction fields. For example:
+
+```csh
+./simv +FIFO_LOG=1
+./simv +FIFO_LOG=2
 ```
 
-The expected final console message is:
+Use `make compile_and_sim` to compile and run in one step, `make compile_verdi`
+to create a Verdi database, and `make verdi` to open it. To compile, simulate,
+and open the FSDB waveform in Verdi, run:
 
-```text
-ODDEVEN TESTBENCH PASSED
-```
-
-## Opening the Waveforms
-
-Compile with the Verdi database options, run the executable, and open the FSDB
-file:
-
-```bash
-make clean
-make compile_verdi
-./simv
+```csh
 make waves_verdi
 ```
 
-Useful waveform signals are:
+Pass runtime options through `RUN_ARGS`, for example:
 
-```text
-clk
-reset
-data_in
-write_en
-data_out
-read_en
-dut.even_wen
-dut.odd_wen
-dut.even_full
-dut.even_empty
-dut.odd_full
-dut.odd_empty
-dut.even_ren
-dut.odd_ren
-dut.arbiter_inst.expect_even
+```csh
+make waves_verdi RUN_ARGS=+FIFO_LOG=2
 ```
 
-## Bug Fixed During Verification
-
-The original FIFO registered its read output on the same edge that the arbiter
-sampled it. As a result, the arbiter received the previous FIFO value. The FIFO
-also calculated its flags using one next pointer and one old pointer, causing
-one-cycle occupancy errors. The corrected FIFO exposes the current head value
-combinationally and calculates both flags using the next read and write
-pointers. More detail is provided in `REPORT_SECTIONS.md`.
-
-## Submission Notes
-
-Submit the RTL, testbench, Makefile, README, report sections, and the annotated
-waveform images. Do not submit simulator-generated files or directories such
-as:
-
-```text
-csrc/
-simv
-simv.daidir/
-novas.fsdb
-ucli.key
-*.log
-verdiLog/
-```
-
+The generated waveform is `sim/fifo.fsdb`. Run `make clean` to remove generated
+simulation and Verdi files while preserving source files.

@@ -22,6 +22,17 @@ module read_arbiter #(
     logic even_has_data;
     logic odd_has_data;
     logic can_output;
+`ifdef ASSERTION_SIM
+    logic inject_error;
+
+    initial begin
+        inject_error = 1'b0;
+        if($test$plusargs("inject_error")) begin
+            inject_error = 1'b1;
+            $display("[READ_ARBITER] inject_error enabled: even reads are suppressed");
+        end
+    end
+`endif
 
     assign even_has_data = !even_empty;
     assign odd_has_data  = !odd_empty;
@@ -30,7 +41,12 @@ module read_arbiter #(
     assign can_output = read_en && ((expect_even && even_has_data) ||
                                      (!expect_even && odd_has_data));
 
+`ifdef ASSERTION_SIM
+    // Simulation-only fault: violate the arbiter read-enable behavior.
+    assign even_ren = can_output && expect_even && !inject_error;
+`else
     assign even_ren = can_output && expect_even;
+`endif
     assign odd_ren  = can_output && !expect_even;
 
     always_ff @(posedge clk) begin

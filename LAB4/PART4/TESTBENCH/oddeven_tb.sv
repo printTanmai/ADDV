@@ -45,6 +45,15 @@ module oddeven_tb;
         .read_en  (read_en)
     );
 
+    oddeven_sva_if sva_if (
+        .clk      (clk),
+        .reset    (reset),
+        .write_en (write_en),
+        .read_en  (read_en),
+        .data_in  (data_in),
+        .data_out (data_out)
+    );
+
     //10 ns clock period; the Makefile supplies the 1ns/1ps timescale
     initial begin
         clk = 1'b0;
@@ -333,6 +342,50 @@ module oddeven_tb;
         end
     endtask
 
+    //Fill each parity FIFO, then attempt one more write to exercise full gating.
+    task automatic exercise_full_write_assertion;
+        integer item_number;
+        integer parity;
+        begin
+            $display("\nExercising even and odd write-while-full assertions");
+            for(parity = 0; parity < 2; parity = parity + 1) begin
+                reset_dut();
+                for(item_number = 0; item_number < FIFO_DEPTH;
+                    item_number = item_number + 1) begin
+                    @(negedge clk);
+                    write_en = 1'b1;
+                    read_en  = 1'b0;
+                    data_in  = (2 * item_number) + parity;
+                    sample_cycle();
+                end
+
+                @(negedge clk);
+                if(parity == 0) begin
+                    check_result(dut.even_full === 1'b1,
+                                 "even FIFO did not become full for assertion stimulus");
+                    data_in = 8'h2a;
+                    check_result(dut.even_wen === 1'b1,
+                                 "full-write request did not reach the even FIFO");
+                end
+                else begin
+                    check_result(dut.odd_full === 1'b1,
+                                 "odd FIFO did not become full for assertion stimulus");
+                    data_in = 8'h29;
+                    check_result(dut.odd_wen === 1'b1,
+                                 "full-write request did not reach the odd FIFO");
+                end
+                write_en = 1'b1;
+                read_en  = 1'b0;
+                sample_cycle();
+
+                // Give the |=> pointer-stability assertion its consequent edge.
+                @(negedge clk);
+                write_en = 1'b0;
+                sample_cycle();
+            end
+        end
+    endtask
+
     initial begin
         reset       = 1'b1;
         write_en    = 1'b0;
@@ -346,6 +399,9 @@ module oddeven_tb;
 
         //case 2 checks normal balanced traffic
         run_case(2, "CASE 2: alternating even and odd values");
+
+        exercise_full_write_assertion();
+        sva_if.check_antecedent_coverage();
 
         if(error_count == 0) begin
             $display("\nODDEVEN TESTBENCH PASSED (%0d checks)", check_count);
