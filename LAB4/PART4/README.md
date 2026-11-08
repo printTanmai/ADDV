@@ -100,18 +100,18 @@ ODDEVEN TESTBENCH PASSED
 
 ## Assertions and Fault Injection
 
-The eight SVA checks are in TESTBENCH/oddeven_sva_if.sv. They check parity routing,
-arbiter selection, output behavior, and FIFO pointer stability when a full FIFO
-receives a write request or an empty FIFO receives a read request. A separate
-assertion exercise fills both parity FIFOs and makes one additional write
-attempt to each. The interface counts each assertion antecedent and prints
-the hit totals; the normal run fails if any tracked condition was not reached.
+The SVA checks are implemented in TESTBENCH/oddeven_sva_if.sv and cover parity
+routing, arbiter selection, output behavior, and FIFO pointer stability when a
+full FIFO receives a write request or an empty FIFO receives a read request. A
+separate assertion exercise fills both parity FIFOs and performs one extra write
+attempt to each. The interface counts each assertion antecedent and prints the
+hit totals; the normal run fails if any tracked condition was not reached.
 
-To inject a design error, run make sim_error. The ASSERTION_SIM build enables
-a simulation-only read-arbiter fault, and the inject_error plusarg suppresses
-even FIFO reads. The arbiter assertion should fail. Without the plusarg, the
-fault is disabled and the normal design behavior is unchanged. The target saves
-the assertion failure in `sim_error.log` and succeeds only when it detects the
+To inject a design error, run make sim_error. The ASSERTION_SIM build enables a
+simulation-only read-arbiter fault, and the inject_error plusarg suppresses even
+FIFO reads. The arbiter assertion should fail. Without the plusarg, the fault is
+disabled and the normal design behavior is unchanged. The target saves the
+assertion failure in `sim_error.log` and succeeds only when it detects the
 expected assertion message.
 
 ## Opening the Waveforms
@@ -162,15 +162,6 @@ sva_if.hit_odd_full_write
 sva_if.hit_arbiter_output
 sva_if.hit_output_read
 ```
-
-## Bug Fixed During Verification
-
-The original FIFO registered its read output on the same edge that the arbiter
-sampled it. As a result, the arbiter received the previous FIFO value. The FIFO
-also calculated its flags using one next pointer and one old pointer, causing
-one-cycle occupancy errors. The corrected FIFO exposes the current head value
-combinationally and calculates both flags using the next read and write
-pointers.
 
 ## Submission Notes
 

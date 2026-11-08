@@ -9,7 +9,6 @@ class fifo_transaction #(
 );
 	rand fifo_operation_e operation;
 	rand logic [DATA_WIDTH-1:0] w_data;
-
 	logic [DATA_WIDTH-1:0] r_data;
 	logic accepted;
 

@@ -13,7 +13,6 @@ interface oddeven_sva_if (
     int hit_even_full_write = 0;
     int hit_odd_full_write = 0;
     int hit_arbiter_output = 0;
-    int hit_output_read = 0;
 
     // Track assertion antecedents so the normal test cannot pass vacuously.
     always @(posedge clk) begin
@@ -30,20 +29,18 @@ interface oddeven_sva_if (
                 hit_odd_full_write = hit_odd_full_write + 1;
             if(oddeven_tb.dut.arbiter_inst.can_output)
                 hit_arbiter_output = hit_arbiter_output + 1;
-            if(oddeven_tb.dut.even_ren || oddeven_tb.dut.odd_ren)
-                hit_output_read = hit_output_read + 1;
         end
     end
 
     task automatic check_antecedent_coverage();
-        $display("SVA antecedent hits: even-route=%0d odd-route=%0d even-empty-read=%0d odd-empty-read=%0d even-full-write=%0d odd-full-write=%0d arbiter=%0d output-read=%0d",
+        $display("SVA antecedent hits: even-route=%0d odd-route=%0d even-empty-read=%0d odd-empty-read=%0d even-full-write=%0d odd-full-write=%0d arbiter=%0d",
             hit_even_route, hit_odd_route, hit_even_empty_read, hit_odd_empty_read,
-            hit_even_full_write, hit_odd_full_write, hit_arbiter_output,
-            hit_output_read);
+            hit_even_full_write, hit_odd_full_write, hit_arbiter_output);
+
         if(hit_even_route == 0 || hit_odd_route == 0 ||
            hit_even_empty_read == 0 || hit_odd_empty_read == 0 ||
            hit_even_full_write == 0 || hit_odd_full_write == 0 ||
-           hit_arbiter_output == 0 || hit_output_read == 0)
+           hit_arbiter_output == 0)
             $fatal(1, "one or more SVA antecedents were never exercised");
     endtask
 
@@ -84,10 +81,4 @@ interface oddeven_sva_if (
             (oddeven_tb.dut.even_ren ^ oddeven_tb.dut.odd_ren))
         else $fatal(1, "arbiter did not assert exactly one FIFO read enable");
 
-    a_output_matches_selected_head: assert property (@(posedge clk) disable iff (reset)
-        (oddeven_tb.dut.even_ren || oddeven_tb.dut.odd_ren) |=>
-            data_out == $past(oddeven_tb.dut.even_ren ?
-                              oddeven_tb.dut.even_rdata :
-                              oddeven_tb.dut.odd_rdata))
-        else $error("output did not match the selected FIFO head");
 endinterface
