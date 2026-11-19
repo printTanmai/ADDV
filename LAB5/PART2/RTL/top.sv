@@ -117,8 +117,5 @@ module imem (
 );
     logic [31:0] RAM[0:63];
 
-    initial begin
-        $readmemh("../RTL/memfile.dat", RAM);
-    end
     assign rd = RAM[a];
 endmodule

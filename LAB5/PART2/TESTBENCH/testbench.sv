@@ -1,17 +1,17 @@
-module MIPS_Testbench ();
+module MIPS_Testbench;
+    import mips_instruction_pkg::*;
+
+    localparam logic [31:0] END_ADDRESS = 32'h0000_00fc;
+    localparam logic [31:0] END_DATA = 32'h0000_0000;
+
     logic clk;
     logic reset;
     logic [31:0] writedata, dataadr;
     logic memwrite;
+    int unsigned seed;
+    int unsigned store_count;
+    instruction_sequence generator;
 
-    int i;
-
-    // Expected memory writes matching memfile.dat
-    parameter int N = 3;
-    logic [31:0] expected_data[N:1];
-    logic [31:0] expected_addr[N:1];
-    
-    // Instantiate top module
     top dut (
         .clk(clk),
         .reset(reset),
@@ -19,59 +19,56 @@ module MIPS_Testbench ();
         .dataadr(dataadr),
         .memwrite(memwrite)
     );
-    
-    // Initialize expected data and addresses
+
+    always #5 clk = ~clk;
 
     initial begin
-        // Checkpoint 1 (Case 1: Basic ISA ops)
-        expected_data[1] = 32'h0f; // 15 in hex
-        expected_addr[1] = 32'h50;
-
-        // Checkpoint 2 (Case 2: ADD Data hazards & Forwarding)
-        expected_data[2] = 32'h28; // 40 in hex
-        expected_addr[2] = 32'h54;
-
-        // Checkpoint 3 (Case 3: BEQ Control hazards & Flushing)
-        expected_data[3] = 32'h12; // 18 in hex
-        expected_addr[3] = 32'h58;
-    end
-
-    // Clock generation (10ns period)
-    always begin
-        clk <= 1'b0; 
-        #5;
-        clk <= 1'b1; 
-        #5;
-    end
-    
-    // Monitor memory write signals on negedge clk
-    initial begin
+        clk = 1'b0;
         reset = 1'b1;
-        @(posedge clk);
-        @(posedge clk);
-        reset = 1'b0;
+        store_count = 0;
+        seed = 1;
+        void'($value$plusargs("SEED=%d", seed));
 
-        i = 1;
-        while (i <= N) begin
-            @(negedge clk);
-            if (memwrite) begin
-                if (dataadr == expected_addr[i] && writedata == expected_data[i]) begin
-                    $display("Memory write %0d successful : wrote %h to address %h", i, writedata, dataadr);
-                end else begin
-                    $display("ERROR: Memory write %0d : wrote %h to address %h ; Expected %h to address %h", 
-                             i, writedata, dataadr, expected_data[i], expected_addr[i]);
-                end
-                i = i + 1;
+        generator = new("generated_program");
+        generator.srandom(seed);
+        if (!generator.generate_program())
+            $fatal(1, "Instruction sequence generation failed");
+
+        $display("Generated %0d instruction words (seed=%0d)",
+                 generator.instruction_words.size(), seed);
+        $writememh("generated_program.hex", generator.instruction_words);
+
+        // Let the DUT's time-zero initialization complete before loading the
+        // generated image. Reset stays asserted until after this replacement.
+        #1;
+        $readmemh("generated_program.hex", dut.imem_inst.RAM);
+        repeat (2) @(posedge clk);
+        @(negedge clk);
+        reset = 1'b0;
+    end
+
+    always @(negedge clk) begin
+        if (!reset && memwrite) begin
+            store_count++;
+            $display("Store %0d: wrote %h to address %h",
+                     store_count, writedata, dataadr);
+
+            if (dataadr == END_ADDRESS) begin
+                if (writedata !== END_DATA)
+                    $fatal(1, "Malformed stop marker: wrote %h", writedata);
+                $display("Stop marker observed; simulation complete.");
+                $finish;
             end
         end
-        
-        $display("TEST COMPLETE - ALL WRITES SUCCESSFUL");
-        $finish;
     end
 
     initial begin
-        $fsdbDumpfile("novas.fsdb");
-        $fsdbDumpvars(0, MIPS_Testbench);
+        $dumpfile("mips.vcd");
+        $dumpvars(0, MIPS_Testbench);
     end
-    
+
+    initial begin
+        repeat (500) @(posedge clk);
+        $fatal(1, "Timed out before the generated stop-marker instruction");
+    end
 endmodule
