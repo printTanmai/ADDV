@@ -12,7 +12,8 @@ module pipe_id_ex (
     input  logic [31:0] rd1_D, rd2_D,
     input  logic [4:0]  rs_D, rt_D, rd_D,
     input  logic [31:0] signimm_D,
-    input  logic [31:0] pcplus4_D,
+    input  logic [31:0] instr_D, pc_D, pcplus4_D,
+    input  logic        valid_D,
 
     // Control Outputs (Execute)
     output logic        regwrite_E, memtoreg_E, memwrite_E,
@@ -24,7 +25,8 @@ module pipe_id_ex (
     output logic [31:0] rd1_E, rd2_E,
     output logic [4:0]  rs_E, rt_E, rd_E,
     output logic [31:0] signimm_E,
-    output logic [31:0] pcplus4_E
+    output logic [31:0] instr_E, pc_E, pcplus4_E,
+    output logic        valid_E
 );
     always_ff @(posedge clk, posedge reset) begin
         if (reset) begin
@@ -41,7 +43,10 @@ module pipe_id_ex (
             rt_E         <= '0;
             rd_E         <= '0;
             signimm_E    <= '0;
+            instr_E      <= '0;
+            pc_E         <= '0;
             pcplus4_E    <= '0;
+            valid_E      <= 1'b0;
         end else if (clr) begin
             regwrite_E   <= 1'b0;
             memtoreg_E   <= 1'b0;
@@ -56,7 +61,10 @@ module pipe_id_ex (
             rt_E         <= '0;
             rd_E         <= '0;
             signimm_E    <= '0;
+            instr_E      <= '0;
+            pc_E         <= '0;
             pcplus4_E    <= '0;
+            valid_E      <= 1'b0;
         end else begin
             regwrite_E   <= regwrite_D;
             memtoreg_E   <= memtoreg_D;
@@ -71,7 +79,10 @@ module pipe_id_ex (
             rt_E         <= rt_D;
             rd_E         <= rd_D;
             signimm_E    <= signimm_D;
+            instr_E      <= instr_D;
+            pc_E         <= pc_D;
             pcplus4_E    <= pcplus4_D;
+            valid_E      <= valid_D;
         end
     end
 endmodule

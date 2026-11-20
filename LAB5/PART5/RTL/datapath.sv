@@ -31,12 +31,14 @@ module datapath (
     // Fetch (IF)
     logic [31:0] pcnext_F, pcnextbr_F, pcplus4_F, pc_F;
     logic [31:0] instr_F;
+    logic        valid_F;
 
     // Decode (ID)
-    logic [31:0] instr_D, pcplus4_D;
+    logic [31:0] instr_D, pc_D, pcplus4_D;
     logic [31:0] rd1_D, rd2_D;
     logic [31:0] signimm_D;
     logic [4:0]  rd_D;
+    logic        valid_D;
 
     // Execute (EX)
     logic        memwrite_E, branch_E;
@@ -47,14 +49,20 @@ module datapath (
     logic [31:0] srca_E, writedata_E, srcb_E;
     logic [31:0] aluout_E, pcbranch_E;
     logic        zero_E;
+    logic [31:0] instr_E, pc_E;
+    logic        valid_E;
 
     // Memory (MEM)
     logic        memtoreg_M;
     logic [31:0] aluout_M, writedata_M, readdata_M;
+    logic [31:0] instr_M, pc_M;
+    logic        valid_M;
 
     // Writeback (WB)
-    logic        memtoreg_W;
-    logic [31:0] readdata_W, aluout_W, result_W;
+    logic        memtoreg_W, memwrite_W;
+    logic [31:0] readdata_W, aluout_W, writedata_W, result_W;
+    logic [31:0] instr_W, pc_W;
+    logic        valid_W;
 
     // 1. FETCH STAGE
     flopenc #(32) pcreg (
@@ -81,12 +89,13 @@ module datapath (
 
     assign pc      = pc_F;
     assign instr_F = instr;
+    assign valid_F = 1'b1;
 
     pipe_if_id reg_if_id (
         .clk(clk), .reset(reset),
         .en(~stallD), .clr(flushD),
-        .instr_F(instr_F), .pcplus4_F(pcplus4_F),
-        .instr_D(instr_D), .pcplus4_D(pcplus4_D)
+        .instr_F(instr_F), .pc_F(pc_F), .pcplus4_F(pcplus4_F), .valid_F(valid_F),
+        .instr_D(instr_D), .pc_D(pc_D), .pcplus4_D(pcplus4_D), .valid_D(valid_D)
     );
 
     // 2. DECODE STAGE
@@ -115,14 +124,14 @@ module datapath (
         .branch_D(branch_D), .pcplus4_D(pcplus4_D),
         .rd1_D(rd1_D), .rd2_D(rd2_D),
         .rs_D(rs_D), .rt_D(rt_D), .rd_D(rd_D),
-        .signimm_D(signimm_D),
+        .signimm_D(signimm_D), .instr_D(instr_D), .pc_D(pc_D), .valid_D(valid_D),
 
         .regwrite_E(regwrite_E), .memtoreg_E(memtoreg_E), .memwrite_E(memwrite_E),
         .alucontrol_E(alucontrol_E), .alusrc_E(alusrc_E), .regdst_E(regdst_E),
         .branch_E(branch_E), .pcplus4_E(pcplus4_E),
         .rd1_E(rd1_E), .rd2_E(rd2_E),
         .rs_E(rs_E), .rt_E(rt_E), .rd_E(rd_E),
-        .signimm_E(signimm_E)
+        .signimm_E(signimm_E), .instr_E(instr_E), .pc_E(pc_E), .valid_E(valid_E)
     );
 
     // 3. EXECUTE STAGE
@@ -164,11 +173,11 @@ module datapath (
         .clk(clk), .reset(reset),
         .regwrite_E(regwrite_E), .memtoreg_E(memtoreg_E), .memwrite_E(memwrite_E),
         .aluout_E(aluout_E), .writedata_E(writedata_E),
-        .writereg_E(writereg_E),
+        .writereg_E(writereg_E), .instr_E(instr_E), .pc_E(pc_E), .valid_E(valid_E),
 
         .regwrite_M(regwrite_M), .memtoreg_M(memtoreg_M), .memwrite_M(memwrite_M),
         .aluout_M(aluout_M), .writedata_M(writedata_M),
-        .writereg_M(writereg_M)
+        .writereg_M(writereg_M), .instr_M(instr_M), .pc_M(pc_M), .valid_M(valid_M)
     );
 
     // 4. MEMORY STAGE
@@ -179,13 +188,13 @@ module datapath (
 
     pipe_mem_wb reg_mem_wb (
         .clk(clk), .reset(reset),
-        .regwrite_M(regwrite_M), .memtoreg_M(memtoreg_M),
-        .readdata_M(readdata_M), .aluout_M(aluout_M),
-        .writereg_M(writereg_M),
+        .regwrite_M(regwrite_M), .memtoreg_M(memtoreg_M), .memwrite_M(memwrite_M),
+        .readdata_M(readdata_M), .aluout_M(aluout_M), .writedata_M(writedata_M),
+        .writereg_M(writereg_M), .instr_M(instr_M), .pc_M(pc_M), .valid_M(valid_M),
 
-        .regwrite_W(regwrite_W), .memtoreg_W(memtoreg_W),
-        .readdata_W(readdata_W), .aluout_W(aluout_W),
-        .writereg_W(writereg_W)
+        .regwrite_W(regwrite_W), .memtoreg_W(memtoreg_W), .memwrite_W(memwrite_W),
+        .readdata_W(readdata_W), .aluout_W(aluout_W), .writedata_W(writedata_W),
+        .writereg_W(writereg_W), .instr_W(instr_W), .pc_W(pc_W), .valid_W(valid_W)
     );
 
     // 5. WRITEBACK STAGE

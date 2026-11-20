@@ -117,8 +117,19 @@ module imem (
 );
     logic [31:0] RAM[0:63];
 
+    string  memfile;
+    integer i;
+
     initial begin
-        $readmemh("../RTL/memfile.dat", RAM);
+        // Fill unused locations with NOPs before loading the selected program.
+        for (i = 0; i < 64; i = i + 1)
+            RAM[i] = 32'h0000_0000;
+
+        if (!$value$plusargs("MEMFILE=%s", memfile))
+            memfile = "RTL/memfile.dat";
+
+        $display("Loading RTL program from %s", memfile);
+        $readmemh(memfile, RAM);
     end
     assign rd = RAM[a];
 endmodule

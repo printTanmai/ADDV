@@ -1,77 +1,132 @@
-module MIPS_Testbench ();
-    logic clk;
-    logic reset;
-    logic [31:0] writedata, dataadr;
-    logic memwrite;
+module MIPS_Testbench;
 
-    int i;
+    logic        clk;
+    logic        reset;
+    logic [31:0] writedata;
+    logic [31:0] dataadr;
+    logic        memwrite;
 
-    // Expected memory writes matching memfile.dat
-    parameter int N = 3;
-    logic [31:0] expected_data[N:1];
-    logic [31:0] expected_addr[N:1];
-    
-    // Instantiate top module
+    integer trace_fd;
+    integer cycle_count;
+    integer timeout_cycles;
+
+    string trace_file;
+    string fsdb_file;
+
+    logic        trace_regwrite;
+    logic [4:0]  trace_rd;
+    logic [31:0] trace_regdata;
+    logic        trace_memwrite;
+    logic [31:0] trace_memaddr;
+    logic [31:0] trace_memdata;
+
     top dut (
-        .clk(clk),
-        .reset(reset),
-        .writedata(writedata),
-        .dataadr(dataadr),
-        .memwrite(memwrite)
+        .clk       (clk),
+        .reset     (reset),
+        .writedata (writedata),
+        .dataadr   (dataadr),
+        .memwrite  (memwrite)
     );
-    
-    // Initialize expected data and addresses
 
+    // 10 ns clock period
     initial begin
-        // Checkpoint 1 (Case 1: Basic ISA ops)
-        expected_data[1] = 32'h0f; // 15 in hex
-        expected_addr[1] = 32'h50;
-
-        // Checkpoint 2 (Case 2: ADD Data hazards & Forwarding)
-        expected_data[2] = 32'h28; // 40 in hex
-        expected_addr[2] = 32'h54;
-
-        // Checkpoint 3 (Case 3: BEQ Control hazards & Flushing)
-        expected_data[3] = 32'h12; // 18 in hex
-        expected_addr[3] = 32'h58;
+        clk = 1'b0;
+        forever #5 clk = ~clk;
     end
 
-    // Clock generation (10ns period)
-    always begin
-        clk <= 1'b0; 
-        #5;
-        clk <= 1'b1; 
-        #5;
-    end
-    
-    // Monitor memory write signals on negedge clk
+    // Reset the processor and open the RTL retirement trace.
     initial begin
         reset = 1'b1;
-        @(posedge clk);
-        @(posedge clk);
-        reset = 1'b0;
 
-        i = 1;
-        while (i <= N) begin
+        if (!$value$plusargs("TRACE=%s", trace_file))
+            trace_file = "traces/rtl.trace";
+
+        if (!$value$plusargs("TIMEOUT=%d", timeout_cycles))
+            timeout_cycles = 300;
+
+        trace_fd = $fopen(trace_file, "w");
+        if (trace_fd == 0)
+            $fatal(1, "Unable to open RTL trace file: %s", trace_file);
+
+        repeat (2) @(posedge clk);
+
+        // Deassert reset away from the active clock edge to avoid a race.
+        @(negedge clk);
+        reset = 1'b0;
+    end
+
+    // Write one line for every valid instruction reaching writeback.
+    // Cycle numbers are intentionally omitted because the ISS is not
+    // cycle-accurate. Only architectural behavior is compared.
+    initial begin
+        cycle_count = 0;
+
+        wait (reset === 1'b0);
+
+        forever begin
             @(negedge clk);
-            if (memwrite) begin
-                if (dataadr == expected_addr[i] && writedata == expected_data[i]) begin
-                    $display("Memory write %0d successful : wrote %h to address %h", i, writedata, dataadr);
-                end else begin
-                    $display("ERROR: Memory write %0d : wrote %h to address %h ; Expected %h to address %h", 
-                             i, writedata, dataadr, expected_data[i], expected_addr[i]);
+            cycle_count = cycle_count + 1;
+
+            if (dut.mips_inst.dp.valid_W) begin
+                // A write to register zero is not an architectural write.
+                trace_regwrite = dut.mips_inst.dp.regwrite_W &&
+                                 (dut.mips_inst.dp.writereg_W != 5'd0);
+                trace_rd       = trace_regwrite
+                               ? dut.mips_inst.dp.writereg_W : 5'd0;
+                trace_regdata  = trace_regwrite
+                               ? dut.mips_inst.dp.result_W : 32'd0;
+
+                trace_memwrite = dut.mips_inst.dp.memwrite_W;
+                trace_memaddr  = trace_memwrite
+                               ? dut.mips_inst.dp.aluout_W : 32'd0;
+                trace_memdata  = trace_memwrite
+                               ? dut.mips_inst.dp.writedata_W : 32'd0;
+
+                $fdisplay(
+                    trace_fd,
+                    "PC=%08x INSTR=%08x REGWRITE=%0d RD=%0d REGDATA=%08x MEMWRITE=%0d MEMADDR=%08x MEMDATA=%08x",
+                    dut.mips_inst.dp.pc_W,
+                    dut.mips_inst.dp.instr_W,
+                    trace_regwrite,
+                    trace_rd,
+                    trace_regdata,
+                    trace_memwrite,
+                    trace_memaddr,
+                    trace_memdata
+                );
+
+                // Every program ends with sw $zero, 252($zero). The store is
+                // included in the trace before simulation terminates.
+                if (trace_memwrite &&
+                    (trace_memaddr == 32'h0000_00fc)) begin
+                    $display(
+                        "RTL PASS: completion store retired after %0d cycles",
+                        cycle_count
+                    );
+                    $fclose(trace_fd);
+                    $finish;
                 end
-                i = i + 1;
+            end
+
+            if (cycle_count >= timeout_cycles) begin
+                $fclose(trace_fd);
+                $fatal(
+                    1,
+                    "RTL TIMEOUT: completion store was not observed within %0d cycles",
+                    timeout_cycles
+                );
             end
         end
-        
-        $display("TEST COMPLETE - ALL WRITES SUCCESSFUL");
-        $finish;
     end
 
+`ifdef FSDB
     initial begin
-        $fsdbDumpfile("novas.fsdb");
+        if (!$value$plusargs("FSDB=%s", fsdb_file))
+            fsdb_file = "build/part5.fsdb";
+
+        $fsdbDumpfile(fsdb_file);
         $fsdbDumpvars(0, MIPS_Testbench);
     end
-    
+`endif
+
 endmodule
