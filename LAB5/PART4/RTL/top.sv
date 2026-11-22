@@ -117,8 +117,7 @@ module imem (
 );
     logic [31:0] RAM[0:63];
 
-    initial begin
-        $readmemh("../RTL/memfile.dat", RAM);
-    end
+    // Part 3: the testbench loads a generated program while reset is asserted.
+    // Do not also load a fixed file here: that would race with the generator.
     assign rd = RAM[a];
 endmodule

@@ -1,0 +1,24 @@
+# Generated VCS, UVM coverage, and Verdi products
+build/
+logs/
+coverage/
+reports/
+csrc/
+simv
+simv.daidir/
+simv.vdb/
+DVEFiles/
+verdiLog/
+ucli.key
+vc_hdrs.h
+novas.conf
+novas.rc
+*.fsdb
+*.vpd
+*.vcd
+
+# Local Python and macOS metadata
+__pycache__/
+*.pyc
+.DS_Store
+._*
