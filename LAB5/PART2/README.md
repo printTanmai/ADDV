@@ -1,113 +1,254 @@
-# PART 2 — Five-Stage Pipelined MIPS Processor
+# PART 2 — Randomized MIPS Instruction Generator and Pipeline Test
 
-PART 2 contains a 32-bit, in-order MIPS-style processor implemented in SystemVerilog. The active design is a classic five-stage pipeline (IF, ID, EX, MEM, WB) with register forwarding, load-use stalling, and branch flushing. Its testbench builds a constrained-random instruction program, loads it into instruction memory, and runs the processor until it observes a designated stop-marker store.
+This directory contains a five-stage pipelined MIPS processor and a UVM-based constrained-random instruction generator. The generator is the primary test stimulus: it constructs a legal program with intentional data dependencies and branch sequences, converts each instruction to 32-bit machine code, writes a hexadecimal memory image, and loads it into the simulation's instruction RAM.
 
-## Contents
+The generated program is designed to exercise:
 
-- [`RTL/`](RTL/) — processor, pipeline registers, control and hazard logic.
-- [`TESTBENCH/`](TESTBENCH/) — constrained-random instruction generator and simulation testbench.
-- [`sim/`](sim/) — VCS Makefile, simulator setup, and generated simulation artifacts.
+- Register setup with `addi`
+- `add`-to-`and` data forwarding
+- `sw`-to-`lw` load data dependencies
+- Pipeline stalls caused by load-use hazards
+- Taken and not-taken `beq` control flow
+- Random register, memory, and R-type instructions
+- A final store used as a simulation stop marker
 
-## Design overview
+## Directory contents
 
-The active simulation top is `top` in [`RTL/top.sv`](RTL/top.sv). It connects the `mips` processor to separate instruction and data memories, each modeled as 64 words of 32 bits. Instruction fetch indexes memory with `pc[7:2]`; data memory indexes with address bits `[7:2]`, so the modeled address range is 0x00–0xFC in four-byte word steps. The testbench initializes instruction memory before releasing reset. Data memory is not initialized globally; values should be written before they are loaded.
+- [`TESTBENCH/instruction_generator.sv`](TESTBENCH/instruction_generator.sv) — constrained-random instruction transaction and complete program sequence generator.
+- [`TESTBENCH/testbench.sv`](TESTBENCH/testbench.sv) — clock/reset control, generator invocation, instruction-memory loading, store monitoring, and timeout/stop logic.
+- [`RTL/`](RTL/) — five-stage processor, pipeline registers, datapath, controller, and hazard unit.
+- [`sim/Makefile`](sim/Makefile) — VCS build and simulation targets.
+- [`sim/generated_program.hex`](sim/generated_program.hex) — most recently generated instruction-memory image.
 
-The processor pipeline is:
+## Instruction generator overview
 
-| Stage | Main work |
+The package `mips_instruction_pkg` contains two main classes:
+
+| Class | Responsibility |
 | --- | --- |
-| IF | Fetch instruction and calculate `PC + 4`; select sequential or redirected PC. |
-| ID | Decode instruction, read registers, sign-extend the immediate, and generate controls. |
-| EX | Perform ALU operation, calculate effective addresses and branch decisions, and select destination register. |
-| MEM | Read or write data memory. |
-| WB | Select ALU or memory result and write the register file. |
+| `instruction` | Represents one instruction, constrains its fields, and produces a 32-bit machine word. |
+| `instruction_sequence` | Randomizes sequence-level parameters and assembles the complete instruction list. |
 
-Pipeline registers carry data and control between stages. The register file writes on the falling clock edge, while pipeline registers and data memory use the rising edge. Reset is asynchronous for the pipeline state elements.
+The testbench constructs `instruction_sequence`, seeds it with `SEED`, calls `generate_program()`, writes `instruction_words` to `generated_program.hex`, and loads that file into the DUT instruction RAM.
 
-### Hazard handling
+## Supported instruction set
 
-- **Data forwarding:** EX operands can be forwarded from MEM or WB. A matching MEM-stage result takes priority over a WB-stage result.
-- **Load-use stall:** when an EX-stage load destination matches either source-register field of the ID-stage instruction, the front of the pipeline stalls and the ID/EX register is cleared to insert a bubble.
-- **Control flow:** `beq` is resolved in EX. A taken branch flushes younger instructions from decode and execute. `j` is decoded by the controller and has a fetch-stage target path, but the constrained-random program does not generate jumps.
+The generator supports only the encodings listed below. Opcode and function constants are defined in [`instruction_generator.sv`](TESTBENCH/instruction_generator.sv).
 
-These mechanisms are implemented primarily in [`RTL/hazard_unit.sv`](RTL/hazard_unit.sv) and [`RTL/datapath.sv`](RTL/datapath.sv).
+| Format | Instruction | Encoding fields |
+| --- | --- | --- |
+| R-type | `add` | `opcode=000000`, `funct=100000` |
+| R-type | `and` | `opcode=000000`, `funct=100100` |
+| I-type | `addi` | `opcode=001000` |
+| I-type | `lw` | `opcode=100011` |
+| I-type | `sw` | `opcode=101011` |
+| I-type | `beq` | `opcode=000100` |
 
-## Implemented instruction operations
+The RTL controller contains additional decode support for `sub`, `or`, `slt`, and `j`, but the generator does **not** create those instructions in the current program. Therefore, the generated-program test is not general coverage of every supported controller instruction.
 
-The controller/ALU decode logic in [`RTL/controller.sv`](RTL/controller.sv) and [`RTL/datapath.sv`](RTL/datapath.sv) includes:
+### R-type fields
 
-| Instruction | Operation |
+For an `add` or `and` instruction, the generator constrains:
+
+- `shamt == 0`
+- `rs` and `rt` in registers 1–10
+- `rd` in registers 5–10
+
+Its machine word is:
+
+```text
+{ opcode[31:26], rs[25:21], rt[20:16], rd[15:11], shamt[10:6], funct[5:0] }
+```
+
+### I-type fields
+
+For `addi`, `lw`, `sw`, and `beq`, the machine word is:
+
+```text
+{ opcode[31:26], rs[25:21], rt[20:16], immediate[15:0] }
+```
+
+Field constraints vary by instruction:
+
+| Instruction | Constraints |
 | --- | --- |
-| `add`, `sub` | Register-register addition and subtraction. |
-| `and`, `or`, `slt` | Register-register bitwise AND/OR and signedness-unspecified less-than comparison (the RTL compares the 32-bit operands as unsigned vectors). |
-| `addi` | Register plus sign-extended immediate. |
-| `lw`, `sw` | Word load and store using base-plus-immediate effective addresses. |
-| `beq` | Branch when the selected operands compare equal. |
-| `j` | Jump to the instruction-encoded target. |
+| `addi` | Base register is `$0`; destination is 1–10; immediate is 1–31. |
+| `lw` | Base register is `$0`; destination is 5–10; offset is 0, 4, or 8 bytes. |
+| `sw` | Base register is `$0`; source is 1–10; offset is a word-aligned value from 0 through 248. |
+| `beq` | Both operands come from registers 1–10; branch offset is -16 through 16. |
 
-The generated test program intentionally uses a smaller subset: setup `addi` instructions; R-type `add` and `and`; `lw`/`sw`; and taken and not-taken `beq` instructions. Its randomized R-type instructions are limited to `add` and `and`. Thus, controller decode support for `sub`, `or`, `slt`, and `j` should not be mistaken for coverage of those instructions in the current generated-program test.
+## Constrained-random sequence
 
-The register-file read port returns zero for register 0. The RTL does not suppress writes to the internal register-file entry for register 0, so software/test programs should not target register 0 as a destination.
+`generate_program()` creates the sequence in the following order:
 
-## Testbench and generated program
+### 1. Register initialization
 
-[`TESTBENCH/instruction_generator.sv`](TESTBENCH/instruction_generator.sv) defines the instruction encodings and constrained-random sequence. Each generated program includes:
+Registers 1–10 are initialized with:
 
-1. Register initialization for registers 1–10.
-2. Initial stores and an `add`-to-`and` dependency with a randomized gap.
-3. A store/load dependency using data-memory address 0x08, with randomized gap instructions that avoid overwriting that location.
-4. A taken and a not-taken branch, with additional instructions to exercise the flush path.
-5. A bounded number of additional randomized R-type, load, and store instructions.
-6. A final `sw $0, 252($0)` stop marker.
+```text
+addi $r, $0, (r * 3) + 1
+```
 
-The testbench uses the `SEED` plusarg (default 1) to seed the sequence, writes the generated words to `generated_program.hex`, loads that file into the DUT instruction RAM, and releases reset. It prints observed stores and finishes when a store to address 0xFC carries zero. It fails if the marker data is incorrect or if the marker is not seen within 500 clock cycles. This is a simulation-completion check, not a full architectural scoreboard: it does not independently compare every register and memory result against a reference model.
+For example, register 1 receives 4 and register 2 receives 7. This creates deterministic values for branch comparison while still using a seed-randomized surrounding sequence.
 
-## Running the simulation
+### 2. Initial memory setup
 
-The supplied Makefile targets Synopsys VCS and UVM 1.2. Run commands from `PART2/sim` so its relative source paths and output locations resolve correctly:
+The generator writes two known values:
+
+- `sw $1, 0($0)` — stores register 1 at address 0x00
+- `sw $2, 4($0)` — stores register 2 at address 0x04
+
+### 3. `add` → `and` data dependency
+
+The generator explicitly creates:
+
+```text
+add $5, $1, $2
+and $6, $5, $1
+```
+
+This places a producer-consumer relationship in registers 5 and 6. The second instruction needs the result from register 5 while it is still moving through the pipeline.
+
+The sequence-level random variable `add_gap` selects 0–3 gap instructions between the pair. Gap instructions are constrained so they do not create a destination in register 5:
+
+- R-type gap instructions cannot write `$5`.
+- Load gap instructions cannot target `$5`.
+- Stores and loads are otherwise randomized.
+
+### 4. `sw` → `lw` dependency
+
+The generator stores register 5 at address 0x08, then inserts 0–3 randomized gap instructions, and finally loads address 0x08 into register 7:
+
+```text
+sw $5, 8($0)
+lw $7, 8($0)
+```
+
+The `pair_gap` variable controls the number of gap instructions. Memory-gap instructions avoid `sw` offsets of 8, preventing the gap sequence from overwriting the location used by the load-use test.
+
+### 5. Branch instructions
+
+The generator creates one taken branch and one not-taken branch:
+
+```text
+beq $1, $1, 1   # taken
+beq $1, $2, 1   # not taken
+```
+
+Immediately after each branch, it inserts two random instructions. Random instructions can be `add`, `and`, `lw`, or `sw`. This gives the pipeline opportunities to flush younger instructions after the taken branch and to continue normally after the not-taken branch.
+
+### 6. Random tail
+
+The sequence-level variable `random_count` is randomized to 6–10. Each random tail instruction is an independently randomized R-type, load, or store instruction.
+
+Although the instruction transaction supports `addi` and `beq`, `append_random()` limits random instructions to:
+
+- R-type `add` or `and`
+- `lw`
+- `sw`
+
+This keeps the random tail focused on forwarding, memory, and control-pipeline interactions.
+
+### 7. Stop marker
+
+The final instruction is:
+
+```text
+sw $0, 252($0)
+```
+
+It writes zero to data address 0xFC. The testbench treats this store as the program completion marker.
+
+## Sequence random variables
+
+| Variable | Random range | Effect |
+| --- | --- | --- |
+| `add_gap` | 0–3 | Instructions between the `add` and `and` dependency pair. |
+| `pair_gap` | 0–3 | Instructions between the store and load dependency pair. |
+| `random_count` | 6–10 | Number of instructions in the randomized tail. |
+
+The seed independently initializes UVM random state. The testbench first calls `generator.srandom(seed)`, then calls `generate_program()`. The same seed should reproduce the same sequence.
+
+## Constraints and code generation
+
+`instruction::to_machine_code()` converts each randomized field combination into a 32-bit word:
+
+- R-type instructions use `{opcode, rs, rt, rd, shamt, funct}`.
+- I-type instructions use `{opcode, rs, rt, immediate}`.
+
+The generator returns failure if randomization or constrained sequence construction fails. It also rejects programs larger than 64 instructions, which prevents an instruction image larger than the 64-word instruction RAM.
+
+The output file is `$writememh` formatted hexadecimal memory data. The testbench reloads it with `$readmemh("generated_program.hex", dut.imem_inst.RAM)` before deasserting reset.
+
+## Running with a seed
+
+Run the simulation from `LAB5/PART2/sim`:
 
 ```sh
-cd PART2/sim
+cd LAB5/PART2/sim
+make compile_and_sim SEED=42
+```
+
+Or compile and run separately:
+
+```sh
 make compile
 make sim SEED=42
 ```
 
-`make sim` compiles and then runs `simv`; the seed is optional and defaults to 1. To compile and run in one VCS invocation instead:
+If `SEED` is omitted, the Makefile and testbench both default to seed 1. The seed can also be passed directly to an existing executable:
 
 ```sh
-make compile_and_sim SEED=42
+./simv +SEED=42
 ```
 
-Useful targets:
+## Testbench behavior
+
+[`TESTBENCH/testbench.sv`](TESTBENCH/testbench.sv):
+
+1. Initializes clock and reset.
+2. Reads `+SEED`; the default is 1.
+3. Constructs and seeds the instruction generator.
+4. Generates the sequence and writes `generated_program.hex`.
+5. Loads the hexadecimal words into instruction RAM.
+6. Holds reset for two clock edges, then releases reset.
+7. Monitors stores on the negative clock edge.
+8. Stops immediately when address 0xFC receives value zero.
+9. Reports a fatal error if the stop marker contains another value.
+10. Times out after 500 positive clock edges if the marker is never reached.
+
+The testbench creates a VCD file, `mips.vcd`, and prints each observed store and the final stop-marker event.
+
+## Simulation completion limits
+
+This environment is a generator-driven functional test, not an independent architectural scoreboard:
+
+- It verifies sequence generation and successful completion.
+- It validates the stop-marker address and value.
+- It does not independently calculate the expected final register file or data memory state.
+- Its timeout is a maximum simulation length, not a program correctness oracle.
+
+Use the generated `generated_program.hex` and the VCD waveform together to verify individual forwarding, stalling, and branch-execution behavior.
+
+## Useful Make targets
 
 | Target | Action |
 | --- | --- |
-| `compile` | Compile the active RTL and testbench into `simv`. |
-| `sim` | Compile, then run `simv` with `+SEED=$(SEED)`. |
-| `compile_and_sim` | Compile and run through VCS in one invocation. |
-| `waves_verdi` | Open the existing `mips.vcd` waveform in Verdi. |
-| `sim_verdi` | Run the compile-and-sim flow, then open the waveform. |
-| `clean` | Remove simulator build directories, executable, waveform files, and logs. |
+| `compile` | Compile the processor and testbench into `simv`. |
+| `sim SEED=n` | Compile and run with the specified seed. |
+| `compile_and_sim SEED=n` | Compile and run in one VCS invocation. |
+| `waves_verdi` | Open `mips.vcd` in Verdi. |
+| `sim_verdi` | Compile, run, and open the waveform. |
+| `clean` | Remove build products, waveforms, logs, and executables. |
 
-The Makefile points to an ASU-hosted VCS installation and uses `-ntb_opts uvm-1.2`; running elsewhere requires a compatible VCS/UVM installation and license, and may require overriding the `VCS` or `VERDI` Make variables. [`sim/env.cshrc`](sim/env.cshrc) provides the lab's C-shell environment setup; it uses `setenv` and is intended for `csh`/`tcsh`, not Bash. The generated `generated_program.hex`, `mips.vcd`, and logs are written in the simulation working directory. `make clean` does not remove `generated_program.hex`.
+The Makefile expects the ASU Synopsys VCS installation configured in [`sim/Makefile`](sim/Makefile). UVM 1.2 support is enabled with `-ntb_opts uvm-1.2`.
 
-## RTL file guide
+## Important implementation notes
 
-| File | Purpose |
-| --- | --- |
-| [`RTL/top.sv`](RTL/top.sv) | Active top-level, processor wrapper, and behavioral instruction/data memories. |
-| [`RTL/controller.sv`](RTL/controller.sv) | Main opcode decoder and ALU function decoder. |
-| [`RTL/datapath.sv`](RTL/datapath.sv) | Five-stage datapath, register file, ALU, and datapath helpers. |
-| [`RTL/hazard_unit.sv`](RTL/hazard_unit.sv) | Forwarding selection, load-use stall, and flush control. |
-| [`RTL/pipe_if_id.sv`](RTL/pipe_if_id.sv) | Fetch/decode pipeline register with enable and clear. |
-| [`RTL/pipe_id_ex.sv`](RTL/pipe_id_ex.sv) | Decode/execute pipeline register with clear. |
-| [`RTL/pipe_ex_mem.sv`](RTL/pipe_ex_mem.sv) | Execute/memory pipeline register. |
-| [`RTL/pipe_mem_wb.sv`](RTL/pipe_mem_wb.sv) | Memory/writeback pipeline register. |
-| [`RTL/flopenc.sv`](RTL/flopenc.sv) | Enabled, resettable register used for the PC. |
-| [`RTL/mux3.sv`](RTL/mux3.sv) | Three-way forwarding mux. |
-| [`TESTBENCH/testbench.sv`](TESTBENCH/testbench.sv) | Clock/reset, program loading, stop-marker check, timeout, and VCD dump. |
-| [`TESTBENCH/instruction_generator.sv`](TESTBENCH/instruction_generator.sv) | Constrained-random instruction and sequence generation. |
-
-## Separate SRAM variant
-
-[`RTL/top_with_sram.sv`](RTL/top_with_sram.sv) is not included in the active simulation Makefile. It defines modules also named `top`, `mips`, `imem`, and `dmem`, and instantiates an external `SRAM_32x64_1rw` model. Do not compile it together with `top.sv`; treat it as a separate integration variant requiring its own compatible RTL and SRAM model. Likewise, [`RTL/memfile.dat`](RTL/memfile.dat) is a hand-written example program and is not loaded by the current testbench, which uses the generated hex file instead.
+- Register 0 reads as zero from the register-file read ports.
+- Software writes to register 0 should be avoided even though the internal register-file storage is not explicitly protected by the RTL.
+- The instruction RAM and data RAM are each modeled as 64 32-bit words.
+- Instruction addresses and data addresses are word-indexed with the address `[7:2]` field.
+- Taken branches are resolved in the execute stage and flush younger decode/execute instructions.
+- Load-use dependencies stall the front of the pipeline and insert a bubble at ID/EX.
+- Forwarded operands originate from the memory or writeback pipeline stages.
